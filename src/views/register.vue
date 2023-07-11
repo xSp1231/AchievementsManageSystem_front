@@ -1,10 +1,10 @@
 <template>
-<h1>test</h1>
+<h1 style="color: #646cff">注册页面</h1>
 </template>
 
 <script>
 export default {
-  name: "test"
+  name: "regitster"
 }
 </script>
 
