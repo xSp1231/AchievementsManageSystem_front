@@ -1,23 +1,26 @@
-<template>
+<template xmlns="">
   <div class="common-layout">
     <el-container class="main_container">
-      <el-aside width="auto" style="max-width: 180px"><Aside></Aside></el-aside>  <!---------<el-aside></el-aside>默认300px------>
+      <el-aside width="auto" style="max-width: 200px"><commonAside></commonAside></el-aside>  <!---------<el-aside></el-aside>默认300px------>
       <el-container>
         <el-header style="padding: 0"><topheader></topheader></el-header>
-        <el-main style="background-color: #efeded" ><router-view></router-view></el-main>
+        <Tag></Tag>
+        <el-main style="background-color: #fcfcfc" ><router-view></router-view></el-main>
       </el-container>
     </el-container>
   </div>
 </template>
 
 <script>
-import Aside from "../components/Aside.vue";
+import commonAside from "../components/CommonAside.vue";
 import topheader from "../components/Header.vue";
+import Tag from "../components/Tag.vue"
 export default {
   name: "layout",
   components:{
-    Aside,
-    topheader
+    commonAside,
+    topheader,
+    Tag
   }
 }
 </script>
