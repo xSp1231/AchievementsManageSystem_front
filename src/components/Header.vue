@@ -30,7 +30,7 @@
       </span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item command="personalArea" divided>个人中心</el-dropdown-item>
+          <el-dropdown-item command="personalArea" divided>注销账号</el-dropdown-item>
           <el-dropdown-item command="logOff">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
@@ -40,6 +40,8 @@
 </template>
 
 <script>
+
+
 import { ElMessage } from 'element-plus'
 import { mapState } from 'vuex';
 import {mapMutations} from 'vuex'
@@ -48,13 +50,15 @@ export default {
   components:{
     Fold,
     ArrowRight,
+
   },
 
   data(){
     return{
       newTime: "",
       ArrowRight,
-      Fold
+      Fold,
+
     }
   },
   computed:{

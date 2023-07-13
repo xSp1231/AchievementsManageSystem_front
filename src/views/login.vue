@@ -107,8 +107,8 @@ export default {
   display: flex;
   border-radius: 8px;
   position: absolute;
-  width: 70%;
-  height: 47%;
+  width:1300px;
+  height: 400px;
   margin: auto;
   top: 0;
   left: 0;
