@@ -28,7 +28,7 @@
                 clearable
             >
               <el-option label="管理员" value="管理员" />
-              <el-option label="学生用户" value="学生" />
+              <el-option label="学生" value="学生" />
             </el-select>
           </el-form-item>
           <el-form-item >
@@ -43,24 +43,49 @@
 </template>
 <script>
 import { ElMessage } from 'element-plus'
+import api from "../api/index.js"
+import {mapMutations} from "vuex"
 export default {
   data(){
     return {
     formdata:{
-      username:"",
-      password:"",
-      role:"",
+      username:"manager",
+      password:"123",
+      role:"管理员",
       }
     }
   },
   methods:{
+    ...mapMutations(['confirmManager','confirmStudent']),
     login(){
-      console.log("登录表单信息",this.formdata.role)
-      ElMessage({
-        message: '登录成功,欢迎回来! '+this.formdata.username,
-        type: 'success',
+
+       console.log("登录角色",this.formdata.role)
+      //如果为管理员 =>header部分显示 成果信息后台管理系统
+
+
+      api.post("/login",this.formdata).then(res=>{
+        console.log("后端返回的数据是 ",res.data);
+        if(res.data.flag===true){
+          if(this.formdata.role==="管理员"){  //调用函数 改变状态
+            console.log("点击")
+            this.confirmManager();
+          }
+          else{
+            this.confirmStudent();
+          }
+          ElMessage({
+            message: '登录成功,欢迎回来! '+this.formdata.username,
+            type: 'success',
+          })
+          this.$router.push("/home");
+        }
+        else{
+          ElMessage({
+            message:res.data.message,
+            type: 'error',
+          })
+        }
       })
-      this.$router.push("/home");//路由跳转
     }
   }
 }
