@@ -5,7 +5,7 @@
       <el-container>
         <el-header style="padding: 0"><topheader></topheader></el-header>
         <Tag></Tag>
-        <el-main style="background-color: #fcfcfc" ><router-view></router-view></el-main>
+        <el-main style="background-color: #fcfcfc;padding: 6px" ><router-view></router-view></el-main>
       </el-container>
     </el-container>
   </div>
