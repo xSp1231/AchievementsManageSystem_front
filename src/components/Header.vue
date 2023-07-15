@@ -26,7 +26,7 @@
   <div class="personalArea"   style="width: 5%;">
     <el-dropdown @command="handleCommand">
       <span class="el-dropdown-link">
-        <img class="picture" style="position:relative;left: 0%;top:10% ;height: 50px;width: 50px;border-radius: 50%;" src="../assets/loginImgs/left.jpg">
+        <img class="picture" style="position:relative;left: 0%;top:10% ;height: 50px;width: 50px;border-radius: 50%;" src="../assets/login/left.jpg">
       </span>
       <template #dropdown>
         <el-dropdown-menu>

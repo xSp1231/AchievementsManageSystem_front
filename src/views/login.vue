@@ -1,46 +1,125 @@
 <template>
-  <div class="loginpage">
-    <div class="loginarea">
-      <div class="imgarea">
-        <h1 style="position: absolute;top:28%;left: 25%;color: #efeded;font-size: 36px">学生成果管理系统</h1>
-        <h1 style="position:absolute;top:43%;left: 35%;color: #efeded;font-size: 36px">SWUST</h1>
-      </div>
-      <div class="loginform">
-        <h2 style="position: absolute;left: 40%;top:12%;">欢迎登录</h2>
-        <div class="form" style="position:absolute;top:2%;">
-        <el-form
-            label-width="200px"
-            :model="formdata"
-            style="max-width: 500px;margin-top: 100px"
-        >
-          <el-form-item label="用户名">
-            <el-input clearable  placeholder="学生用户名为学号,管理员为工号" v-model="formdata.username" />
-          </el-form-item>
-          <el-form-item label="密码">
-            <el-input  show-password  type="password" clearable
-                       placeholder="密码长度为3-10个字符" v-model="formdata.password" />
-          </el-form-item>
-          <el-form-item label="身份">
-            <el-select
-                style="width: 400px"
-                v-model="formdata.role"
-                placeholder="身份选择"
-                clearable
-            >
-              <el-option label="管理员" value="管理员" />
-              <el-option label="学生" value="学生" />
-            </el-select>
-          </el-form-item>
-          <el-form-item >
-            <el-button type="primary"  style="position: relative;left: 25%; width: 150px; height: 38px; " @click="login()">登录</el-button>
-          </el-form-item>
-        </el-form>
+  <div class="login">
+    <div class="other">
+        <div class="l-left">
+          <h3 class="icon">SWUST</h3>
+          <h1 class="title">Welcome Back!</h1>
+          <h4 class="subtitle">Student Achievement Management System</h4>
+          <div class="thing1">
+            <p class="new1">S</p>
+          </div>
+          <div class="thing2">
+            <p class="new2">m</p>
+          </div>
         </div>
-      </div>
+        <div class="l-right">
+          <el-form :model="formdata" label-width="auto" label-position="top" style="margin-left: 20%;margin-right:20% ">
+            <h1>Sign in</h1>
+              <el-form-item label="用户名" style="margin-bottom: 0;margin-top: 6%">
+                <el-input v-model="formdata.username" placeholder="学生用户名为学号,管理员为工号" clearable></el-input>
+              </el-form-item>
+              <el-form-item label="密码" style="margin-bottom: 0">
+                <el-input v-model="formdata.password" placeholder="密码长度为3-10个字符" show-password  type="password" clearable></el-input>
+              </el-form-item>
+              <el-form-item label="身份选择" style="margin-bottom: 0">
+                <el-select v-model="formdata.role" placeholder="身份选择" clearable>
+                  <el-option label="本科生" value="学生"></el-option>
+                  <el-option label="管理员" value="管理员"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-checkbox label="记住密码" name="" style=""></el-checkbox>
+            <el-form-item>
+              <div class="btn">
+                <el-button round @click="login()" style="background-color: #5287bc;color:white;">登录</el-button>
+              </div>
+            </el-form-item>
+          </el-form>
+        </div>
     </div>
-
   </div>
 </template>
+<style lang="less" scoped>
+.login{
+  background: url("../assets/login/background.jpg") center no-repeat;
+  background-size: 100% 100%;
+  position:absolute;
+  width:100%;
+  height:100%;
+  .other{
+    width:70%;
+    height:70%;
+    display: flex;
+    position: absolute;
+    transform:translate(20% ,20%);
+    //border: 1px solid black;
+    .l-left{
+      width:40%;
+      height:100%;
+      background: url("../assets/login/left1.png");
+      .icon{
+        color:#f0eee5;
+        padding:15px 15px;
+      }
+      .title{
+        color:#f0eee5;
+        text-align: center;
+        padding-top:15%;
+      }
+      .subtitle{
+        color:#f0eee5;
+        text-align: center;
+      }
+      .thing1{
+        width:20px;
+        height: 20px;
+        background-color: #f0eee5;
+        margin-left:100px;
+        margin-top: 100px;
+        position: absolute;
+        .new1{
+          color:#5287bc;
+          font-weight: bold;
+          text-align: center;
+        }
+      }
+      .thing2{
+        width:20px;
+        height: 20px;
+        background-color: #f0eee5;
+        position: absolute;
+        margin-left:220px;
+        margin-top: 170px;
+        .new2{
+          color:#5287bc;
+          font-weight: bold;
+          text-align: center;
+        }
+      }
+    }
+    .l-right{
+      width:60%;
+      height:100%;
+      background: url("../assets/login/right.jpg");
+      h1{
+        color:#5287bc;
+        margin-top: 15%;
+      }
+      .btn{
+        width:100%;
+        display: flex;
+        justify-content: center;
+        .el-button{
+          width:200px;
+        }
+      }
+
+    }
+  }
+}
+.el-card{
+  padding: 0;
+}
+</style>
 <script>
 import { ElMessage } from 'element-plus'
 import api from "../api/index.js"
@@ -90,46 +169,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-
-.loginpage {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: #535bf2;
-  background-image: url('../assets/loginImgs/bg.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-}
-
-.loginarea {
-  display: flex;
-  border-radius: 8px;
-  position: absolute;
-  width:1300px;
-  height: 400px;
-  margin: auto;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #f8f5f5;
-}
-.imgarea{
-  border-radius: 8px;
-  position: relative;
-  width: 51%;
-  height: 100%;
-  background-image: linear-gradient(rgba(86, 172, 208, 0.8), rgba(30, 194, 227, 0.9)), url('../assets/loginImgs/left.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-}
-.loginform{
-  position: relative;
-  width: 49%;
-  height: 100%;
-  background-color: #fcfcfc;
-}
-</style>
