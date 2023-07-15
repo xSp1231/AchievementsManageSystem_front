@@ -10,6 +10,8 @@ const app = createApp(App)
 app.use(router)
 app.use(store)
 app.use(ElementPlus)
+// 屏蔽控制台警告信息
+app.config.warnHandler = () => null;
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {  //应用所有图标
     app.component(key, component)
 }
