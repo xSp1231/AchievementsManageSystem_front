@@ -5,15 +5,15 @@
           <h3 class="icon">SWUST</h3>
           <h1 class="title">Welcome Back!</h1>
           <h4 class="subtitle">Student Achievement Management System</h4>
-          <div class="thing1">
-            <p class="new1">S</p>
-          </div>
-          <div class="thing2">
-            <p class="new2">m</p>
-          </div>
+<!--          <div class="thing1">-->
+<!--            <p class="new1"></p>-->
+<!--          </div>-->
+<!--          <div class="thing2">-->
+<!--            <p class="new2"></p>-->
+<!--          </div>-->
         </div>
         <div class="l-right">
-          <el-form :model="formdata" label-width="auto" label-position="top" style="margin-left: 20%;margin-right:20% ">
+          <el-form :model="formdata" label-width="auto" label-position="top" style="margin-left: 20%;margin-right:38% ">
             <h1>Sign in</h1>
               <el-form-item label="用户名" style="margin-bottom: 0;margin-top: 6%">
                 <el-input v-model="formdata.username" placeholder="学生用户名为学号,管理员为工号" clearable></el-input>
@@ -46,15 +46,17 @@
   width:100%;
   height:100%;
   .other{
-    width:70%;
+    border-radius: 10px;
+    width:60%;
     height:70%;
     display: flex;
     position: absolute;
-    transform:translate(20% ,20%);
-    //border: 1px solid black;
+    top:5%;
+    transform:translate(30% ,20%);
     .l-left{
+      border-radius: 10px;
       width:40%;
-      height:100%;
+      height:470px;
       background: url("../assets/login/left1.png");
       .icon{
         color:#f0eee5;
@@ -97,8 +99,9 @@
       }
     }
     .l-right{
+      border-radius: 10px;
       width:60%;
-      height:100%;
+      height:470px;
       background: url("../assets/login/right.jpg");
       h1{
         color:#5287bc;

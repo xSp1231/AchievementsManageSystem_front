@@ -12,7 +12,7 @@
     <el-button @click="getAll()" :icon="Search"   class="search">查询</el-button>
     <el-button @click="reback()" class="renew">重置</el-button>
     <el-button @click="deleteBatches()" type="danger" class="dels">批量删除</el-button>
-    <el-button @click="" type="success" plain class="dels">Excel数据导入</el-button>
+    <el-button @click="test()" type="success" plain class="dels">Excel数据导出</el-button>
   </div>
   <div class="addInfo"  style="margin-top: 10px">
     <el-button type="text" plain size="default" :icon="Plus" @click="dialogVisible = true;isadd = true;dialogTitle='新增用户信息' ">点击增加</el-button>
@@ -168,6 +168,9 @@ export default {
     this.getAll()
   },
   methods:{
+    test(){
+      window.location.href = "后端接口";
+    },
     reback() {
       api.get('/student/1/5').then((res) => {
 
