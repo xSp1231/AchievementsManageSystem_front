@@ -2,10 +2,21 @@
 <div class="top-header" style="width:100%;height:100%; background-color: #e8e6e6;display:flex">
 
   <div class="breadcrumbArea" style="width: 58%;display: flex">
-    <div class="foldarea" style="width: 6%;position: relative;top:23%;left: 1%">
-      <el-icon style="font-size: 26px;color: #9f9fa1" @click="strentch()">
-        <Fold />
-      </el-icon></div>
+    <div  class="foldarea" style="width: 6%;position: relative;top:23%;left: 1%">
+
+    <el-icon v-if="!isCollapse" style="font-size: 26px;color: #9f9fa1" @click="strentch()">
+      <Fold />
+    </el-icon>
+      <el-icon v-if="isCollapse" style="font-size: 26px;color: #9f9fa1" @click="strentch()">
+        <Expand />
+      </el-icon>
+
+    </div>
+
+
+
+
+
     <!---面包屑区域-->
     <div class="bread" style="width: 94%;">
       <el-breadcrumb :separator-icon="ArrowRight" style="position: relative;top:33%;font-size:15px;font-style:normal">
@@ -45,31 +56,30 @@
 import { ElMessage } from 'element-plus'
 import { mapState } from 'vuex';
 import {mapMutations} from 'vuex'
-import {Fold,ArrowRight} from "@element-plus/icons-vue";
+import {Fold, ArrowRight, Expand} from "@element-plus/icons-vue";
+
 export default {
   components:{
+    Expand,
     Fold,
     ArrowRight,
-
   },
-
   data(){
     return{
       newTime: "",
       ArrowRight,
       Fold,
-
     }
   },
   computed:{
-    ...mapState(['isManager','tabsList']),  //tablist 面包屑数据
+    ...mapState(['isManager','tabsList','isCollapse']),  //tablist 面包屑数据
   },
   mounted() {
+    const myTimeDisplay = setInterval(() => {
+      this.getNowTime();
+    }, 1000);
     this.getNowTime();
     clearInterval(myTimeDisplay);
-    var myTimeDisplay = setInterval(() => {
-      this.getNowTime();
-    }, 1000)
   },
   methods:{
     ...mapMutations(['collapseMenu']),

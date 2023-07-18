@@ -10,9 +10,20 @@
     <el-input class="filter-item" v-model="queryInfo.name" placeholder="学生姓名"
               style="width: 150px;margin-right: 8px"></el-input>
     <el-button @click="getAll()" :icon="Search"   class="search">查询</el-button>
-    <el-button @click="reback()" class="renew">重置</el-button>
-    <el-button @click="deleteBatches()" type="danger" class="dels">批量删除</el-button>
-    <el-button @click="test()" type="success" plain class="dels">Excel数据导出</el-button>
+    <el-button @click="reback()" :icon="Refresh" class="renew">重置</el-button>
+    <el-button @click="deleteBatches()"   :icon="DeleteFilled" type="danger" class="dels">批量删除</el-button>
+
+    <el-button type="primary" plain :icon="Download" style="margin-left: 10px" @click="exportAll()" >导出全部数据</el-button>
+    <el-button type="" plain :icon="Download" @click="exportPart()">批量导出</el-button>
+    <el-upload action="http://localhost:8080/importStudentInfo"
+               :show-file-list="false" accept="xlsx"
+               :on-success="handleImportSuccess"
+               :before-upload="beforeAvatarUpload"
+               style="display: inline-block;position: absolute;right: 2%"
+    >
+      <el-button type="success"  :icon="UploadFilled" plain  >Excel数据导入</el-button>
+    </el-upload>
+
   </div>
   <div class="addInfo"  style="margin-top: 10px">
     <el-button type="text" plain size="default" :icon="Plus" @click="dialogVisible = true;isadd = true;dialogTitle='新增用户信息' ">点击增加</el-button>
@@ -106,7 +117,7 @@
   <div class="page" style="width: 40%;margin-top:1%;margin-left: 30px" >
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                    :current-page="queryInfo.currentPage"
-                   :page-sizes="[5, 10, 15, 20]" :page-size="queryInfo.pageSize"
+                   :page-sizes="[5, 10, 15, 20,100]" :page-size="queryInfo.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
                    :total="queryInfo.total">
     </el-pagination>
@@ -116,20 +127,16 @@
 </template>
 
 <script>
-import {
-  Search,
-  Edit,
-  Plus,
-  DeleteFilled,
-} from '@element-plus/icons-vue'
+import {DeleteFilled, Edit, Plus, Search,UploadFilled,Refresh,Download} from '@element-plus/icons-vue'
 import api from "../../api/index.js"
-import { ElMessageBox } from 'element-plus'
+import {ElMessageBox} from 'element-plus'
+
 export default {
   name: "index",
   data() {
     return {
-
-      Search,Plus, Edit,DeleteFilled,//返回组件
+      //返回组件
+      Search,Plus, Edit,DeleteFilled,UploadFilled,Refresh,Download,
       dialogTitle:"test",
       isadd: true,//true 添加  false 关闭
       dataList: [
@@ -168,9 +175,6 @@ export default {
     this.getAll()
   },
   methods:{
-    test(){
-      window.location.href = "后端接口";
-    },
     reback() {
       api.get('/student/1/5').then((res) => {
 
@@ -318,9 +322,58 @@ export default {
           });
         })
       }
+    } ,
+    handleImportSuccess(){
+        this.$message.success("导入成功");
+        this.getAll()
+    },
+    beforeAvatarUpload(rawFile) {
+      if (rawFile.type !== 'application/vnd.ms-excel' && rawFile.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        this.$message.error('只允许excel文件导入!')
+        return false
+      }
+      if (rawFile.size / 1024 / 1024 > 8) {
+        this.$message.error('Avatar picture size can not exceed 8MB!')
+        return false
+      }
+      return true
+    },
+    exportAll(){
+       window.location.href = "http://localhost:8080/exportAll";
+      // api.get("/exportAll").then(res=>{
+      //   console.log("导出的数据 is ",res)
+      // })
+    },
+    exportPart() {
+      console.log("选择的用户名为", this.usernames)
+      if (this.usernames.length === 0) {
+        this.$message.warning("请勾选想要导出的用户！")
+      } else {
+        api.post('/exportByUsername', this.usernames, {
+          responseType: 'blob' // 指定响应数据的类型为 Blob 对象
+        }).then(response => {
+              // 获取响应头中的文件名
+              const header = response.headers['content-disposition']
+              console.log("响应的文件名",header)
+              const filename = header ? header.split('=')[1] : 'StudentInfo.xlsx'
+              // 创建一个新的 Blob 对象，将响应体的数据保存到其中
+              const blob = new Blob([response.data], { type: 'application/vnd.ms-excel' })
+              // 创建一个 URL 对象，用于生成文件的下载链接
+              const url = window.URL.createObjectURL(blob)
+              // 创建一个 <a> 元素，设置下载链接和文件名，模拟用户点击下载链接
+              const link = document.createElement('a')
+              link.href = url
+              link.download = filename
+              document.body.appendChild(link)
+              link.click()
+              // 释放 URL 对象
+              window.URL.revokeObjectURL(url)
+            })
+            .catch(error => {
+              console.error(error)
+            })
+      }
     }
-
-
 
 
 
