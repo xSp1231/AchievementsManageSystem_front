@@ -14,7 +14,7 @@
         </div>
         <div class="l-right">
           <el-form :model="formdata" label-width="auto" label-position="top" style="margin-left: 20%;margin-right:38% ">
-            <h1>Sign in</h1>
+              <h1>Sign in</h1>
               <el-form-item label="用户名" style="margin-bottom: 0;margin-top: 6%">
                 <el-input v-model="formdata.username" placeholder="学生用户名为学号,管理员为工号" clearable></el-input>
               </el-form-item>
@@ -31,6 +31,7 @@
             <el-form-item>
               <div class="btn">
                 <el-button round @click="login()" style="background-color: #5287bc;color:white;">登录</el-button>
+                <el-button round @click="toRegister()" style="background-color: #5287bc;color:white;">注册</el-button>
               </div>
             </el-form-item>
           </el-form>
@@ -168,6 +169,9 @@ export default {
           })
         }
       })
+    },
+    toRegister(){
+      this.$router.push("/register");
     }
   }
 }
