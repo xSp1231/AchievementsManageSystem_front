@@ -33,12 +33,10 @@
           <el-form-item label="姓名" style="margin-bottom: 20px;margin-top: 0%" prop="name" >
             <el-input v-model.number="ruleForm.name" placeholder="请输入姓名" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="身份选择" style="margin-bottom: 20px">
-            <el-select v-model="ruleForm.major" placeholder="专业" clearable>
-              <el-option label="计算机科学与技术" value="计算机科学与技术"></el-option>
-              <el-option label="软件工程" value="软件工程"></el-option>
-            </el-select>
+          <el-form-item label="专业班级" style="margin-bottom: 20px;margin-top: 0%" prop="major" >
+            <el-input v-model.number="ruleForm.major" placeholder="xx专业xx班(如计科2002)" autocomplete="off"></el-input>
           </el-form-item>
+
           <el-form-item>
             <div class="btn" style="margin-left: 70px;margin-right: 60px;margin-bottom: 0px">
               <el-button type="primary" round @click="submitForm('ruleForm')" style="width: 110px">注册</el-button>
@@ -178,11 +176,12 @@ export default {
     };
     var validatePass = (rule, value, callback) => {
 
+      let str = value;
+      this.percentage=str.length*10;
       if (value === '') {
         callback(new Error('请输入密码'));
       } else {
-        let str = value;
-        this.percentage=str.length*10;
+
         if (this.ruleForm.checkPass !== '') {
           this.$refs.ruleForm.validateField('checkPass');
         }
@@ -211,11 +210,6 @@ export default {
 
       customColor: '#9589E6',
       percentage:0,
-      customColors:[
-        {},
-        {}
-      ],
-
       ruleForm: {
         username:"",
         password: '',
@@ -236,9 +230,7 @@ export default {
         username: [
           { validator:checkUser,trigger:'blur'}
         ],
-        major: [
-            {}
-        ]
+        major: [{}]
       }
     };
   },
@@ -274,6 +266,7 @@ export default {
             type:'success',
             duration:1500,
           })
+          this.$router.push("/login");
         }else{
           this.$message({
             message:'注册失败',
@@ -292,9 +285,11 @@ export default {
         }
 
       });
+
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.percentage = 0;
     }
   }
 }
