@@ -158,22 +158,6 @@ export default {
   
   data() {
 
-    var checkAge = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error('年龄不能为空'));
-      }
-      setTimeout(() => {
-        if (!Number.isInteger(value)) {
-          callback(new Error('请输入数字值'));
-        } else {
-          if (value < 18) {
-            callback(new Error('必须年满18岁'));
-          } else {
-            callback();
-          }
-        }
-      }, 1000);
-    };
     var validatePass = (rule, value, callback) => {
 
       let str = value;
@@ -201,7 +185,16 @@ export default {
 
     var checkUser = (rule,value,callback)=>{
       if (value === '') {
-        callback(new Error('请输入姓名'));
+        callback(new Error('请输入学号'));
+      }else{
+        callback();
+      }
+    };
+    var checkUser
+
+        = (rule,value,callback)=>{
+      if (value === '') {
+        callback(new Error('请输入学号'));
       }else{
         callback();
       }
@@ -221,16 +214,16 @@ export default {
       },
       rules: {
         password: [
-          { validator: validatePass, trigger: 'change' }
+          { validator: validatePass, trigger: 'change' ,required:true}
         ],
         checkPass: [
-          { validator: validatePass2, trigger: 'blur' }
+          { validator: validatePass2, trigger: 'blur' ,required:true}
         ],
-        name: [{ }],
+        name: [{required:true}],
         username: [
-          { validator:checkUser,trigger:'blur'}
+          { validator:checkUser,trigger:'blur',required:true}
         ],
-        major: [{}]
+        major: [{required:true}]
       }
     };
   },
@@ -258,27 +251,29 @@ export default {
 
     submitForm(formName) {
 
-      api.post("/register",this.ruleForm).then(res=>{
-        console.log("后端返回的数据为",res.data);
-        if(res.data.flag==true){
-          this.$message({
-            message:'注册成功',
-            type:'success',
-            duration:1500,
-          })
-          this.$router.push("/login");
-        }else{
-          this.$message({
-            message:'注册失败',
-            type:'false',
-            duration:1500,
-          })
-        }
-      })
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
-
-
+          if(this.ruleForm.password != this.ruleForm.checkPass){
+            this.$message.error('两次输入密码不一致！')
+            return
+          }
+          api.post("/register",this.ruleForm).then(res=>{
+            console.log("后端返回的数据为",res.data);
+            if(res.data.flag==true){
+              this.$message({
+                message:'注册成功',
+                type:'success',
+                duration:1500,
+              })
+              this.$router.push("/login");
+            }else{
+              ElMessage({
+                message:res.data.message,
+                type: 'error',
+              })
+            }
+          })
         } else {
           console.log('error submit!!');
           return false;
