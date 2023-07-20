@@ -4,15 +4,14 @@
     <div class="other">
       <div class="l-left">
         <h3 class="icon">SWUST</h3>
-        <h1 class="title">Welcome Back!</h1>
-        <h4 class="subtitle">Student Achievement</h4>
-        <h5 class="subtitle1">  Management System</h5>
-        <!--          <div class="thing1">-->
-        <!--            <p class="new1"></p>-->
-        <!--          </div>-->
-        <!--          <div class="thing2">-->
-        <!--            <p class="new2"></p>-->
-        <!--          </div>-->
+        <h1 class="title">{{this.designString.title}}</h1>
+        <h4 class="subtitle">{{this.designString.subtitle}}</h4>
+<!--        <h5 class="subtitle1">  Management System</h5>-->
+        <div class="thing1">
+        </div>
+        <div class="thing2">
+        </div>
+        <button style="margin-top: 67%;margin-left: 5%;color:#5287bc;font-size:17px" @click="changeData()">{{this.designString.flag ? "英文":"Chinese"}}</button>
       </div>
       <div class="l-right">
 
@@ -62,12 +61,12 @@
   height:100%;
   .other{
     border-radius: 10px;
-    width:60%;
-    height:70%;
+    width:70%;
+    height:60%;
     display: flex;
     position: absolute;
     top:5%;
-    transform:translate(30% ,20%);
+    transform:translate(20% ,10%);
     .l-left{
       border-radius: 10px;
       width:40%;
@@ -83,10 +82,6 @@
         padding-top:15%;
       }
       .subtitle{
-        color:#f0eee5;
-        text-align: center;
-      }
-      .subtitle1{
         color:#f0eee5;
         text-align: center;
       }
@@ -210,7 +205,7 @@ export default {
         name:"",
         major:'',
         checkPass: '',
-        status:1
+        status:1,
       },
       rules: {
         password: [
@@ -224,8 +219,13 @@ export default {
           { validator:checkUser,trigger:'blur',required:true}
         ],
         major: [{required:true}]
+      },
+      designString: {
+        title: "Welcome Back!",
+        subtitle: "Student Achievement Manage System",
+        flag:true
       }
-    };
+    }
   },
 
   methods: {
@@ -285,7 +285,19 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
       this.percentage = 0;
-    }
+    },
+    changeData(){
+      this.flag=!this.flag;
+      if(this.flag)
+      {
+        this.designString.title="欢迎回来！";
+        this.designString.subtitle="学生成果管理系统"
+      }
+      else{
+        this.designString.title="Welcome Back!";
+        this.designString.subtitle="Student Achievement Manage System"
+      }
+    },
   }
 }
 

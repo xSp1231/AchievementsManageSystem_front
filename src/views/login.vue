@@ -9,7 +9,7 @@
           </div>
           <div class="thing2">
           </div>
-          <button @click="changeData()" style="margin-top: 67%;margin-left: 5%;color:#5287bc;font-size:17px">{{this.flag ? "英文":"Chinese"}}</button>
+          <button style="margin-top: 67%;margin-left: 5%;color:#5287bc;font-size:17px" @click="changeData()">{{this.designString.flag ? "英文":"Chinese"}}</button>
         </div>
         <div class="l-right">
           <el-form :model="formdata" label-width="auto" label-position="top" style="margin-left: 20%;margin-right:25% ">
@@ -137,7 +137,8 @@ export default {
       },
       designString: {
         title: "Welcome Back!",
-        subtitle: "Student Achievement Manage System"
+        subtitle: "Student Achievement Manage System",
+        flag:true
       }
     }
   },
@@ -184,7 +185,8 @@ export default {
         this.designString.title="Welcome Back!";
         this.designString.subtitle="Student Achievement Manage System"
       }
-    }
+    },
+
   }
 }
 </script>
