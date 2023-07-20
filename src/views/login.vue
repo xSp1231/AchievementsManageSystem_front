@@ -12,7 +12,7 @@
           <button @click="changeData()" style="margin-top: 67%;margin-left: 5%;color:#5287bc;font-size:17px">{{this.flag ? "英文":"Chinese"}}</button>
         </div>
         <div class="l-right">
-          <el-form :model="formdata" label-width="auto" label-position="top" style="margin-left: 20%;margin-right:35% ">
+          <el-form :model="formdata" label-width="auto" label-position="top" style="margin-left: 20%;margin-right:25% ">
             <h1>Sign in</h1>
               <el-form-item label="用户名" style="margin-bottom: 0;margin-top: 6%">
                 <el-input v-model="formdata.username" placeholder="学生用户名为学号,管理员为工号" clearable></el-input>
@@ -47,12 +47,12 @@
   height:100%;
   .other{
     border-radius: 10px;
-    width:60%;
-    height:70%;
+    width:70%;
+    height:60%;
     display: flex;
     position: absolute;
     top:5%;
-    transform:translate(30% ,20%);
+    transform:translate(20% ,10%);
     .l-left{
       border-radius: 10px;
       width:40%;
@@ -105,7 +105,7 @@
       background: url("../assets/login/right.jpg");
       h1{
         color:#5287bc;
-        margin-top: 15%;
+        margin-top: 30%;
       }
       .btn{
         width:100%;
@@ -130,10 +130,14 @@ import {mapMutations} from "vuex"
 export default {
   data(){
     return {
-    formdata:{
-      username:"manager",
-      password:"123",
-      role:"管理员",
+      formdata: {
+        username: "manager",
+        password: "123",
+        role: "管理员",
+      },
+      designString: {
+        title: "Welcome Back!",
+        subtitle: "Student Achievement Manage System"
       }
     }
   },
@@ -168,6 +172,18 @@ export default {
           })
         }
       })
+    },
+    changeData(){
+      this.flag=!this.flag;
+      if(this.flag)
+      {
+        this.designString.title="欢迎回来！";
+        this.designString.subtitle="学生成果管理系统"
+      }
+      else{
+        this.designString.title="Welcome Back!";
+        this.designString.subtitle="Student Achievement Manage System"
+      }
     }
   }
 }
