@@ -67,11 +67,11 @@
 
       <div id="box-two" style="width: 100%;height:49%;margin-top:0.5% ;display: flex">
         <div class="three" >
-<!--           <line-chart></line-chart>-->
+           <line-chart></line-chart>
         </div>
 
         <div class="four">
-<!--            <pie-chart></pie-chart> &lt;!&ndash;-别用el-card了&ndash;&gt;-->
+            <pie-chart></pie-chart> <!---别用el-card了-->
         </div>
       </div>
     </div>
@@ -79,8 +79,8 @@
 </template>
 
 <script>
-// import pieChart from "./GraphsOfHome/PieChart.vue";
-// import lineChart from "./GraphsOfHome/NumberOfDailySystemUsers.vue"
+import pieChart from "./GraphsOfHome/PieChart.vue";
+import lineChart from "./GraphsOfHome/NumberOfDailySystemUsers.vue"
 import {
   ZoomIn,
   DocumentAdd,
@@ -91,8 +91,8 @@ import {
 export default {
   name: "Home",
   components:{
-    // pieChart,
-    // lineChart,
+    pieChart,
+    lineChart,
     UserFilled,Avatar,DocumentAdd,Management
   },
   data(){

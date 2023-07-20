@@ -6,16 +6,22 @@
         <h3 class="icon">SWUST</h3>
         <h1 class="title">{{this.designString.title}}</h1>
         <h4 class="subtitle">{{this.designString.subtitle}}</h4>
-<!--        <h5 class="subtitle1">  Management System</h5>-->
         <div class="thing1">
         </div>
         <div class="thing2">
         </div>
-        <button style="margin-top: 67%;margin-left: 5%;color:#5287bc;font-size:17px" @click="changeData()">{{this.designString.flag ? "英文":"Chinese"}}</button>
       </div>
       <div class="l-right">
-
-        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="auto" label-position="left" style="margin-left: 15%;margin-right: 25%" class="demo-ruleForm">
+        <el-switch
+            size="default"
+            style="margin-left: 92%;--el-switch-on-color: rgba(40,146,211,0.8); --el-switch-off-color: #cfd3cf"
+            v-model="designString.flag"
+            inline-prompt
+            active-text="英"
+            inactive-text="中"
+            @change="changeData()"
+        />
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="auto" label-position="left" style="margin-left: 15%;margin-right: 25%;margin-top: -5%" class="demo-ruleForm">
           <h1>Register</h1>
           <el-form-item label="用户名" style="margin-bottom: 20px;margin-top: 3%" prop="username">
             <el-input v-model="ruleForm.username" placeholder="请输入学号" clearable></el-input>
@@ -38,13 +44,13 @@
 
           <el-form-item>
             <div class="btn" style="margin-left: 70px;margin-right: 60px;margin-bottom: 0px">
-              <el-button type="primary" round @click="submitForm('ruleForm')" style="width: 110px">注册</el-button>
+              <el-button type="primary" round @click="submitForm('ruleForm')" style="width: 110px;background-color: #5287bc;color:white;">注册</el-button>
               <el-button @click="resetForm('ruleForm')" round style="width: 110px">重置</el-button>
             </div>
 
 
           </el-form-item>
-          <router-link :style='{"cursor":"pointer","padding":"0 70%","color":"#278bd5","display":"inline-block","width":"100%","lineHeight":"1","fontSize":"12px","textDecoration":"none"}' to="/login">已有账户登录</router-link>
+          <router-link :style='{"cursor":"pointer","padding":"0 70%","color":"#278bd5","display":"inline-block","width":"100%","lineHeight":"1","fontSize":"12px","textDecoration":"none"}' to="/login">已有账户登录,返回登录</router-link>
 
         </el-form>
       </div>
@@ -61,12 +67,12 @@
   height:100%;
   .other{
     border-radius: 10px;
-    width:70%;
-    height:60%;
+    width:60%;
+    height:70%;
     display: flex;
     position: absolute;
     top:5%;
-    transform:translate(20% ,10%);
+    transform:translate(30% ,20%);
     .l-left{
       border-radius: 10px;
       width:40%;

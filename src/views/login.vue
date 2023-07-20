@@ -1,3 +1,4 @@
+<!----login--->
 <template>
   <div class="login">
     <div class="other">
@@ -9,11 +10,19 @@
           </div>
           <div class="thing2">
           </div>
-          <button style="margin-top: 67%;margin-left: 5%;color:#5287bc;font-size:17px" @click="changeData()">{{this.designString.flag ? "英文":"Chinese"}}</button>
         </div>
         <div class="l-right">
+          <el-switch
+              size="default"
+              style="margin-left: 92%;--el-switch-on-color: rgba(40,146,211,0.8); --el-switch-off-color: #cfd3cf"
+              v-model="designString.flag"
+              inline-prompt
+              active-text="英"
+              inactive-text="中"
+              @change="changeData()"
+          />
           <el-form :model="formdata" label-width="auto" label-position="top" style="margin-left: 20%;margin-right:38% ">
-              <h1>Sign in</h1>
+               <h1>Sign in</h1>
               <el-form-item label="用户名" style="margin-bottom: 0;margin-top: 6%">
                 <el-input v-model="formdata.username" placeholder="学生用户名为学号,管理员为工号" clearable></el-input>
               </el-form-item>
@@ -38,6 +47,74 @@
     </div>
   </div>
 </template>
+
+<script>
+import { ElMessage } from 'element-plus'
+import api from "../api/index.js"
+import {mapMutations} from "vuex"
+export default {
+  data(){
+    return {
+      formdata: {
+        username: "manager",
+        password: "123",
+        role: "管理员",
+      },
+      designString: {
+        title: "Welcome Back!",
+        subtitle: "Student Achievement Manage System",
+        flag:true
+      }
+    }
+  },
+  methods:{
+    ...mapMutations(['confirmManager','confirmStudent']),
+    login(){
+       console.log("登录角色",this.formdata.role)
+      //如果为管理员 =>header部分显示 成果信息后台管理系统
+      api.post("/login",this.formdata).then(res=>{
+        console.log("后端返回的数据是 ",res.data);
+        if(res.data.flag===true){
+          if(this.formdata.role==="管理员"){  //调用函数 改变状态
+            console.log("点击")
+            this.confirmManager();
+          }
+          else{
+            this.confirmStudent();
+          }
+          ElMessage({
+            message: '登录成功,欢迎回来! '+this.formdata.username,
+            type: 'success',
+          })
+          this.$router.push("/home");
+        }
+        else{
+          ElMessage({
+            message:res.data.message,
+            type: 'error',
+          })
+        }
+      })
+    },
+    changeData(){
+      console.log("滑动的值",this.designString.flag)
+      if(this.designString.flag)
+      {
+        this.designString.title="欢迎回来!";
+        this.designString.subtitle="学生成果管理系统"
+      }
+      else{
+        this.designString.title="Welcome Back!";
+        this.designString.subtitle="Student Achievement Manage System"
+      }
+    },
+
+    toRegister(){
+      this.$router.push("/register");
+    }
+  }
+}
+</script>
 <style lang="less" scoped>
 .login{
   background: url("../assets/login/background.jpg") center no-repeat;
@@ -123,73 +200,3 @@
   padding: 0;
 }
 </style>
-<script>
-import { ElMessage } from 'element-plus'
-import api from "../api/index.js"
-import {mapMutations} from "vuex"
-export default {
-  data(){
-    return {
-      formdata: {
-        username: "manager",
-        password: "123",
-        role: "管理员",
-      },
-      designString: {
-        title: "Welcome Back!",
-        subtitle: "Student Achievement Manage System",
-        flag:true
-      }
-    }
-  },
-  methods:{
-    ...mapMutations(['confirmManager','confirmStudent']),
-    login(){
-
-       console.log("登录角色",this.formdata.role)
-      //如果为管理员 =>header部分显示 成果信息后台管理系统
-
-
-      api.post("/login",this.formdata).then(res=>{
-        console.log("后端返回的数据是 ",res.data);
-        if(res.data.flag===true){
-          if(this.formdata.role==="管理员"){  //调用函数 改变状态
-            console.log("点击")
-            this.confirmManager();
-          }
-          else{
-            this.confirmStudent();
-          }
-          ElMessage({
-            message: '登录成功,欢迎回来! '+this.formdata.username,
-            type: 'success',
-          })
-          this.$router.push("/home");
-        }
-        else{
-          ElMessage({
-            message:res.data.message,
-            type: 'error',
-          })
-        }
-      })
-    },
-    changeData(){
-      this.flag=!this.flag;
-      if(this.flag)
-      {
-        this.designString.title="欢迎回来！";
-        this.designString.subtitle="学生成果管理系统"
-      }
-      else{
-        this.designString.title="Welcome Back!";
-        this.designString.subtitle="Student Achievement Manage System"
-      }
-    },
-
-    toRegister(){
-      this.$router.push("/register");
-    }
-  }
-}
-</script>

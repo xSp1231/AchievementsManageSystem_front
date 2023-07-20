@@ -7,8 +7,6 @@ import store from "./store/index.js";
 import ElementPlus from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import 'element-plus/dist/index.css' // 引入element plus 样式文件
-
-
 const app = createApp(App)
 app.use(router)
 app.use(store)
