@@ -12,8 +12,8 @@
           <button style="margin-top: 67%;margin-left: 5%;color:#5287bc;font-size:17px" @click="changeData()">{{this.designString.flag ? "英文":"Chinese"}}</button>
         </div>
         <div class="l-right">
-          <el-form :model="formdata" label-width="auto" label-position="top" style="margin-left: 20%;margin-right:25% ">
-            <h1>Sign in</h1>
+          <el-form :model="formdata" label-width="auto" label-position="top" style="margin-left: 20%;margin-right:38% ">
+              <h1>Sign in</h1>
               <el-form-item label="用户名" style="margin-bottom: 0;margin-top: 6%">
                 <el-input v-model="formdata.username" placeholder="学生用户名为学号,管理员为工号" clearable></el-input>
               </el-form-item>
@@ -47,12 +47,12 @@
   height:100%;
   .other{
     border-radius: 10px;
-    width:70%;
-    height:60%;
+    width:60%;
+    height:70%;
     display: flex;
     position: absolute;
     top:5%;
-    transform:translate(20% ,10%);
+    transform:translate(30% ,20%);
     .l-left{
       border-radius: 10px;
       width:40%;
@@ -105,7 +105,7 @@
       background: url("../assets/login/right.jpg");
       h1{
         color:#5287bc;
-        margin-top: 30%;
+        margin-top: 15%;
       }
       .btn{
         width:100%;
@@ -187,6 +187,9 @@ export default {
       }
     },
 
+    toRegister(){
+      this.$router.push("/register");
+    }
   }
 }
 </script>

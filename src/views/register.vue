@@ -150,7 +150,7 @@ import {reactive,ref} from 'vue';
 // import type { FormInstance, FormRules } from 'element-plus'
 export default {
   function:true,
-  
+
   data() {
 
     var validatePass = (rule, value, callback) => {
