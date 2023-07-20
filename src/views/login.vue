@@ -30,6 +30,7 @@
             <el-form-item>
               <div class="btn">
                 <el-button round @click="login()" style="background-color: #5287bc;color:white;">登录</el-button>
+                <el-button round @click="toRegister()" style="background-color: #5287bc;color:white;">注册</el-button>
               </div>
             </el-form-item>
           </el-form>
@@ -46,11 +47,12 @@
   height:100%;
   .other{
     border-radius: 10px;
-    width:70%;
+    width:60%;
     height:70%;
     display: flex;
     position: absolute;
-    transform:translate(20% ,20%);
+    top:5%;
+    transform:translate(30% ,20%);
     .l-left{
       border-radius: 10px;
       width:40%;
@@ -68,19 +70,18 @@
       .subtitle{
         color:#f0eee5;
         text-align: center;
-        margin-top:3%;
       }
       .thing1{
         width:20px;
         height: 20px;
         background-color: #f0eee5;
-        margin-left:10%;
-        margin-top: 10%;
+        margin-left:100px;
+        margin-top: 100px;
         position: absolute;
-        .international-icon {
-          font-size: 20px;
-          cursor: pointer;
-          //vertical-align: -5px !important;
+        .new1{
+          color:#5287bc;
+          font-weight: bold;
+          text-align: center;
         }
       }
       .thing2{
@@ -88,10 +89,14 @@
         height: 20px;
         background-color: #f0eee5;
         position: absolute;
-        margin-left:28%;
-        margin-top: 15%;
+        margin-left:220px;
+        margin-top: 170px;
+        .new2{
+          color:#5287bc;
+          font-weight: bold;
+          text-align: center;
+        }
       }
-
     }
     .l-right{
       border-radius: 10px;
@@ -100,7 +105,7 @@
       background: url("../assets/login/right.jpg");
       h1{
         color:#5287bc;
-        margin-top: 30%;
+        margin-top: 15%;
       }
       .btn{
         width:100%;
@@ -129,16 +134,9 @@ export default {
       username:"manager",
       password:"123",
       role:"管理员",
-      },
-      designString: {
-          title:"Welcome Back!",
-          subtitle:"Student Achievement Management System",
-          flag:true
-      },
+      }
     }
-
   },
-
   methods:{
     ...mapMutations(['confirmManager','confirmStudent']),
     login(){
@@ -170,18 +168,6 @@ export default {
           })
         }
       })
-    },
-    changeData(){
-      this.flag=!this.flag;
-      if(this.flag)
-      {
-        this.designString.title="欢迎回来!";
-        this.designString.subtitle="学生成果管理系统";
-      }
-      else{
-        this.designString.title="Welcome Back!";
-        this.designString.subtitle="Student Achievement Management System";
-      }
     }
   }
 }
