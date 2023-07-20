@@ -3,17 +3,16 @@
     <div class="other">
         <div class="l-left">
           <h3 class="icon">SWUST</h3>
-          <h1 class="title">Welcome Back!</h1>
-          <h4 class="subtitle">Student Achievement Management System</h4>
-<!--          <div class="thing1">-->
-<!--            <p class="new1"></p>-->
-<!--          </div>-->
-<!--          <div class="thing2">-->
-<!--            <p class="new2"></p>-->
-<!--          </div>-->
+          <h1 class="title">{{this.designString.title}}</h1>
+          <h4 class="subtitle">{{this.designString.subtitle}}</h4>
+          <div class="thing1">
+          </div>
+          <div class="thing2">
+          </div>
+          <button @click="changeData()" style="margin-top: 67%;margin-left: 5%;color:#5287bc;font-size:17px">{{this.flag ? "英文":"Chinese"}}</button>
         </div>
         <div class="l-right">
-          <el-form :model="formdata" label-width="auto" label-position="top" style="margin-left: 20%;margin-right:38% ">
+          <el-form :model="formdata" label-width="auto" label-position="top" style="margin-left: 20%;margin-right:35% ">
             <h1>Sign in</h1>
               <el-form-item label="用户名" style="margin-bottom: 0;margin-top: 6%">
                 <el-input v-model="formdata.username" placeholder="学生用户名为学号,管理员为工号" clearable></el-input>
@@ -47,12 +46,11 @@
   height:100%;
   .other{
     border-radius: 10px;
-    width:60%;
+    width:70%;
     height:70%;
     display: flex;
     position: absolute;
-    top:5%;
-    transform:translate(30% ,20%);
+    transform:translate(20% ,20%);
     .l-left{
       border-radius: 10px;
       width:40%;
@@ -70,18 +68,19 @@
       .subtitle{
         color:#f0eee5;
         text-align: center;
+        margin-top:3%;
       }
       .thing1{
         width:20px;
         height: 20px;
         background-color: #f0eee5;
-        margin-left:100px;
-        margin-top: 100px;
+        margin-left:10%;
+        margin-top: 10%;
         position: absolute;
-        .new1{
-          color:#5287bc;
-          font-weight: bold;
-          text-align: center;
+        .international-icon {
+          font-size: 20px;
+          cursor: pointer;
+          //vertical-align: -5px !important;
         }
       }
       .thing2{
@@ -89,14 +88,10 @@
         height: 20px;
         background-color: #f0eee5;
         position: absolute;
-        margin-left:220px;
-        margin-top: 170px;
-        .new2{
-          color:#5287bc;
-          font-weight: bold;
-          text-align: center;
-        }
+        margin-left:28%;
+        margin-top: 15%;
       }
+
     }
     .l-right{
       border-radius: 10px;
@@ -105,7 +100,7 @@
       background: url("../assets/login/right.jpg");
       h1{
         color:#5287bc;
-        margin-top: 15%;
+        margin-top: 30%;
       }
       .btn{
         width:100%;
@@ -134,9 +129,16 @@ export default {
       username:"manager",
       password:"123",
       role:"管理员",
-      }
+      },
+      designString: {
+          title:"Welcome Back!",
+          subtitle:"Student Achievement Management System",
+          flag:true
+      },
     }
+
   },
+
   methods:{
     ...mapMutations(['confirmManager','confirmStudent']),
     login(){
@@ -168,6 +170,18 @@ export default {
           })
         }
       })
+    },
+    changeData(){
+      this.flag=!this.flag;
+      if(this.flag)
+      {
+        this.designString.title="欢迎回来!";
+        this.designString.subtitle="学生成果管理系统";
+      }
+      else{
+        this.designString.title="Welcome Back!";
+        this.designString.subtitle="Student Achievement Management System";
+      }
     }
   }
 }
