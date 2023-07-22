@@ -26,7 +26,7 @@
 
   </div>
   <div class="addInfo"  style="margin-top: 10px">
-    <el-button type="text" plain size="default" :icon="Plus" @click="dialogVisible = true;isadd = true;dialogTitle='新增用户信息' ">点击增加</el-button>
+    <el-button type="text" plain size="default" :icon="Plus" @click="dialogVisible = true; isadd = true;dialogTitle='新增用户信息' ">点击增加</el-button>
     <el-dialog
         draggable
         v-model="dialogVisible"
@@ -374,9 +374,6 @@ export default {
             })
       }
     }
-
-
-
   }
 
 }
@@ -385,115 +382,3 @@ export default {
 <style scoped>
 
 </style>
-<!--<div class="userManage" style="width: 100%;height: 100%;background-color: #ffffff;position: relative">
-  <div class="findarea" style="position: absolute;top:1%;left: 3%">
-    <el-input class="filter-item" v-model="queryInfo.type" placeholder="学生用户名"
-              style="width: 150px;margin-right: 8px"></el-input>
-    <el-input class="filter-item" v-model="queryInfo.name" placeholder="专业班级"
-              style="width: 150px;margin-right: 8px"></el-input>
-    <el-input class="filter-item" v-model="queryInfo.description" placeholder="学生姓名"
-              style="width: 150px;margin-right: 8px"></el-input>
-    <el-input class="filter-item" v-model="queryInfo.description" placeholder="账号状态"
-              style="width: 150px;margin-right: 8px"></el-input>
-    <el-button @click="getAll()" class="search">查询</el-button>
-    <el-button @click="reback()" class="renew">重置</el-button>
-    <el-button @click="deleteBatches()" type="danger" class="dels">批量删除</el-button>
-  </div>
-  <div class="addInfo"  style="position: absolute;top:6%;left: 3%">
-    <el-button type="text" plain size="default" :icon="Plus" @click="dialogVisible = true;isadd = true;dialogTitle='新增用户信息' ">点击增加</el-button>
-    <el-dialog
-        draggable
-        v-model="dialogVisible"
-        :title="dialogTitle"
-        width="30%"
-        :before-close="handleClose"
-    >
-      <el-form :model="formData" style="width: 80%"  ref="dataAddForm" :rules="rules">
-        <el-form-item label="用户名" label-width="150" prop="username" >
-          <el-input v-model="formData.username"   :disabled="!isadd"  placeholder="用户名" clearable autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="密码"  label-width="150" prop="password">
-          <el-input v-model="formData.password"  placeholder="密码" clearable autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="学生姓名" label-width="150" prop="name">
-          <el-input v-model="formData.name"   placeholder="姓名填写" clearable autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="角色" label-width="150" prop="role">
-          <el-input v-model="formData.role"  placeholder="学生(该字段不用填写)" disabled  clearable autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="专业班级" label-width="150" prop="major">
-          <el-input v-model="formData.major"  placeholder="xx专业xx班(如 计科2119班)" clearable autocomplete="off" />
-        </el-form-item>
-
-        <el-form-item label="帐号状态" label-width="150" >
-          <el-select v-model="formData.status"  placeholder="学生账号状态">
-            <el-option label="可用" value=1 />
-            <el-option label="禁用" value=0 />
-          </el-select>
-        </el-form-item>
-      </el-form>
-
-      <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="cancelOption()">取消</el-button>
-        <el-button v-if="isadd===true"  type="primary" @click="saveStudent()">
-          确定添加
-        </el-button>
-        <el-button v-if="isadd===false"  type="success" @click="editStudent()">
-          确定更改信息
-        </el-button>
-      </span>
-      </template>
-    </el-dialog>
-  </div>
-  <div class="table" style="width: 90%; position: absolute;top:11%;left: 3%;" >
-    <el-table :data="dataList" style="width: 100%" height="480"  size="large"  >
-      <el-table-column
-          type="selection"
-          width="70">
-      </el-table-column>
-      <el-table-column prop="username" label="用户名" width="150" sortable>
-      </el-table-column>
-      <el-table-column prop="password" label="密码" width="150" >
-      </el-table-column>
-      <el-table-column prop="name" label="学生姓名" width="150" sortable>
-      </el-table-column>
-      <el-table-column prop="major" label="专业班级" width="180">
-      </el-table-column>
-      <el-table-column prop="role" label="角色" width="140">
-      </el-table-column>
-
-      <el-table-column prop="status" label="帐号状态" width="140" >
-        <template #default="{ row }">
-          <el-tag :type="row.status === 1 ? 'success' : 'danger'">
-            {{ row.status === 1 ? '可用' : '禁用' }}
-          </el-tag>
-        </template>
-
-      </el-table-column>
-
-      <el-table-column label="操作">
-        <template #default="scope">
-          <el-button size="small" :icon="Edit" @click="handleUpdate(scope.row)"
-          >编辑</el-button
-          >
-          <el-button
-              size="small"
-              type="danger"
-              :icon="DeleteFilled"
-              @click="DeleteByUsername(scope.row)"
-          >删除</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
-  <div class="page" style="width: 40%;position: absolute;bottom:10%;left:10%" >
-    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                   :current-page="queryInfo.currentPage"
-                   :page-sizes="[5, 10, 15, 20]" :page-size="queryInfo.pageSize"
-                   layout="total, sizes, prev, pager, next, jumper"
-                   :total="queryInfo.total">
-    </el-pagination>
-  </div>
-</div>-->
