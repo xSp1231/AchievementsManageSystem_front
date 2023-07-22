@@ -2,7 +2,10 @@
 <template>
 
   <div class="userManage" style="width: 100%;height: 100%;background-color: #ffffff;position: relative;">
-  <div class="findarea" style="">
+
+
+  <div style="margin-left: 2%">
+    <div class="findarea" style="">
     <el-input class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
               style="width: 150px;margin-right: 8px"></el-input>
     <el-input class="filter-item" v-model="queryInfo.major" placeholder="专业班级"
@@ -19,13 +22,13 @@
                :show-file-list="false" accept="xlsx"
                :on-success="handleImportSuccess"
                :before-upload="beforeAvatarUpload"
-               style="display: inline-block;position: absolute;right: 2%"
+               style="display: inline-block;position: absolute;right: 1%"
     >
       <el-button type="success"  :icon="UploadFilled" plain  >Excel数据导入</el-button>
     </el-upload>
 
   </div>
-  <div class="addInfo"  style="margin-top: 10px">
+    <div class="addInfo"  style="margin-top: 10px">
     <el-button type="text" plain size="default" :icon="Plus" @click="dialogVisible = true; isadd = true;dialogTitle='新增用户信息' ">点击增加</el-button>
     <el-dialog
         draggable
@@ -72,7 +75,7 @@
       </template>
     </el-dialog>
   </div>
-  <div class="table" style="width: 90%;margin-top: 0px " >
+    <div class="table" style="width: 90%;margin-top: 0px " >
     <el-table :data="dataList" style="width: 100%" height="480"  size="large"  @selection-change="handleSelectionChange" >
       <el-table-column
           type="selection"
@@ -114,14 +117,18 @@
       </el-table-column>
     </el-table>
   </div>
-  <div class="page" style="width: 40%;margin-top:1%;margin-left: 30px" >
-    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                   :current-page="queryInfo.currentPage"
-                   :page-sizes="[5, 10, 15, 20,100]" :page-size="queryInfo.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                   :total="queryInfo.total">
-    </el-pagination>
+    <div class="page" style="width: 40%;margin-top:1%;margin-left: 30px" >
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                     :current-page="queryInfo.currentPage"
+                     :page-sizes="[5, 10, 15, 20,100]" :page-size="queryInfo.pageSize"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="queryInfo.total">
+      </el-pagination>
+    </div>
   </div>
+
+
+
   </div>
 
 </template>

@@ -2,7 +2,7 @@
 
 <template>
   <div class="notice" style="width: 100%;height: 100%;background-color:#f8f8f8;border-radius: 10px">
-    <h2 style="text-align: center;margin-bottom: 0.5%;color: #9f9fa1">公告管理(Powered By wangEditor)</h2>
+    <h2 style="text-align: center;margin-bottom: 0.5%;color: rgba(126,124,124,0.75)">公告管理(Powered By wangEditor)</h2>
 
     <div class="noticeTable" style="margin-left: 5%;margin-right: 5%;">
       <el-button type="text" plain :icon="Plus" @click="addNotice()">点击增加</el-button>
@@ -28,32 +28,34 @@
           </template>
         </el-table-column>
       </el-table>
-
-
     </div>
     <!---添加公告时的对话框-->
-    <el-dialog v-model="AddDialogVisible" style="width: 820px;height: 630px;" draggable  title="发布公告信息">
+    <el-dialog v-model="AddDialogVisible" style="width: 820px;height: 620px;" draggable  title="发布公告信息">
 
       <el-form
+          ref="ruleForms"
+          :rules="rules"
           :inline="true"
           :label-position="labelPosition"
           label-width="60px"
           :model="AddNoticeData"
         >
-        <el-form-item label="标题">
-          <el-input v-model="AddNoticeData.title"  />
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="AddNoticeData.title" placeholder="请为此次公告起一个标题" />
         </el-form-item>
-        <el-form-item label="时间" >
+        <el-form-item label="时间" prop="time" >
           <el-date-picker
+
               v-model="AddNoticeData.time"
               :value-format="'YYYY-MM-DD'"
               type="date"
-              placeholder="Pick a date"
+              placeholder="公告发布时间"
               clearable
           />
         </el-form-item>
-        <el-form-item label="状态">
+        <el-form-item label="状态" prop="status">
           <el-select
+              placeholder="选择公告的状态"
               v-model="AddNoticeData.status"
               clearable
           >
@@ -86,7 +88,7 @@
 
      </el-dialog>
     <!---查看公告时的对话框---->
-    <el-dialog v-model="ViewDialogVisible" style="width: 820px;height: 530px;" draggable  title="发布公告信息">
+    <el-dialog v-model="ViewDialogVisible" style="width: 820px;height: 530px;" draggable  title="公告内容">
 
       <div style="border: 1px solid #ccc;">
         <Toolbar
@@ -109,7 +111,6 @@
       </div>
 
     </el-dialog>
-
 
   </div>
 
@@ -324,20 +325,39 @@ const AddNoticeData = ref({ //增加公告时候的信息
   title: "",
   comment: ""
 })
-const ViewNoticeData = ref({
+ref({
   id:"",
   time: "",
   status: "",
   title: "",
   comment: ""
+});
+const rules = reactive({
+  title: [
+    { required: true, message: '标题不可为空', trigger: 'blur' },
+    { min: 1, max: 60, message: 'Length should be 1 to 60', trigger: 'blur' },
+  ],
+  status:[
+    {
+      required: true,
+      message: '请选择状态!',
+      trigger: 'change',
+    },
+  ],
+  time: [
+    {
+      type: 'date',
+      required: true,
+      message: '请选择时间',
+      trigger: 'change',
+    },
+  ],
 })
-
 
 //mounted函数 //超级重要
 onMounted(() => {
   getNotices();
 })
-
 const read = (raw) => {
   dialogVisible.value = true;
 }
@@ -354,8 +374,8 @@ const deleteNotice = (row) => {
       '确定删除这条数据吗?',
       'Warning',
       {
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'Cancel',
+        confirmButtonText: '是',
+        cancelButtonText: '否',
         type: 'warning',
       }
   )
@@ -383,9 +403,6 @@ const deleteNotice = (row) => {
       })
 }
 
-
-
-
 //点击查看公告  = 赋值
 const view=(row)=>{
   console.log("row is ",row.comment)
@@ -395,7 +412,7 @@ const view=(row)=>{
 
 }
 
-function closeViewDialog(){//关闭对话框
+const closeViewDialog=()=>{//关闭对话框
   ViewDialogVisible.value=false;
 }
 
@@ -412,39 +429,41 @@ const addNotice=()=>{
   AddValueHtml.value=""  //富文本内容清空
   AddDialogVisible.value=true //打开
 }
-function confirmAdd(){ //确定添加
+
+const ruleForms = ref(null)  //创建对象 将其帮到el-form模板的ref 上面
+const confirmAdd =  () => {
+  //通过ref的值验证
   AddNoticeData.value.comment=AddValueHtml.value; //赋值
-  //时间进行处理
-//   const selectedDate = new Date(AddNoticeData.value.time);
-// // 使用 Date 对象的 getFullYear()、getMonth() 和 getDate() 方法获取年月日信息
-//   const year = selectedDate.getFullYear();
-//   const month = selectedDate.getMonth() + 1;
-//   const day = selectedDate.getDate();
-//
-// // 将年月日信息拼接成短时间格式（例如：2023-07-18）
-//   AddNoticeData.value.time=`${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-  console.log("得到的内容结果是 ",AddNoticeData.value.comment)
-  console.log("AddNoticeData (时间) is ",AddNoticeData.value.time)
-   //发送请求
-  api.post("/addNotice",AddNoticeData.value).then(res=>{
-    console.log(res);
-    if(res.data.flag===true){
-      ElMessage({
-        type: 'success',
-        message: res.data.message,
-      })
-    }
-    else{
-      ElMessage({
-        type: 'error',
-        message: res.data.message,
-      })
-    }
-
-  }).finally(getNotices)
-
   AddDialogVisible.value=false //关闭
-}
+  ruleForms.value.validate((valid) => {
+    if (valid) {
+      console.log("通过");
+      api.post("/addNotice",AddNoticeData.value).then(res=>{
+        console.log(res);
+        if(res.data.flag===true){
+          ElMessage({
+            type: 'success',
+            message: res.data.message,
+          })
+        }
+        else{
+          ElMessage({
+            type: 'error',
+            message: res.data.message,
+          })
+        }
+
+      }).finally(getNotices)
+      //触发成功验证表单，调用接口；
+    } else {
+      console.log("未通过");
+      ElMessage({
+        type: 'info',
+        message: "未通过表单校验 请检查表单字段",
+      })
+    }
+  });
+};
 function closeAddDialog(){
   AddDialogVisible.value=false //关闭
 }

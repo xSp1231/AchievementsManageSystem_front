@@ -11,9 +11,9 @@
           <div class="notice" style="width: 100%;height: 92%;background-color:#f6f4f4;border-radius: 10px">
 
             <el-table :data="tableData" stripe height="96%" style="width: 100%" >
-              <el-table-column sortable prop="date" label="发布时间" width="180" />
+              <el-table-column sortable prop="time" label="发布时间" width="150" />
               <el-table-column prop="title" label="标题" width="180" />
-              <el-table-column sortable prop="status" label="状态" width="180" >
+              <el-table-column sortable prop="status" label="状态" width="100" >
                 <template #default="{ row }">
                   <el-tag :type="row.status === '紧急' ? 'danger' : 'info'">
                     {{ row.status}}
@@ -27,13 +27,25 @@
               </el-table-column>
             </el-table>
 
-            <el-dialog v-model="dialogVisible" style="width: 500px;height: 500px;" draggable title="详细信息">
-              <span>{{dialogData.date}}</span>
-              <span>{{dialogData.status}}</span>
-              <span>{{dialogData.title}}</span>
-              <span>{{dialogData.comment}}</span>
+            <el-dialog v-model="dialogVisible" style="width: 820px;height: 530px;" draggable title="公告内容详细信息">
+              <div style="border: 1px solid #ccc">
+                <Toolbar
+                    style="border-bottom: 1px solid #ccc"
+                    :editor="editorRef"
+                    :defaultConfig="toolbarConfig"
+                    :mode="mode"
+                />
+                <Editor
+                    style="height: 310px; overflow-y: hidden;"
+                    v-model="valueHtml"
+                    :defaultConfig="editorConfig"
+                    :mode="mode"
+                    @onCreated="handleCreated"
+                />
+              </div>
+
               <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">关闭</el-button>
+                <el-button @click="closeDialog()">关闭</el-button>
               </div>
             </el-dialog>
 
@@ -78,28 +90,35 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import pieChart from "./GraphsOfHome/PieChart.vue";
 import lineChart from "./GraphsOfHome/NumberOfDailySystemUsers.vue"
 import {
   ZoomIn,
-  DocumentAdd,
-  Management,
-  UserFilled,
-  Avatar,
 } from '@element-plus/icons-vue';
-export default {
-  name: "Home",
-  components:{
-    pieChart,
-    lineChart,
-    UserFilled,Avatar,DocumentAdd,Management
-  },
-  data(){
-    return{
-      ZoomIn,
-      UserFilled,
-      countData: [
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import '@wangeditor/editor/dist/css/style.css' // 引入 css
+import {onBeforeUnmount, onMounted, reactive, ref, shallowRef} from 'vue'
+import api from "../api/index.js";
+//-----------------------------------wangEditor实例
+const editorRef = shallowRef()
+// 内容 HTML
+const valueHtml = ref('')
+const toolbarConfig = {}
+const editorConfig = { placeholder: '请输入内容...',readOnly: true } //只读状态
+// 组件销毁时，也及时销毁编辑器
+onBeforeUnmount(() => {
+  const editor = editorRef.value
+  if (editor == null) return
+  editor.destroy()
+})
+
+const handleCreated = (editor) => {
+  editorRef.value = editor // 记录 editor 实例，重要！
+}
+//-------------------------------------------------------------------------
+     //对象 数组 创建时使用reactive 不需要使用value访问  而ref用于创建基本数据类型 需要.value访问
+     const countData=reactive([
         {
           name: "学生使用人数:",
           value: 1234,
@@ -118,99 +137,59 @@ export default {
           icon: "Management",
           color: "#67676c",
         },
-      ],
-      tableData:[
+      ])
+     const tableData=reactive([
         {
-          date: '2016-05-03',
+          time: '2016-05-03',
           title: 'Tom',
           status:"紧急",
-          content: 'No. 189, Grove St, Los Angeles',
+          comment: 'No. 189, Grove St, Los Angeles',
         },
         {
-          date: '2016-05-02',
+          time: '2016-05-02',
           title: 'Tom',
           status:"一般",
-          content: 'No. 189, Grove St, Los Angeles',
+          comment: 'No. 189, Grove St, Los Angeles',
         },
         {
-          date: '2016-05-04',
+          time: '2016-05-04',
           title: 'Tom',
           status:"一般",
-          content: 'No. 189, Grove St, Los Angeles',
+          comment: 'No. 189, Grove St, Los Angeles',
         },
-        {
-          date: '2016-05-01',
-          title: 'Tom',
-          status:"一般",
-          content: 'No. 189, Grove St, Los Angeles',
-        },
-        {
-          date: '2016-05-03',
-          title: 'Tom',
-          status:"紧急",
-          content: 'No. 189, Grove St, Los Angeles',
-        },
-        {
-          date: '2016-05-02',
-          title: 'Tom',
-          status:"紧急",
-          content: 'No. 189, Grove St, Los Angeles',
-        },
-        {
-          date: '2016-05-04',
-          title: 'Tom',
-          status:"紧急",
-          content: 'No. 189, Grove St, Los Angeles',
-        },
-        {
-          date: '2016-05-01',
-          title: 'Tom',
-          status:"一般",
-          content: 'No. 189, Grove St, Los Angeles',
-        },
-        {
-          date: '2016-05-03',
-          title: 'Tom',
-          status:"紧急",
-          content: 'No. 189, Grove St, Los Angeles',
-        },
-        {
-          date: '2016-05-02',
-          title: 'Tom',
-          status:"紧急",
-          content: 'No. 189, Grove St, Los Angeles',
-        },
-        {
-          date: '2016-05-04',
-          title: 'Tom',
-          status:"一般",
-          content: 'No. 189, Grove St, Los Angeles',
-        },
-        {
-          date: '2016-05-01',
-          title: 'Tom',
-          status:"一般",
-          content: 'No. 189, Grove St, Los Angeles',
-        },
-      ],
-      dialogVisible: false,
-      dialogData: {
-        "date":"",
+      ])
+     const dialogVisible =ref(false)
+     const dialogData=reactive({
+        "time":"",
         "title":"",
         "status":"",
         "comment":"" //内容
-      },
-    };
-    },
-  methods: {
-    read(row) {
-      console.log("点击")
-      this.dialogData = row;
-      this.dialogVisible = true;
-    },
-  },
+      })
 
+   onMounted(()=>{
+     getNotices()
+   })
+
+    const getNotices = () => {
+     api.get("/getNotices").then(res => {
+     console.log("home页面得到的公告数据 is ", res.data.data);
+     Object.assign(tableData, res.data.data);
+
+  })
 }
+
+
+    const read=(row)=>{
+       console.log("row is ",row)
+      // Object.assign(dialogData, row); //将row的值赋值给dialogData   不能直接使用dialogData=row
+        valueHtml.value=row.comment
+        dialogVisible.value = true;
+    }
+   const closeDialog=()=>{
+    valueHtml.value="";
+    dialogVisible.value=false
+}
+
 
 </script>
 
