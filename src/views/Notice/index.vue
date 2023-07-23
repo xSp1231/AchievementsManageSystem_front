@@ -30,7 +30,7 @@
       </el-table>
     </div>
     <!---添加公告时的对话框-->
-    <el-dialog v-model="AddDialogVisible" style="width: 820px;height: 620px;" draggable  title="发布公告信息">
+    <el-dialog v-model="AddDialogVisible" style="width: 800px;height: 610px;" draggable  title="发布公告信息">
 
       <el-form
           ref="ruleForms"

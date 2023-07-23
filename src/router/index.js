@@ -1,5 +1,5 @@
 import {createRouter, createWebHistory} from 'vue-router'
-
+import { useRoute, useRouter } from "vue-router"
 const routes = [
     {
         path: "/login",
