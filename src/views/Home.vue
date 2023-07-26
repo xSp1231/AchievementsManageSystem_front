@@ -58,7 +58,7 @@
 
           <div class="top" style="width: 100%;height: 30%;display: flex;">
           <el-card shadow="hover" style="width:30%;height: 70%;margin-top: 1%;margin-left: 1%;border-radius: 10px;background-color: rgba(222,227,227,0.4);" v-for="item in countData" :key="item.name">
-            <div class="item" style="display: flex;">
+            <div class="item" style="display: flex;margin-top: -2%">
               <div   style="width:40px;height: 40px; background:rgba(9,141,189,0.66);border-radius: 5px;margin-right: 5%"><el-icon style="font-size: 30px;color: #eae9e9;margin-left: 12%;margin-top: 10%"><component :is="item.icon"/></el-icon></div>
               <div class="detail">
                 <h4 class="describe" >{{ item.name }}</h4>

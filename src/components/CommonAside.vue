@@ -6,7 +6,7 @@
         class="el-menu-vertical-demo"
         style="height: 100vh;"
         background-color="rgb(52,73,94)"
-        active-text-color="white"
+        active-text-color="rgba(31,170,189,0.91)"
         text-color=" #e3e1e1"
     >
       <h2 class="menu-title" style="text-align: center; height: 5%;position: relative; top: 1%; color:  #e3e1e1;background-color: rgb(52,73,94)">
@@ -21,7 +21,7 @@
       </el-menu-item>
 
       <el-sub-menu  v-for="it in hasChildren" :key="it.name" :index="it.name"
-                   style="width:100%;">
+                   style="width:100%;background-color: rgba(31,170,189,0.91)">
         <template #title>
           <el-icon>
             <component :is="it.icon"/>

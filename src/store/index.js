@@ -17,15 +17,15 @@ const store = createStore({
             state.isCollapse =!state.isCollapse;//折叠；
             console.log("vuex!!====",state.isCollapse)
         },
-        confirmManager(state){ //确定为管理员 调用这个函数
-
-            state.isManager=true;
-            console.log("isManager值改变为",state.isManager)
-        },
-        confirmStudent(state){ //
-            state.isManager=false;
-            console.log("isManager值改变为",state.isManager)
-        },
+        // confirmManager(state){ //确定为管理员 调用这个函数
+        //
+        //     state.isManager=true;
+        //     console.log("isManager值改变为",state.isManager)
+        // },
+        // confirmStudent(state){ //
+        //     state.isManager=false;
+        //     console.log("isManager值改变为",state.isManager)
+        // },
         //更新面包屑
         updateBread(state, val) {//state为state里面的state对象，val为点击菜单时 获取到的数据
             console.log("点击导航栏传进来的val is", val);//val为点击页面菜单时的对象

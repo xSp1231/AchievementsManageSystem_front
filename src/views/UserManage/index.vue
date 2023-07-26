@@ -347,9 +347,6 @@ export default {
     },
     exportAll(){
        window.location.href = "http://localhost:8080/exportAll";
-      // api.get("/exportAll").then(res=>{
-      //   console.log("导出的数据 is ",res)
-      // })
     },
     exportPart() {
       console.log("选择的用户名为", this.usernames)

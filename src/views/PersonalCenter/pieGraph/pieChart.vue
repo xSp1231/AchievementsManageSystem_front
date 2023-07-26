@@ -17,7 +17,7 @@ const initChart=()=>{
     title: {
       text: '个人成果占比',
       textStyle:{
-        color:"grey",
+        color:"#9f9fa1",
         fontSize: 19, // 字体大小
         fontWeight: 'bold', // 字体粗细
       },
