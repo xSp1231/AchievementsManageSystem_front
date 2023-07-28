@@ -5,7 +5,7 @@
       <div id="box-one" style="width: 100%;height:49%;display: flex">
         <div class="one">
           <div class="intro" style="width:100%;height: 8%;background-color: #eeecec;border-radius: 10px">
-            <h3 style="text-align: center;color: grey;">公告栏</h3>
+            <h3 style="text-align: center;color: grey;">公告栏<el-button @click="info()">info</el-button> </h3>
           </div>
 
           <div class="notice" style="width: 100%;height: 92%;background-color:#f6f4f4;border-radius: 10px">
@@ -170,6 +170,12 @@ const handleCreated = (editor) => {
      getNotices()
    })
 
+    const info=()=>{
+       api.get("/info").then(res=>{
+         console.log("res is ",res);
+       })
+    }
+
     const getNotices = () => {
      api.get("/getNotices").then(res => {
      console.log("home页面得到的公告数据 is ", res.data.data);
@@ -194,8 +200,9 @@ const handleCreated = (editor) => {
 </script>
 
 <style lang="less"  scoped>
+
 .one{
-  width: 50%;
+  width: 49%;
   height: 100%;
   border-radius: 15px;
   background-color: #f6f4f4;
@@ -204,24 +211,27 @@ const handleCreated = (editor) => {
 .two{
   //display: flex;
   //flex-wrap: wrap;
-  width: 50%;
+  width: 49%;
   height: 100%;
   border-radius: 15px;
   background-color: #f6f4f4;
   margin-left: 0.5%;
 }
 .three{
-   width: 50%;
+   width: 49%;
    height: 100%;
    border-radius: 15px;
    background-color: #f6f4f4;
    margin-left:0.5%;
  }
 .four{
-    width: 50%;
+    width: 49%;
     height: 100%;
     border-radius: 15px;
     background-color: #f6f4f4;
     margin-left: 0.5%;
   }
+.home{
+  overflow-x: hidden;
+}
 </style>

@@ -12,9 +12,16 @@ export default {
     this.draw()
   },
   methods: {
+
     draw() {
       this.myChart = echarts.init(this.$refs.line);
       this.myChart.setOption({
+        grid: {
+          left: 60, // 将图表向右移动50像素
+          right: 70,
+          bottom: 30,
+          top:80
+        },
         title: {
           text: '系统近七天使用人数',
           top:15,
@@ -31,7 +38,7 @@ export default {
         legend: {},
         toolbox: {
           top:15,
-          right:30,
+          right:50,
           show: true,
           feature: {
             magicType: { type: ['line', 'bar'] },
@@ -67,6 +74,10 @@ export default {
           },
         ]
       });
+      //  随外层div的大小变化自适应
+
+
+
     },
   }
 };

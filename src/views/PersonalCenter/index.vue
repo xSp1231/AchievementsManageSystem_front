@@ -178,9 +178,6 @@ const updateInfo=()=>{
     }
   });
 
-
-
-
 }
 const resetFormOne=()=>{
   getUserInfo()
@@ -295,15 +292,10 @@ onMounted(()=>{
   getUserInfo();
 })
 const getUserInfo=()=>{
-  const token = localStorage.getItem('jwtToken');
-  api.get("/getUserInfo",{
-     headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }).then(res=>{
-    console.log("获取到的信息是 ",res.data.data)
-    Object.assign(userInfo,res.data.data)
-  })
+    api.get("/getUserInfo").then(res=>{
+      console.log("获取到的用户信息",res.data.data );
+      Object.assign(userInfo,res.data.data)
+    })
 }
 const attention= () => {
   ElNotification({

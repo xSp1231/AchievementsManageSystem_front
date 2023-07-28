@@ -6,7 +6,7 @@
 
     <div style="margin-left: 2%">
       <div class="findarea" style="">
-        <el-input class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
+        <el-input v-if="store.state.role==='admin'" class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
                   style="width: 150px;margin-right: 8px"></el-input>
         <el-input class="filter-item" v-model="queryInfo.title" placeholder="论文标题"
                   style="width: 150px;margin-right: 8px"></el-input>
@@ -16,10 +16,11 @@
         <el-button @click="reback()" :icon="Refresh" class="renew">重置</el-button>
         <el-button @click="deleteBatch()" :icon="DeleteFilled" type="danger" class="dels">批量删除</el-button>
 
-        <el-button type="primary" plain :icon="Download" style="margin-left: 10px" @click="exportAll()">导出全部科技论文成果数据
+        <el-button
+            v-if="store.state.role==='admin'" type="primary" plain :icon="Download" style="margin-left: 10px" @click="exportAll()">导出全部科技论文成果数据
         </el-button>
-        <el-button type="" plain :icon="Download" @click="exportPart()">批量导出</el-button>
-        <el-upload action="http://localhost:8080/ScientificPaper/importData"
+        <el-button v-if="store.state.role==='admin'" type="" plain :icon="Download" @click="exportPart()">批量导出</el-button>
+        <el-upload v-if="store.state.role==='admin'" action="http://localhost:8080/ScientificPaper/importData"
                    :show-file-list="false" accept="xlsx"
                    :on-success="handleImportSuccess"
                    :before-upload="beforeUpload"
@@ -170,7 +171,8 @@
 import {DeleteFilled, Edit, Plus, Search, UploadFilled, Refresh, Download} from '@element-plus/icons-vue'
 import api from "../../api/index.js"
 import {ElMessage, ElMessageBox} from 'element-plus'
-import {onMounted, reactive, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
+import store from "../../store/index.js";
 const dialogTitle = ref("test")
 const isAdd = ref(true)//true 添加  false 关闭
 const dataList = ref([
@@ -353,7 +355,14 @@ const handleCurrentChange = (newpage) => {//显示跳转到多少页
   queryInfo.currentPage = newpage
   getAll()
 }
+
+const username=computed(()=>store.state.username)
 const getAll = () => { //分页+条件查询
+  console.log("科技论文表role is ",store.state.role)
+  if(store.state.role==="student"){//如果为学生  那么就发请求 获得他的username   //vuex
+     console.log("科技论文表的username " ,username.value)
+    queryInfo.username=username.value
+  }
   let param;
   param = "?username=" + queryInfo.username
   param += "&title=" + queryInfo.title
@@ -367,7 +376,7 @@ const getAll = () => { //分页+条件查询
     queryInfo.pageSize = res.data.data.size;
     queryInfo.total = res.data.data.total;
   })
-}
+} //admin getall  student getByUsername  可以直接在getAll里面加入条件
 //点击el-diaglog右上角的x按钮(叉叉)
 const handleClose = (done) => {
   ElMessageBox.confirm('确定退出相应操作?')
@@ -477,6 +486,15 @@ const handleSelectionChange=(val)=>{
 }
 //批量删除
 const deleteBatch=()=>{
+  if(ids.length===0){
+    ElMessage({
+      type: 'warning',
+      message: "青选择要删除的数据",
+    })
+    return;
+
+  }
+
   ElMessageBox.confirm(
       '确定删除选中的成果信息吗?',
       'Warning',

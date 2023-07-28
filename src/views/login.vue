@@ -54,7 +54,8 @@ import {ElMessage} from 'element-plus'
 import api from "../api/index.js"
 import {reactive} from "vue";
 import {useRouter} from "vue-router";
-
+import {useStore} from "vuex";
+const store=useStore();
 const router = useRouter()
 const formdata = reactive({
   username: "manager",
@@ -71,8 +72,27 @@ const login = () => {
   console.log("登录角色", formdata.role)
   //如果为管理员 =>header部分显示 成果信息后台管理系统
   api.post("/login", formdata).then(res => {
-    console.log("后端返回的数据是 ", res.data);
+    console.log("登陆之后后端返回的数据是 ", res.data);
     if (res.data.flag === true) {
+      store.commit("inittabList")//登录成功之后 初始化面包屑 和tag标签
+      //存入token
+      let tokenValue=res.data.data.tokenValue;
+      let tokenName=res.data.data.tokenName;
+
+
+      //存入角色
+      if(tokenValue &&tokenName){
+        let role=res.data.message;
+        console.log("tokenValue is ",tokenValue)
+        console.log("tokenName is ",tokenName)
+
+        console.log("role is ",role)
+        sessionStorage.setItem('saToken', tokenValue); //会话存储里面
+        sessionStorage.setItem('tokenName', tokenName);
+        sessionStorage.setItem('role', role);
+
+      }
+
       if (formdata.role === "管理员") {  //调用函数 改变状态
         console.log("点击")
       } else {

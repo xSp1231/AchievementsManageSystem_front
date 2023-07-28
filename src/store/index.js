@@ -1,4 +1,5 @@
 import {createStore} from 'vuex'
+import api from "../api/index.js";
 const store = createStore({
     state:{
       isCollapse:false, //控制侧边栏折叠
@@ -11,8 +12,35 @@ const store = createStore({
                 icon: "HomeFilled",
             },
         ],
+      role:"",
+      username:"" //学生的用户名
     },
     mutations: {
+        getUsername(state){
+            api.get("/getUserInfo").then(res=>{
+                console.log("获取到的用户信息",res.data.data.username );
+                if(res.data.flag===true){
+                    state.username=res.data.data.username;
+                    console.log("vuex得到的用户名是 ",state.username)
+                }
+            })
+
+        },
+
+        getRole(state){
+            state.role=sessionStorage.getItem("role");
+            console.log("vuex得到的用户角色:",state.role)
+        },
+        inittabList(state){
+            state.tabsList=[//面包屑数据  //点击菜单时 向面包屑里面添加新数据；
+                {
+                    path: "/home",
+                    name: "home",
+                    label: "主页",
+                    icon: "HomeFilled",
+                },
+            ]
+        },
         collapseMenu(state) {
             state.isCollapse =!state.isCollapse;//折叠；
             console.log("vuex!!====",state.isCollapse)
