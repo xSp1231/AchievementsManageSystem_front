@@ -6,20 +6,27 @@
 
     <div style="margin-left: 2%">
       <div class="findarea" style="">
-        <el-input v-if="store.state.role==='admin'" class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
+        <el-input clearable v-if="store.state.role==='admin'" class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
                   style="width: 150px;margin-right: 8px"></el-input>
-        <el-input class="filter-item" v-model="queryInfo.title" placeholder="论文标题"
+        <el-input clearable class="filter-item" v-model="queryInfo.title" placeholder="论文标题"
                   style="width: 150px;margin-right: 8px"></el-input>
-        <el-input class="filter-item" v-model="queryInfo.status" placeholder="填报结果状态"
-                  style="width: 150px;margin-right: 8px"></el-input>
+        <el-select clearable v-model="queryInfo.status" placeholder="成果填报状态" style="margin-right:0.3%;width: 130px">
+          <el-option label="审核" value="审核" />
+          <el-option label="接收" value="接收" />
+          <el-option label="拒绝" value="拒绝" />
+        </el-select>
         <el-button @click="getAll()" :icon="Search" class="search">查询</el-button>
-        <el-button @click="reback()" :icon="Refresh" class="renew">重置</el-button>
+
+          <el-button @click="reback()" :icon="Refresh" class="renew">重置</el-button>
+
         <el-button @click="deleteBatch()" :icon="DeleteFilled" type="danger" class="dels">批量删除</el-button>
 
         <el-button
-            v-if="store.state.role==='admin'" type="primary" plain :icon="Download" style="margin-left: 10px" @click="exportAll()">导出全部科技论文成果数据
+            v-if="store.state.role==='admin'" type="primary" plain :icon="Download" style="margin-left: 10px"
+            @click="exportAll()">导出全部科技论文成果数据
         </el-button>
-        <el-button v-if="store.state.role==='admin'" type="" plain :icon="Download" @click="exportPart()">批量导出</el-button>
+        <el-button v-if="store.state.role==='admin'" type="" plain :icon="Download" @click="exportPart()">批量导出
+        </el-button>
         <el-upload v-if="store.state.role==='admin'" action="http://localhost:8080/ScientificPaper/importData"
                    :show-file-list="false" accept="xlsx"
                    :on-success="handleImportSuccess"
@@ -43,7 +50,7 @@
         >
           <el-form :model="formData" style="width: 80%" ref="rulesForm" :rules="rules" :inline="true">
             <el-form-item label="用户名" label-width="150" prop="username">
-              <el-input v-model="formData.username" placeholder="用户名" clearable autocomplete="off"/>
+              <el-input  :disabled="isStudent||isAdd===false"   v-model="formData.username" placeholder="用户名" clearable autocomplete="off"/>
             </el-form-item>
             <el-form-item label="标题" label-width="150" prop="title">
               <el-input v-model="formData.title" placeholder="请填写标题" clearable autocomplete="off"/>
@@ -82,17 +89,16 @@
               <el-input v-model="formData.accessionNumber" placeholder="" clearable autocomplete="off"/>
             </el-form-item>
             <el-form-item label="填报结果状态" label-width="150" prop="status">
-              <el-select v-model="formData.status" placeholder="学生账号状态">
+              <el-select :disabled="isStudent"  v-model="formData.status" placeholder="成果填报状态">
                 <el-option label="审核" value="审核"/>
                 <el-option label="接收" value="接收"/>
                 <el-option label="拒绝" value="拒绝"/>
 
               </el-select>
-
             </el-form-item>
           </el-form>
 
-          <template #footer >
+          <template #footer>
       <span class="dialog-footer" style="margin-right: 30%">
         <el-button @click="cancelOption()">取消</el-button>
         <el-button v-if="isAdd===true" type="primary" @click="confirmAdd()">
@@ -147,7 +153,7 @@
           <el-table-column fixed="right" label="Operations" width="120">
             <template #default="scope">
               <el-button link type="primary" size="large" @click="handleUpdate(scope.row)">编辑</el-button>
-              <el-button link type="danger" size="large"  @click="deleteOne(scope.row)"  >删除</el-button>
+              <el-button link type="danger" size="large" @click="deleteOne(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -173,100 +179,10 @@ import api from "../../api/index.js"
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {computed, onMounted, reactive, ref} from "vue";
 import store from "../../store/index.js";
+
 const dialogTitle = ref("test")
 const isAdd = ref(true)//true 添加  false 关闭
-const dataList = ref([
-  {
-    "id": 1,
-    "username": "5120214558",
-    "title": "测试理论",
-    "jcName": "sci1区",
-    "publicDate": "2023-07-24",
-    "issueNumber": "666期",
-    "volumeNumber": "666卷",
-    "pageRange": "12-19",
-    "place": 1,
-    "allAuthors": "徐书鹏",
-    "searchType": "关键字检索",
-    "accessionNumber": "1008610086",
-    "status": "审核"
-  },
-  {
-    "id": 1,
-    "username": "xsp",
-    "title": "测试理论",
-    "jcName": "sci1区",
-    "publicDate": "2023-07-24",
-    "issueNumber": "666期",
-    "volumeNumber": "666卷",
-    "pageRange": "12-19",
-    "place": 1,
-    "allAuthors": "徐书鹏",
-    "searchType": "关键字检索",
-    "accessionNumber": "10086",
-    "status": "审核"
-  },
-  {
-    "id": 1,
-    "username": "xsp",
-    "title": "测试理论",
-    "jcName": "sci1区",
-    "publicDate": "2023-07-24",
-    "issueNumber": "666期",
-    "volumeNumber": "666卷",
-    "pageRange": "12-19",
-    "place": 1,
-    "allAuthors": "徐书鹏",
-    "searchType": "关键字检索",
-    "accessionNumber": "10086",
-    "status": "审核"
-  },
-  {
-    "id": 1,
-    "username": "xsp",
-    "title": "测试理论",
-    "jcName": "sci1区",
-    "publicDate": "2023-07-24",
-    "issueNumber": "666期",
-    "volumeNumber": "666卷",
-    "pageRange": "12-19",
-    "place": 1,
-    "allAuthors": "徐书鹏",
-    "searchType": "关键字检索",
-    "accessionNumber": "10086",
-    "status": "审核"
-  },
-  {
-    "id": 1,
-    "username": "xsp",
-    "title": "测试理论",
-    "jcName": "sci1区",
-    "publicDate": "2023-07-24",
-    "issueNumber": "666期",
-    "volumeNumber": "666卷",
-    "pageRange": "12-19",
-    "place": 1,
-    "allAuthors": "徐书鹏",
-    "searchType": "关键字检索",
-    "accessionNumber": "10086",
-    "status": "审核"
-  },
-  {
-    "id": 1,
-    "username": "xsp",
-    "title": "测试理论",
-    "jcName": "sci1区",
-    "publicDate": "2023-07-24",
-    "issueNumber": "666期",
-    "volumeNumber": "666卷",
-    "pageRange": "12-19",
-    "place": 1,
-    "allAuthors": "徐书鹏",
-    "searchType": "关键字检索",
-    "accessionNumber": "10086",
-    "status": "审核"
-  },
-])//当前页要展示的列表数据
+const dataList = ref([])//当前页要展示的列表数据
 const dialogVisible = ref(false)
 const formData = reactive({ //对话框里面要填写的表单数据
   "id": 0,
@@ -317,9 +233,10 @@ let ids = [];  //let定义变量 const定义常量
 onMounted(() => {
   getAll()
 })
+
 const resetFormData = () => {
   formData.id = 0;
-  formData.username="";
+  formData.username = "";
   formData.title = "";
   formData.jcName = "";
   formData.publicDate = "";
@@ -334,15 +251,24 @@ const resetFormData = () => {
 }
 //重置函数
 const reback = () => {
-  api.get('/ScientificPaper/1/5').then((res) => {
-    dataList.value = res.data.data.records;
+  if (sessionStorage.getItem('role') === 'student') {
     queryInfo.currentPage = 1;
     queryInfo.pageSize = 5;
-    queryInfo.total = res.data.data.total;
-    queryInfo.username = ""
-    queryInfo.title = ""
-    queryInfo.status = ""
-  })
+    //重置
+    queryInfo.status=""
+    queryInfo.title=""
+    getAll();
+  } else { //admin
+    api.get('/ScientificPaper/1/5').then((res) => {
+      dataList.value = res.data.data.records;
+      queryInfo.currentPage = 1;
+      queryInfo.pageSize = 5;
+      queryInfo.total = res.data.data.total;
+      queryInfo.username = ""
+      queryInfo.title = ""
+      queryInfo.status = ""
+    })
+  }
 }
 const handleSizeChange = (newsize) => {
   console.log(`每页 ${newsize} 条`);
@@ -354,15 +280,23 @@ const handleCurrentChange = (newpage) => {//显示跳转到多少页
   console.log(`当前跳转到的页码为: ${newpage}`);
   queryInfo.currentPage = newpage
   getAll()
-}
 
-const username=computed(()=>store.state.username)
+}
+const username = ref("");
+
 const getAll = () => { //分页+条件查询
-  console.log("科技论文表role is ",store.state.role)
-  if(store.state.role==="student"){//如果为学生  那么就发请求 获得他的username   //vuex
-     console.log("科技论文表的username " ,username.value)
-    queryInfo.username=username.value
+  console.log("科技论文表role is ", sessionStorage.getItem("role"))
+  if (sessionStorage.getItem('role') === "student") {//如果为学生  那么就发请求 获得他的username 之后再发送请求   //vuex
+    api.get("/getUserInfo").then(res => {
+      console.log("获取到的用户姓名", res.data.data.username);
+      username.value = res.data.data.username
+      queryInfo.username = username.value
+    }).finally(get)
+  } else { //管理员
+    get();
   }
+}
+const get = () => {
   let param;
   param = "?username=" + queryInfo.username
   param += "&title=" + queryInfo.title
@@ -376,7 +310,10 @@ const getAll = () => { //分页+条件查询
     queryInfo.pageSize = res.data.data.size;
     queryInfo.total = res.data.data.total;
   })
-} //admin getall  student getByUsername  可以直接在getAll里面加入条件
+}
+
+
+//admin getall  student getByUsername  可以直接在getAll里面加入条件
 //点击el-diaglog右上角的x按钮(叉叉)
 const handleClose = (done) => {
   ElMessageBox.confirm('确定退出相应操作?')
@@ -403,32 +340,37 @@ const handleClose = (done) => {
 const cancelOption = () => {
   dialogVisible.value = false;
 }
+const isStudent=ref(false)
 //点击进行填报
 const addInfo = () => {
   resetFormData()//清空表单数据
+  if(sessionStorage.getItem("role")==="student"){ //如果是学生  那么就让dialog对话框的用户名  填报状态不能够编辑
+    isStudent.value=true
+  }
+  //之后姓名赋值  让其不能编辑
+  formData.username=store.state.username  //获取登陆者用户名  如果是学生=>得到username  否则 空字符串
   console.log("刷新之后formdata is ", formData)
-  dialogVisible.value=true;
-  isAdd.value=true;
-  dialogTitle.value="科技论文信息填报-请事先查看公告里面的填报要求"
+  dialogVisible.value = true;
+  isAdd.value = true;
+  dialogTitle.value = "科技论文信息填报-请事先查看公告里面的填报要求"
 }
 //增加成果 + 表单校验
 const confirmAdd = () => {
-  formData.place=parseInt(formData.place) //string 转换为int
-  console.log("上传的formData is ",formData)
+  formData.place = parseInt(formData.place) //string 转换为int
+  console.log("上传的formData is ", formData)
   // 表单校验 上传
   rulesForm.value.validate((valid) => {
     if (valid) {
       console.log("通过");
-      api.post("/ScientificPaper/add/",formData).then(res=>{
+      api.post("/ScientificPaper/add/", formData).then(res => {
         console.log(res);
-        if(res.data.flag===true){
+        if (res.data.flag === true) {
           ElMessage({
             type: 'success',
             message: res.data.message,
           })
-        dialogVisible.value=false;
-        }
-        else{
+          dialogVisible.value = false;
+        } else {
           ElMessage({
             type: 'error',
             message: res.data.message,
@@ -459,7 +401,7 @@ const deleteOne = (row) => {
       .then(() => {
         console.log("要删除的成果id是", row.id);
         api.post("/ScientificPaper/deleteOne/" + row.id).then(res => {
-          console.log("删除单个返回的信息为 ",res);
+          console.log("删除单个返回的信息为 ", res);
           if (res.data.flag === true) { //成功删除
             ElMessage({
               type: 'success',
@@ -481,12 +423,12 @@ const deleteOne = (row) => {
       })
 }
 //批量选择
-const handleSelectionChange=(val)=>{
-    ids = val.map(row => row.id);
+const handleSelectionChange = (val) => {
+  ids = val.map(row => row.id);
 }
 //批量删除
-const deleteBatch=()=>{
-  if(ids.length===0){
+const deleteBatch = () => {
+  if (ids.length === 0) {
     ElMessage({
       type: 'warning',
       message: "青选择要删除的数据",
@@ -505,9 +447,9 @@ const deleteBatch=()=>{
       }
   )
       .then(() => {
-        console.log("要删除的成果id是",ids);
-        api.post("/ScientificPaper/deleteBatch" ,ids).then(res => {
-          console.log("删除单个返回的信息为 ",res);
+        console.log("要删除的成果id是", ids);
+        api.post("/ScientificPaper/deleteBatch", ids).then(res => {
+          console.log("删除单个返回的信息为 ", res);
           if (res.data.flag === true) { //成功删除
             ElMessage({
               type: 'success',
@@ -527,20 +469,20 @@ const deleteBatch=()=>{
           message: '取消批量删除',
         })
       })
-
-
-
-
 }
 //点击编辑
 const handleUpdate = (row) => {
+  if(sessionStorage.getItem("role")==="student"){ //如果是学生  那么就让dialog对话框的用户名  填报状态不能够编辑
+    isStudent.value=true
+  }
+
   dialogTitle.value = "更改成果信息";
   dialogVisible.value = true; //弹出窗口
   isAdd.value = false//开始编辑 改变表格按键
   api.get("/ScientificPaper/getScientificPaperById/" + row.id).then(res => {
     console.log("通过科技论文id搜索到的信息是", res.data.data);
     if (res.data.flag === true) {
-      Object.assign(formData,res.data.data)
+      Object.assign(formData, res.data.data)
     } else {
       ElMessage({
         type: 'warning',
@@ -550,15 +492,15 @@ const handleUpdate = (row) => {
   }).finally(getAll)
 }
 //点击
-const confirmUpdate=()=>{
+const confirmUpdate = () => {
   //用户修改 变为审核
   //管理员自己定义
   //formData.status="审核"  //编辑后 状态变为 审核
   rulesForm.value.validate((valid) => {
-    if(valid){
-      api.post("/ScientificPaper/update" , formData).then(res => {
-        console.log("传递过来的formdata is ",formData)
-        console.log("编辑之后的 res is ",res);
+    if (valid) {
+      api.post("/ScientificPaper/update", formData).then(res => {
+        console.log("传递过来的formdata is ", formData)
+        console.log("编辑之后的 res is ", res);
         if (res.data.flag === true) {
           ElMessage({
             type: 'success',
@@ -571,8 +513,7 @@ const confirmUpdate=()=>{
           })
         }
       }).finally(getAll)
-    }
-    else{
+    } else {
       ElMessage({
         type: 'warning',
         message: '请检查所填表单字段是否有效',
@@ -583,32 +524,30 @@ const confirmUpdate=()=>{
   })
 
 
-
   dialogVisible.value = false; //关闭窗口
 }
 //导出全部
-const exportAll=()=>{
+const exportAll = () => {
   window.location.href = "http://localhost:8080/ScientificPaper/exportAll";
 }
 //批量导出
-const exportPart=()=>{
+const exportPart = () => {
   console.log("选择的用户名为", ids)
   if (ids.length === 0) {
     ElMessage({
       type: 'warning',
-      message:"请勾选想要导出的用户!",
+      message: "请勾选想要导出的用户!",
     })
-  }
-  else {
+  } else {
     api.post('/ScientificPaper/exportByIds', ids, {
       responseType: 'blob' // 指定响应数据的类型为 Blob 对象
     }).then(response => {
       // 获取响应头中的文件名
       const header = response.headers['content-disposition']
-      console.log("响应的文件名",header)
+      console.log("响应的文件名", header)
       const filename = header ? header.split('=')[1] : 'ScientificPaperInfo.xlsx'
       // 创建一个新的 Blob 对象，将响应体的数据保存到其中
-      const blob = new Blob([response.data], { type: 'application/vnd.ms-excel' })
+      const blob = new Blob([response.data], {type: 'application/vnd.ms-excel'})
       // 创建一个 URL 对象，用于生成文件的下载链接
       const url = window.URL.createObjectURL(blob)
       // 创建一个 <a> 元素，设置下载链接和文件名，模拟用户点击下载链接
@@ -626,28 +565,28 @@ const exportPart=()=>{
   }
 }
 //数据导入之前的判定
-const beforeUpload=(rawFile)=>{
+const beforeUpload = (rawFile) => {
   if (rawFile.type !== 'application/vnd.ms-excel' && rawFile.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
     ElMessage({
       type: 'warning',
-      message:"只允许excel文件导入!",
+      message: "只允许excel文件导入!",
     })
     return false
   }
   if (rawFile.size / 1024 / 1024 > 10) {
     ElMessage({
       type: 'warning',
-      message:"文件大小不能超过10MB!",
+      message: "文件大小不能超过10MB!",
     })
     return false
   }
   return true
 }
 //导入成功之后的效果
-const handleImportSuccess=()=>{
+const handleImportSuccess = () => {
   ElMessage({
     type: 'success',
-    message:"数据导入成功,重复信息将不会导入",
+    message: "数据导入成功,重复信息将不会导入",
   })
   getAll()
 }

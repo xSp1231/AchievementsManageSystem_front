@@ -78,8 +78,6 @@ const login = () => {
       //存入token
       let tokenValue=res.data.data.tokenValue;
       let tokenName=res.data.data.tokenName;
-
-
       //存入角色
       if(tokenValue &&tokenName){
         let role=res.data.message;

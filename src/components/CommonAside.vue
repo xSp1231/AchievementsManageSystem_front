@@ -64,8 +64,10 @@ const flag =ref(true)
 const menudata=reactive([])
 
 onMounted(()=>{
+  console.log("aside aside aside")
   store.commit("getRole")     //获得登陆者角色
-  findUsername()
+  store.commit("getUsername")
+  //findUsername()
   console.log("当前的角色是 ",role.value)
   changeMenu()
 })

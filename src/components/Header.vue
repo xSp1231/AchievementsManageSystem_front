@@ -85,6 +85,9 @@ const stretch = () => {
 }
 const handleCommand = (command) => {//////注意dropdown里面时间的触发
   if (command === 'logOff') {
+    sessionStorage.removeItem('saToken'); //会话存储里面
+    sessionStorage.removeItem('tokenName');
+    sessionStorage.removeItem('role');
     ElMessage({
       showClose: true,
       message: '退出登录',

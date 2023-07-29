@@ -269,6 +269,9 @@ const deleteUser=()=>{
                   type: 'success',
                   message: '账号注销成功',
                 })
+                sessionStorage.removeItem('saToken'); //会话存储里面
+                sessionStorage.removeItem('tokenName');
+                sessionStorage.removeItem('role');
                 router.push("/login") //删除之后跳转到登录页面
               }
               else{

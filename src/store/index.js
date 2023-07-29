@@ -17,6 +17,7 @@ const store = createStore({
     },
     mutations: {
         getUsername(state){
+            if(sessionStorage.getItem('role')==='student'){//学生
             api.get("/getUserInfo").then(res=>{
                 console.log("获取到的用户信息",res.data.data.username );
                 if(res.data.flag===true){
@@ -24,9 +25,11 @@ const store = createStore({
                     console.log("vuex得到的用户名是 ",state.username)
                 }
             })
-
+            }
+            else{//admin
+                state.username=""
+            }
         },
-
         getRole(state){
             state.role=sessionStorage.getItem("role");
             console.log("vuex得到的用户角色:",state.role)

@@ -22,15 +22,15 @@ const initChart=()=>{
         fontWeight: 'bold', // 字体粗细
       },
       left: 'center', // 标题居中
-      top:10
+      top:20
     },
     legend: {
       bottom:6
     },
     toolbox: {
       show: true,
-      top:10,
-      right:20,
+      top:20,
+      right:40,
       feature: {
         mark: { show: true },
         dataView: { show: true, readOnly: false },

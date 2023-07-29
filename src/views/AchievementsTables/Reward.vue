@@ -7,14 +7,20 @@
 
     <div style="margin-left: 2%">
       <div class="findarea" style="">
-        <el-input v-if="store.state.role==='admin'"   class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
+        <el-input clearable v-if="store.state.role==='admin'"   class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
                   style="width: 150px;margin-right: 8px"></el-input>
-        <el-input class="filter-item" v-model="queryInfo.rewardName" placeholder="证书名称(奖项名称)"
+        <el-input clearable class="filter-item" v-model="queryInfo.rewardName" placeholder="证书名称(奖项名称)"
                   style="width: 150px;margin-right: 8px"></el-input>
-        <el-input class="filter-item" v-model="queryInfo.status" placeholder="填报结果状态"
-                  style="width: 150px;margin-right: 8px"></el-input>
+        <el-select clearable v-model="queryInfo.status" placeholder="成果填报状态" style="margin-right:0.3%;width: 130px">
+          <el-option label="审核" value="审核" />
+          <el-option label="接收" value="接收" />
+          <el-option label="拒绝" value="拒绝" />
+        </el-select>
         <el-button @click="getAll()" :icon="Search" class="search">查询</el-button>
-        <el-button @click="reback()" :icon="Refresh" class="renew">重置</el-button>
+
+          <el-button @click="reback()" :icon="Refresh" class="renew">重置</el-button>
+
+
         <el-button @click="deleteBatch()" :icon="DeleteFilled" type="danger" class="dels">批量删除</el-button>
 
         <el-button v-if="store.state.role==='admin'" type="primary" plain :icon="Download" style="margin-left: 10px" @click="exportAll()">导出全部奖励数据
@@ -44,7 +50,7 @@
         >
           <el-form :model="formData" style="width: 80%" ref="rulesForm" :rules="rules" :inline="true">
             <el-form-item label="用户名" label-width="150" prop="username">
-              <el-input v-model="formData.username" placeholder="用户名" clearable autocomplete="off"/>
+              <el-input  :disabled="isStudent||isAdd===false" v-model="formData.username" placeholder="用户名" clearable autocomplete="off"/>
             </el-form-item>
             <el-form-item label="奖项名称" label-width="150" prop="rewardName">
               <el-input v-model="formData.rewardName" placeholder="请填写奖项名称" clearable autocomplete="off"/>
@@ -97,7 +103,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="填报结果状态" label-width="150" prop="status">
-              <el-select v-model="formData.status" placeholder="成果填报状态状态">
+              <el-select   :disabled="isStudent" v-model="formData.status" placeholder="成果填报状态状态">
                 <el-option label="审核" value="审核"/>
                 <el-option label="接收" value="接收"/>
                 <el-option label="拒绝" value="拒绝"/>
@@ -186,98 +192,7 @@ import {computed, onMounted, reactive, ref} from "vue";
 import store from "../../store/index.js";
 const dialogTitle = ref("test")
 const isAdd = ref(true)//true 添加  false 关闭
-const dataList = ref([
-  {
-    "id": 1,
-    "username": "5120214558",
-    "title": "测试理论",
-    "jcName": "sci1区",
-    "publicDate": "2023-07-24",
-    "issueNumber": "666期",
-    "volumeNumber": "666卷",
-    "pageRange": "12-19",
-    "place": 1,
-    "allAuthors": "徐书鹏",
-    "searchType": "关键字检索",
-    "accessionNumber": "1008610086",
-    "status": "审核"
-  },
-  {
-    "id": 1,
-    "username": "xsp",
-    "title": "测试理论",
-    "jcName": "sci1区",
-    "publicDate": "2023-07-24",
-    "issueNumber": "666期",
-    "volumeNumber": "666卷",
-    "pageRange": "12-19",
-    "place": 1,
-    "allAuthors": "徐书鹏",
-    "searchType": "关键字检索",
-    "accessionNumber": "10086",
-    "status": "审核"
-  },
-  {
-    "id": 1,
-    "username": "xsp",
-    "title": "测试理论",
-    "jcName": "sci1区",
-    "publicDate": "2023-07-24",
-    "issueNumber": "666期",
-    "volumeNumber": "666卷",
-    "pageRange": "12-19",
-    "place": 1,
-    "allAuthors": "徐书鹏",
-    "searchType": "关键字检索",
-    "accessionNumber": "10086",
-    "status": "审核"
-  },
-  {
-    "id": 1,
-    "username": "xsp",
-    "title": "测试理论",
-    "jcName": "sci1区",
-    "publicDate": "2023-07-24",
-    "issueNumber": "666期",
-    "volumeNumber": "666卷",
-    "pageRange": "12-19",
-    "place": 1,
-    "allAuthors": "徐书鹏",
-    "searchType": "关键字检索",
-    "accessionNumber": "10086",
-    "status": "审核"
-  },
-  {
-    "id": 1,
-    "username": "xsp",
-    "title": "测试理论",
-    "jcName": "sci1区",
-    "publicDate": "2023-07-24",
-    "issueNumber": "666期",
-    "volumeNumber": "666卷",
-    "pageRange": "12-19",
-    "place": 1,
-    "allAuthors": "徐书鹏",
-    "searchType": "关键字检索",
-    "accessionNumber": "10086",
-    "status": "审核"
-  },
-  {
-    "id": 1,
-    "username": "xsp",
-    "title": "测试理论",
-    "jcName": "sci1区",
-    "publicDate": "2023-07-24",
-    "issueNumber": "666期",
-    "volumeNumber": "666卷",
-    "pageRange": "12-19",
-    "place": 1,
-    "allAuthors": "徐书鹏",
-    "searchType": "关键字检索",
-    "accessionNumber": "10086",
-    "status": "审核"
-  },
-])//当前页要展示的列表数据
+const dataList = ref([])//当前页要展示的列表数据
 const dialogVisible = ref(false)
 const formData = reactive({ //对话框里面要填写的表单数据
   "id": 0,
@@ -321,6 +236,7 @@ const queryInfo = reactive({
 })
 let ids = [];  //let定义变量 const定义常量
 onMounted(() => {
+  store.commit("getUsername")
   getAll()
 })
 const resetFormData = () => {
@@ -338,6 +254,14 @@ const resetFormData = () => {
 }
 //重置函数
 const reback = () => {
+  if (sessionStorage.getItem('role') === 'student') {
+    queryInfo.currentPage = 1;
+    queryInfo.pageSize = 5;
+    queryInfo.rewardName=""
+    queryInfo.status=""
+    getAll();
+  }
+  else{
   api.get('/Reward/1/5').then((res) => {
     dataList.value = res.data.data.records;
     queryInfo.currentPage = 1;
@@ -347,6 +271,7 @@ const reback = () => {
     queryInfo.rewardName = ""
     queryInfo.status = ""
   })
+  }
 }
 const handleSizeChange = (newsize) => {
   console.log(`每页 ${newsize} 条`);
@@ -359,12 +284,19 @@ const handleCurrentChange = (newpage) => {//显示跳转到多少页
   queryInfo.currentPage = newpage
   getAll()
 }
-const username=computed(()=>store.state.username)
+const username = ref("");
 const getAll = () => { //分页+条件查询
-  if(store.state.role==="student"){//如果为学生  那么就发请求 获得他的username   //vuex
-    console.log("科技论文表的username " ,username.value)
-    queryInfo.username=username.value
+  if (sessionStorage.getItem('role') === "student") {//如果为学生  那么就发请求 获得他的username 之后再发送请求   //vuex
+    api.get("/getUserInfo").then(res => {
+      console.log("获取到的用户姓名", res.data.data.username);
+      username.value = res.data.data.username
+      queryInfo.username = username.value
+    }).finally(get)
+  } else { //管理员
+    get();
   }
+}
+const get = () => {
   let param;
   param = "?username=" + queryInfo.username
   param += "&rewardName=" + queryInfo.rewardName
@@ -375,6 +307,7 @@ const getAll = () => { //分页+条件查询
     dataList.value = res.data.data.records;
     console.log("datalist is ", dataList.value)
     queryInfo.currentPage = res.data.data.current;
+    queryInfo.pageSize = res.data.data.size;
     queryInfo.pageSize = res.data.data.size;
     queryInfo.total = res.data.data.total;
   })
@@ -395,9 +328,18 @@ const handleClose = (done) => {
 const cancelOption = () => {
   dialogVisible.value = false;
 }
+const isStudent=ref(false)
 //点击进行填报
 const addInfo = () => {
   resetFormData()//清空表单数据
+  if(sessionStorage.getItem("role")==="student"){ //如果是学生  那么就让dialog对话框的用户名  填报状态不能够编辑
+    isStudent.value=true
+  }
+  //之后姓名赋值  让其不能编辑
+  formData.username=store.state.username  //获取登陆者用户名
+
+
+
   console.log("刷新之后formdata is ", formData)
   dialogVisible.value=true;
   isAdd.value=true;
@@ -525,6 +467,9 @@ const deleteBatch=()=>{
 //点击编辑
 
 const handleUpdate = (row) => {
+  if(sessionStorage.getItem("role")==="student"){ //如果是学生  那么就让dialog对话框的用户名  填报状态不能够编辑
+    isStudent.value=true
+  }
   dialogTitle.value = "更改成果信息";
   dialogVisible.value = true; //弹出窗口
   isAdd.value = false//开始编辑 改变表格按键

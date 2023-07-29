@@ -66,5 +66,25 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(), routes,
 })
+// 导航守卫
+router.beforeEach((to, from, next) => {
+   const token=sessionStorage.getItem("saToken")
+        if (token) {// 如果存在token，则允许访问路由
+            if(to.name!="login" &&to.name!="register"){
+                next();
+            }
+            else{
+                next({name:"Home"})
+            }
+        }
+        else { // 如果不存在token，则跳转到登录页面或注册页面
+            if (to.name === 'login' || to.name === 'register') {
+                next()
+            }
+            else {
+                next({name:"login"})
+            }
+        }
 
+})
 export default router

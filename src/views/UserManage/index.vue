@@ -6,14 +6,21 @@
 
   <div style="margin-left: 2%">
     <div class="findarea" style="">
-    <el-input class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
+    <el-input clearable class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
               style="width: 150px;margin-right: 8px"></el-input>
-    <el-input class="filter-item" v-model="queryInfo.major" placeholder="专业班级"
+    <el-input clearable class="filter-item" v-model="queryInfo.major" placeholder="专业班级"
               style="width: 150px;margin-right: 8px"></el-input>
-    <el-input class="filter-item" v-model="queryInfo.name" placeholder="学生姓名"
+    <el-input clearable class="filter-item" v-model="queryInfo.name" placeholder="学生姓名"
               style="width: 150px;margin-right: 8px"></el-input>
     <el-button @click="getAll()" :icon="Search"   class="search">查询</el-button>
-    <el-button @click="reback()" :icon="Refresh" class="renew">重置</el-button>
+      <el-tooltip
+          class="box-item"
+          effect="light"
+          content="选择重置 请事先将搜索框里面的内容清除^-^"
+          placement="top"
+      >
+        <el-button @click="reback()" :icon="Refresh" class="renew">重置</el-button>
+      </el-tooltip>
     <el-button @click="deleteBatches()"   :icon="DeleteFilled" type="danger" class="dels">批量删除</el-button>
 
     <el-button type="primary" plain :icon="Download" style="margin-left: 10px" @click="exportAll()" >导出全部数据</el-button>
@@ -161,7 +168,7 @@ export default {
         "status":1,
       },
       rules: {//校验规则
-        username: [{required: true, message: 'username为学号', trigger: 'blur'}],
+        username: [{required: true, message: 'username为学号', trigger: 'blur'},{min: 3, max: 10, message: '密码应在 3 到 10 个字符之间', trigger: 'blur'}],
         password: [{required: true, message: '密码为必填项', trigger: 'blur'},{min: 3, max: 10, message: '密码应在 3 到 10 个字符之间', trigger: 'blur'}],
         name:     [{required: true, message: '姓名为必填项', trigger: 'blur'}],
         major:    [{required: true, message: '按照格式填写专业班级', trigger: 'blur'}],
