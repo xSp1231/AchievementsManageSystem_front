@@ -106,6 +106,8 @@
               </el-select>
 
             </el-form-item>
+
+
           </el-form>
 
           <template #footer >
@@ -166,6 +168,11 @@
               <el-button link type="danger" size="large"  @click="deleteOne(scope.row)"  >删除</el-button>
             </template>
           </el-table-column>
+          <template v-slot:empty>
+            <div class="no-data">
+              <el-empty description="暂未填写,这里空空如也www" />
+            </div>
+          </template>
         </el-table>
       </div>
       <div class="page" style="width: 40%;margin-top:1%;margin-left: 30px">

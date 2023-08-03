@@ -1,16 +1,21 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import { useRoute, useRouter } from "vue-router"
 const routes = [
+    // {
+    //     path: "/login",
+    //     name: "login",
+    //     component: () => import('../views/test/login.vue'),
+    // },
     {
-        path: "/login",
-        name: "login",
-        component: () => import('../views/login.vue'),
+        path: "/LoginAndRegister",
+        name: "loginandregister",
+        component: () => import('../views/System/LoginAndRegister.vue'),
     },
-    {
-        path: "/register",
-        name: "register",
-        component: () => import('../views/register.vue'),
-    },
+    // {
+    //     path: "/register",
+    //     name: "register",
+    //     component: () => import('../views/test/register.vue'),
+    // },
     {
         path: "/",
         name: "layout",
@@ -19,7 +24,7 @@ const routes = [
         children: [{
             path: "home",
             name: "Home",
-            component:()=>import('../views/Home.vue'),
+            component:()=>import('../views/System/Home.vue'),
         },{
             path: "personalCenter", //个人中心
             name: "personalCenter",
@@ -68,9 +73,11 @@ const router = createRouter({
 })
 // 导航守卫
 router.beforeEach((to, from, next) => {
-   const token=sessionStorage.getItem("saToken")
+
+
+    const token=sessionStorage.getItem("saToken")
         if (token) {// 如果存在token，则允许访问路由
-            if(to.name!="login" &&to.name!="register"){
+            if(to.name!="loginandregister"){
                 next();
             }
             else{
@@ -78,11 +85,11 @@ router.beforeEach((to, from, next) => {
             }
         }
         else { // 如果不存在token，则跳转到登录页面或注册页面
-            if (to.name === 'login' || to.name === 'register') {
+            if (to.name === 'loginandregister' ) {
                 next()
             }
             else {
-                next({name:"login"})
+                next({name:"loginandregister"})
             }
         }
 

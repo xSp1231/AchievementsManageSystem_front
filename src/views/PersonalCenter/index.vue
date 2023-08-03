@@ -253,7 +253,7 @@ const updatePwd=()=>{
 }
 const deleteUser=()=>{
     ElMessageBox.confirm(
-        '此操作将注销您的账号，后续将无法找回,请慎重考虑',
+        '此操作将注销您的账号,后续将无法找回,且所填写的成果数据也将被删除,请慎重考虑',
         'Warning',
         {
           confirmButtonText: '确定注销',
@@ -303,7 +303,7 @@ const getUserInfo=()=>{
 const attention= () => {
   ElNotification({
     title: 'Info',
-    message: h('i', { style: 'color: teal;'  },'谨慎选择是否注销账号!请保存好自己的账号密码，切勿将账号密码传递给他人，以防所填信息出现问题。如有，出现的后果将由本人承担。'),
+    message: h('i', { style: 'color: teal;'  },'谨慎选择是否注销账号!注销之后后续将无法找回,且所填写的成果数据也将被删除,请慎重考虑。请保存好自己的账号密码，切勿将账号密码传递给他人，以防所填信息出现问题。如有，出现的后果将由本人承担。'),
     type: 'info',
     duration: 0,
   })

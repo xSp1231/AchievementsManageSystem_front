@@ -144,7 +144,6 @@
 import {DeleteFilled, Edit, Plus, Search,UploadFilled,Refresh,Download} from '@element-plus/icons-vue'
 import api from "../../api/index.js"
 import {ElMessageBox} from 'element-plus'
-
 export default {
   name: "index",
   data() {
@@ -268,11 +267,19 @@ export default {
 
 
     },
+
     DeleteByUsername(row){
       console.log("要删除信息的用户名是",row.username);
-      this.$confirm("确认是否删除", "提示", {type: "warning"}).then(() => {
+      this.$confirm("确认是否删除?删除后，该用户的所有成果信息也将删除，后续无法找回,请慎重考虑", "提示", {type: "warning"}).then(() => {
         api.delete('/student/' + row.username).then((res) => {
+          console.log("删除的res is ",res)
           this.$message.success("删除成功");
+          if(res.data.message==="学生注销成功!"){
+            sessionStorage.removeItem('saToken'); //会话存储里面
+            sessionStorage.removeItem('tokenName');
+            sessionStorage.removeItem('role');
+           this.$router.push("/login") //删除之后跳转到登录页面
+          }
           // console.log("总的数量", this.queryInfo.total);
           // if (((this.queryInfo.total - 1) % (this.queryInfo.pageSize) === 0) && this.queryInfo.pageSize !== 1) {//当删除掉某页最后一行数据的时候 我们需要跳转到前面的页面
           //   this.queryInfo.currentPage -= 1;//页数减1
@@ -318,7 +325,7 @@ export default {
         this.$message.warning("请选择数据！")
       }
       else {
-        this.$confirm('确认删除所选数据？', '提示', {
+        this.$confirm('确认是否删除?删除后，该用户的所有成果信息也将删除，后续无法找回,请慎重考虑', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
