@@ -55,9 +55,10 @@
           <!-- 登录按钮 -->
           <div v-show="isShow" class="btnArea">
             <el-button type="success" round
-                       style="width: 100px;background-color:rgba(97,116,131,0.22);border: 1px solid #ccc8c8;letter-spacing: 2px"
+                       style="width: 100px;margin-left: 25%;background-color:rgba(97,116,131,0.22);border: 1px solid #ccc8c8;letter-spacing: 2px"
                        @click="login">登录
             </el-button>
+            <el-link type="info"  underline style="color: #808894;margin-left: 3%;height: 30px" @click="findPwd()" >忘记密码?点我找回</el-link>
           </div>
         </transition>
       </div>
@@ -85,7 +86,7 @@
                           maxlength="10"></el-input>
               </el-form-item>
               <div class="demo-progress" style="margin-left:25%;height: 15px;margin-top: 13px">
-                <el-progress style="width: 240px;"  :percentage="progressLength" :format="format" :color="getColor" />
+                <el-progress striped striped-flow :duration="8"  style="width: 240px;"  :percentage="progressLength" :format="format" :color="getColor" />
               </div>
               <el-form-item label="确认密码" style="margin-bottom: 17px;margin-top: 3px" prop="checkPass">
                 <el-input show-password type="password" placeholder="请输入相同密码" v-model="ruleForm.checkPass" autocomplete="off" maxlength="10"></el-input>
@@ -95,6 +96,9 @@
               </el-form-item>
               <el-form-item label="专业班级" style="margin-bottom: 17px;margin-top: 0" prop="major" >
                 <el-input v-model="ruleForm.major" placeholder="xx专业xx班(如计科2002)" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="qq邮箱号" style="margin-bottom: 17px;margin-top: 0" prop="email" >
+                <el-input v-model="ruleForm.email" placeholder="不需要加上@qq.com" autocomplete="off"></el-input>
               </el-form-item>
             </el-form>
           </div>
@@ -271,6 +275,7 @@ const rules = reactive({//校验规则
     trigger: 'blur'
   }],
   name:[{required: true, message: '姓名为必填项', trigger: 'blur'}],
+  email:[{required: true, message: 'qq邮箱号为必填项', trigger: 'blur'}],
   major:[{required: true, message: '注意专业填写格式,如计科2101', trigger: 'blur'}],
    checkPass:[{ validator: validatecheckPass, trigger: 'blur' }],
 
@@ -281,6 +286,7 @@ const ruleForm=reactive({
       role: "学生",
       name:"",
       major:'',
+      email:"",
       checkPass: '',
       status:1,
 })
@@ -359,7 +365,11 @@ const reSetForm=()=>{
   ruleForm.checkPass= ''
   ruleForm.status=1
 }
-
+//找回密码
+const findPwd=()=>{
+  router.push({name:'passwordandrecovery'})
+  //跳转到找回密码的页面
+}
 </script>
 
 <style scoped>
@@ -467,10 +477,11 @@ const reSetForm=()=>{
 }
 
 .btnArea {
+  display: flex;
   flex: 1;
   width: 100%;
   display: flex;
-  justify-content: space-around; /*水平居中*/
+  /*justify-content: space-around; !*水平居中*!*/
 }
 
 .rigestTitle {

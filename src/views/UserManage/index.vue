@@ -61,6 +61,10 @@
           <el-input v-model="formData.major"  placeholder="xx专业xx班(如 计科2119班)" clearable autocomplete="off" />
         </el-form-item>
 
+        <el-form-item label="用户qq号" label-width="150" prop="email">
+          <el-input v-model="formData.email"  placeholder="输入账号即可,不加@qq.com" clearable autocomplete="off" />
+        </el-form-item>
+
         <el-form-item label="帐号状态" label-width="150" >
           <el-select v-model="formData.status"  placeholder="学生账号状态">
             <el-option label="可用" value=1 />
@@ -95,6 +99,8 @@
       <el-table-column prop="name" label="学生姓名" width="150" sortable>
       </el-table-column>
       <el-table-column prop="major" label="专业班级" width="180">
+      </el-table-column>
+      <el-table-column prop="email" label="用户qq号" width="180">
       </el-table-column>
       <el-table-column prop="role" label="角色" width="140">
       </el-table-column>
@@ -153,9 +159,9 @@ export default {
       dialogTitle:"test",
       isadd: true,//true 添加  false 关闭
       dataList: [
-        {"username":"test","password":"123","name":"徐书鹏","major":"计算机科学与技术","role":"角色","status":0},
-        {"username":"test","password":"123","name":"徐书鹏","major":"计算机科学与技术","role":"角色","status":1},
-        {"username":"test","password":"123","name":"徐书鹏","major":"计算机科学与技术","role":"角色","status":1},
+        {"username":"test","password":"123","name":"徐书鹏","major":"计算机科学与技术","role":"角色","status":0,"email":"2789347466"},
+        {"username":"test","password":"123","name":"徐书鹏","major":"计算机科学与技术","role":"角色","status":1,"email":"2789347466"},
+        {"username":"test","password":"123","name":"徐书鹏","major":"计算机科学与技术","role":"角色","status":1,"email":"2789347466"},
       ],//当前页要展示的列表数据
       dialogVisible: false,
       formData: { //表单数据
@@ -164,6 +170,7 @@ export default {
         "name": "",
         "role": "学生",
         "major": "",
+        "email":"",
         "status":1,
       },
       rules: {//校验规则
@@ -171,6 +178,7 @@ export default {
         password: [{required: true, message: '密码为必填项', trigger: 'blur'},{min: 3, max: 10, message: '密码应在 3 到 10 个字符之间', trigger: 'blur'}],
         name:     [{required: true, message: '姓名为必填项', trigger: 'blur'}],
         major:    [{required: true, message: '按照格式填写专业班级', trigger: 'blur'}],
+        email:    [{required: true, message: '请填写自己正确的qq号', trigger: 'blur'}],
       },
       //分页请求体params
       queryInfo: {
@@ -217,7 +225,7 @@ export default {
       param += "&name=" + this.queryInfo.name
       param += "&major=" + this.queryInfo.major
       api.get("/student/"+this.queryInfo.currentPage+"/"+this.queryInfo.pageSize+param).then(res=>{
-        console.log("后端返回的数据是 ",res);
+        console.log("getall 后端返回的数据是 ",res);
         this.dataList=res.data.data.records;
         this.queryInfo.currentPage = res.data.data.current;
         this.queryInfo.pageSize = res.data.data.size;

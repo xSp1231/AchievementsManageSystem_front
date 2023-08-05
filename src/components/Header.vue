@@ -93,7 +93,7 @@ const handleCommand = (command) => {//////注意dropdown里面时间的触发
       message: '退出登录',
       type: 'success',
     })
-    router.push('/login')
+    router.push('/loginandregister')
   }
 }
 

@@ -4,7 +4,7 @@
   <div class="infoTable" style="width: 50%;height: 95%;margin-left:2%;margin-top: 1.5%;border-radius: 10px">
     <el-card style="width: 100%;height: 100%;border-radius: 10px;background-color: #f1efef" shadow="hover">
 
-      <h3 style="margin-left: 40%;color: #9f9fa1">个人信息修改</h3>
+      <h3 style="margin-left: 40%;margin-top: -10px;color: #9f9fa1">个人信息修改</h3>
       <el-form
           style="margin-top: 1%;max-width: 560px;"
           ref="ruleFormRefOne"
@@ -31,6 +31,9 @@
         </el-form-item>
         <el-form-item label="专业班级" prop="major">
           <el-input v-model="userInfo.major" />
+        </el-form-item>
+        <el-form-item label="qq号" prop="email">
+          <el-input v-model="userInfo.email" />
         </el-form-item>
 
         <el-form-item style="margin-left: 20%">
@@ -118,6 +121,7 @@ const userInfo=reactive({
   "name":"",
   "role":"",
   "major":"",
+  "email":"",//邮箱号
   "status":"",
   //-------------------------------
   "inputPasswordOne":"",   //个人信息修改时需要输入的密码
@@ -133,6 +137,7 @@ const updateInfo=()=>{
         "status":userInfo.status,
         "name":userInfo.name,
         'major':userInfo.major,
+        'email':userInfo.email,
         'password':userInfo.password   //还是之前密码
       } //之后发出post请求
      ruleFormRefOne.value.validate((valid) => {
