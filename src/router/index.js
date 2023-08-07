@@ -13,7 +13,7 @@ const routes = [
     },
     {
         path: "/PasswordRecovery",
-        name: "passwordandrecovery",
+        name: "passwordRecovery",
         component: () => import('../views/System/findPwd.vue'),
     },
     {
@@ -72,26 +72,26 @@ const router = createRouter({
     history: createWebHistory(), routes,
 })
 // 导航守卫
-// router.beforeEach((to, from, next) => {
-//
-//
-//     const token=sessionStorage.getItem("saToken")
-//         if (token) {// 如果存在token，则允许访问路由
-//             if(to.name!="loginandregister"){
-//                 next();
-//             }
-//             else{
-//                 next({name:"Home"})
-//             }
-//         }
-//         else { // 如果不存在token，则跳转到登录页面或注册页面
-//             if (to.name === 'loginandregister' ) {
-//                 next()
-//             }
-//             else {
-//                 next({name:"loginandregister"})
-//             }
-//         }
-//
-// })
+router.beforeEach((to, from, next) => {
+
+    const token=sessionStorage.getItem("saToken")
+        if (token) {// 如果存在token，则允许访问路由
+            if(to.name!="loginandregister" && to.name!='passwordRecovery'){
+                next();
+            }
+            else{
+                next({name:"Home"})
+            }
+        }
+
+        else { // 如果不存在token，则跳转到登录页面或注册页面
+            if (to.name === 'loginandregister' || to.name==='passwordRecovery' ) {
+                next()
+            }
+            else {
+                next({name:"loginandregister"})
+            }
+        }
+
+})
 export default router

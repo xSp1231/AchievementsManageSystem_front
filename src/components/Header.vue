@@ -22,31 +22,31 @@
         </el-breadcrumb>
       </div>
     </div>
-
     <div class="blankArea" style="width: 16%;"><h1 style="position: relative;top:26%;left: 10%;color: #949393">
-      学生成果信息管理后台</h1></div>
-    <div class="timeArea" style="width: 18%; display: flex;position: relative">
-      <h4 style="width: 30%;top:30%;left: 10%;position:absolute; color: #676464">
+      学生成果信息管理系统</h1></div>
+    <div class="timeArea" style="width: 15%; display: flex;position: relative">
+      <h4 style="width: 30px;top:30%;left: 9%;position:absolute; color: #676464">
         <el-icon size="21px">
           <Calendar/>
         </el-icon>
       </h4>
-      <h4 style="position: absolute;top:30%;width:70%;left: 20%;color: #949393">{{ newTime }}</h4>
+      <h4 style="position: absolute;top:30%;width:180px;left: 20%;color: #949393">{{ newTime }}</h4>
     </div>
-    <div class="personalArea" style="width: 5%;">
-      <el-dropdown @command="handleCommand">
-      <span class="el-dropdown-link">
-        <img class="picture" style="position:relative;left: 0%;top:10% ;height: 50px;width: 50px;border-radius: 50%;"
-             src="../assets/login/left.jpg">
-      </span>
+    <div class="personalArea" style="width: 10%;">
+      <el-dropdown @command="handleCommand" style="margin-left: 20%;width: 80px">
+
+        <img v-if="role==='admin'" class="picture" style="margin-left: 30px;margin-top: 6px;height: 50px;width: 50px;border-radius: 50%;"
+             src="../assets/images/managerAvator.jpg">
+        <img v-if="role!=='admin'" class="picture" style="margin-left: 30px;margin-top: 6px;height: 50px;width: 50px;border-radius: 50%;"
+             src="../assets/images/two.jpg">
         <template #dropdown>
           <el-dropdown-menu>
-<!--            <el-dropdown-item command="personalArea" divided>注销账号</el-dropdown-item>-->
-            <el-dropdown-item command="logOff">退出登录</el-dropdown-item>
+            <el-dropdown-item command="logOff" :icon="Guide" divided>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
     </div>
+
   </div>
 </template>
 
@@ -55,7 +55,7 @@
 
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {useStore} from 'vuex';
-import {Fold, ArrowRight, Expand} from "@element-plus/icons-vue";
+import {Fold, ArrowRight, Expand,Guide} from "@element-plus/icons-vue";
 import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import api from "../api/index.js";
@@ -69,6 +69,9 @@ const isCollapse = computed(() => store.state.isCollapse)
 onMounted(() => {
   // 在组件挂载时启动定时器，每秒钟更新一次时间
   setInterval(getNowTime, 1000);
+});
+const role = computed(() => {
+  return sessionStorage.getItem('role');
 });
 
 const getNowTime = () => {

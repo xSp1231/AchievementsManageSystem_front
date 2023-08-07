@@ -1,102 +1,119 @@
 <!---个人中心 进行密码 信息的修改---->
 <template>
-<div class="personalInfo" >
-  <div class="infoTable" style="width: 50%;height: 95%;margin-left:2%;margin-top: 1.5%;border-radius: 10px">
-    <el-card style="width: 100%;height: 100%;border-radius: 10px;background-color: #f1efef" shadow="hover">
+  <div class="personalInfo">
+    <div class="infoTable" style="width: 50%;height: 97%;margin-left:2%;margin-top: 0.5%;border-radius: 10px">
+      <el-card style="width: 100%;height: 100%;border-radius: 10px;padding: 0;background-color: #f1efef" shadow="hover">
+        <h3 style="margin-left: 40%;margin-top: -10px;color: #9f9fa1">个人信息修改</h3>
+        <el-form
+            style="margin-top: 1%;max-width: 560px;"
+            ref="ruleFormRefOne"
+            :model="userInfo"
+            status-icon
+            label-width="150px"
+            :rules="rulesOne"
+        >
+          <el-form-item label="password" prop="inputPasswordOne">
+            <el-input v-model="userInfo.inputPasswordOne" show-password clearable :prefix-icon="Key" type="password"
+                      autocomplete="off"
+                      placeholder="修改个人信息时,请输入密码"/>
+          </el-form-item>
+          <el-form-item label="用户名" style="margin-bottom: 10px">
+            <el-input
+                v-model="userInfo.username"
+                autocomplete="off"
+                disabled
+            />
+          </el-form-item>
+          <el-form-item label="账号状态" style="margin-bottom: 10px">
+            <el-input v-model="userInfo.status" disabled/>
+          </el-form-item>
+          <el-form-item label="姓名" prop="name">
+            <el-input clearable
+                      v-model="userInfo.name"/>
+          </el-form-item>
+          <el-form-item label="专业班级" prop="major">
+            <el-input clearable
+                      v-model="userInfo.major"/>
+          </el-form-item>
+          <el-form-item label="qq号" prop="email">
+            <el-input clearable v-model="userInfo.email"/>
+          </el-form-item>
 
-      <h3 style="margin-left: 40%;margin-top: -10px;color: #9f9fa1">个人信息修改</h3>
-      <el-form
-          style="margin-top: 1%;max-width: 560px;"
-          ref="ruleFormRefOne"
-          :model="userInfo"
-          status-icon
-          label-width="150px"
-          :rules="rulesOne"
-      >
-        <el-form-item label="password" prop="inputPasswordOne" >
-          <el-input v-model="userInfo.inputPasswordOne" show-password type="password" autocomplete="off" placeholder="修改个人信息时,请输入密码"  />
-        </el-form-item>
-        <el-form-item label="用户名" >
-          <el-input
-              v-model="userInfo.username"
-              autocomplete="off"
-              disabled
-          />
-        </el-form-item>
-        <el-form-item label="账号状态" >
-          <el-input v-model="userInfo.status" disabled />
-        </el-form-item>
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="userInfo.name" />
-        </el-form-item>
-        <el-form-item label="专业班级" prop="major">
-          <el-input v-model="userInfo.major" />
-        </el-form-item>
-        <el-form-item label="qq号" prop="email">
-          <el-input v-model="userInfo.email" />
-        </el-form-item>
+          <el-form-item style="margin-left: 20%">
+            <el-button type="primary" @click="updateInfo()">确认修改个人信息</el-button>
+            <el-button @click="resetFormOne()">重置</el-button>
+          </el-form-item>
+        </el-form>
 
-        <el-form-item style="margin-left: 20%">
-          <el-button type="primary"  @click="updateInfo()">确认修改个人信息</el-button>
-          <el-button @click="resetFormOne()">重置</el-button>
-        </el-form-item>
-      </el-form>
+        <h3 style="margin-left: 40%;margin-top:-13px;color: #9f9fa1">密码修改</h3>
+        <el-form
+            :rules="rulesTwo"
+            ref="ruleFormRefTwo"
+            style="margin-top: 1%;max-width: 560px;"
+            :model="userInfo"
+            status-icon
+            label-width="150px"
+        >
+          <el-form-item label="原始密码" prop="inputPasswordTwo">
+            <el-input v-model="userInfo.inputPasswordTwo" type="password" clearable :prefix-icon="Key"
+                      autocomplete="off" placeholder="修改密码时,请输入原始密码"
+                      show-password/>
+          </el-form-item>
+          <el-form-item label="新密码" prop="newPassword" style="margin-bottom: 16px">
+            <el-input
+                clearable :prefix-icon="Key"
+                show-password
+                placeholder="长度为3到10"
+                v-model="userInfo.newPassword"
+                autocomplete="off"
+            />
+          </el-form-item>
+          <el-form-item label="确认新密码" prop="confirmPassword" style="margin-bottom: 12px">
+            <el-input v-model="userInfo.confirmPassword" clearable :prefix-icon="Key"
+                      show-password/>
+          </el-form-item>
 
-      <h3 style="margin-left: 40%;color: #9f9fa1">密码修改</h3>
-      <el-form
-          :rules="rulesTwo"
-          ref="ruleFormRefTwo"
-          style="margin-top: 1%;max-width: 560px;"
-          :model="userInfo"
-          status-icon
-          label-width="150px"
-      >
-        <el-form-item label="原始密码" prop="inputPasswordTwo">
-          <el-input v-model="userInfo.inputPasswordTwo" type="password" autocomplete="off" placeholder="修改密码时,请输入原始密码"  show-password />
-        </el-form-item>
-        <el-form-item label="新密码" prop="newPassword">
-          <el-input
-              show-password
-              placeholder="长度为3到10"
-              v-model="userInfo.newPassword"
-              autocomplete="off"
-          />
-        </el-form-item>
-        <el-form-item label="确认新密码" prop="confirmPassword">
-          <el-input v-model="userInfo.confirmPassword" show-password />
-        </el-form-item>
+          <el-form-item style="margin-left: 20%">
+            <el-button type="primary" @click="updatePwd()"
+            >确认修该密码
+            </el-button
+            >
+            <el-button @click="resetFormTwo()">重置</el-button>
+          </el-form-item>
+        </el-form>
 
-        <el-form-item style="margin-left: 20%">
-          <el-button type="primary" @click="updatePwd()"
-          >确认修该密码</el-button
-          >
-          <el-button @click="resetFormTwo()">重置</el-button>
-        </el-form-item>
-      </el-form>
+      </el-card>
 
-    </el-card>
+    </div>
+
+
+    <div class="other"
+         style="width: 40%;height: 90%;margin-left: 1.5%;margin-top: 0.5%;background-color: #f3f3f3;border-radius: 10px">
+      <div class="notification"
+           style="width: 100%;height: 10%;background-color: #f1efef;border-radius: 10px;display: flex">
+        <el-tooltip
+            effect="dark"
+            content="点击查看具体信息"
+            placement="top-start"
+        >
+          <el-button style="margin-left: 2%;margin-top: 2%" plain @click="attention()" type="info"> 个人信息修改注意事项
+          </el-button>
+
+        </el-tooltip>
+        <h4 style="margin-top: 2.8%;margin-left: 23px;font-size: 15px;font-style: italic;font-weight: normal;color: #d73c4c">
+          用户修改信息时必看</h4>
+        <el-button style="margin-top: 2.6%;margin-left: 10%;" type="danger" plain size="small" round :icon="Delete"
+                   @click="deleteUser()"> 账号注销
+        </el-button>
+      </div>
+      <div class="staticGraph"
+           style="width: 100%;height: 87%;margin-top: 3%;background-color: #f1efef;border-radius: 10px">
+        <pie-chart></pie-chart>
+      </div>
+    </div>
+
 
   </div>
-  <div class="other" style="width: 40%;height: 90%;margin-left: 1.5%;margin-top: 1.5%;background-color: #f3f3f3;border-radius: 10px">
-  <div class="notification" style="width: 100%;height: 10%;background-color: #f1efef;border-radius: 10px;display: flex">
-    <el-tooltip
-        effect="dark"
-        content="点击查看具体信息"
-        placement="top-start"
-    >
-      <el-button style="margin-left: 2%;margin-top: 2%"  plain @click="attention()" type="info"> 个人信息修改注意事项</el-button>
-
-    </el-tooltip>
-    <h4 style="margin-top: 2.8%;margin-left: 23px;font-size: 15px;font-style: italic;font-weight: normal;color: #d73c4c">用户修改信息时必看</h4>
-    <el-button  style="margin-top: 2.6%;margin-left: 10%;" type="danger" plain size="small" round :icon="Delete" @click="deleteUser()" > 账号注销</el-button>
-  </div>
-  <div class="staticGraph" style="width: 100%;height: 87%;margin-top: 3%;background-color: #f1efef;border-radius: 10px">
-      <pie-chart></pie-chart>
-  </div>
- </div>
-
-
-</div>
 </template>
 
 <script setup>
@@ -107,66 +124,68 @@ import {
   Message,
   Search,
   Star,
+  Key
 } from '@element-plus/icons-vue'
 import {useRouter} from "vue-router";
-const router=useRouter();
+
+const router = useRouter();
 import PieChart from "./pieGraph/pieChart.vue";
 import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {h, onMounted, reactive, ref} from "vue";
 import api from "../../api/index.js";
-const userInfo=reactive({
-  "id":"",
-  "username":"",
-  "password":"",
-  "name":"",
-  "role":"",
-  "major":"",
-  "email":"",//邮箱号
-  "status":"",
-  //-------------------------------
-  "inputPasswordOne":"",   //个人信息修改时需要输入的密码
-  "inputPasswordTwo":"",   //更改密码时需要输入的密码
-  "newPassword":"",  //新密码
-  "confirmPassword":"", //确认新密码
-})
-const updateInfo=()=>{
-      console.log("userinfo的信息 ",userInfo);
-      let info={
-        "id":userInfo.id,
-        "username":userInfo.username,
-        "status":userInfo.status,
-        "name":userInfo.name,
-        'major':userInfo.major,
-        'email':userInfo.email,
-        'password':userInfo.password   //还是之前密码
-      } //之后发出post请求
-     ruleFormRefOne.value.validate((valid) => {
 
-       if(userInfo.inputPasswordOne===""){
-         ElMessage({
-           type: 'info',
-           message: "未输入原始密码",
-         })
-         return;
-       }
-       if(userInfo.password!==userInfo.inputPasswordOne){
-         ElMessage({
-           type: 'error',
-           message: "原始密码输入错误!",
-         })
-         return;
-       }
+const userInfo = reactive({
+  "id": "",
+  "username": "",
+  "password": "",
+  "name": "",
+  "role": "",
+  "major": "",
+  "email": "",//邮箱号
+  "status": "",
+  //-------------------------------
+  "inputPasswordOne": "",   //个人信息修改时需要输入的密码
+  "inputPasswordTwo": "",   //更改密码时需要输入的密码
+  "newPassword": "",  //新密码
+  "confirmPassword": "", //确认新密码
+})
+const updateInfo = () => {
+  console.log("userinfo的信息 ", userInfo);
+  let info = {
+    "id": userInfo.id,
+    "username": userInfo.username,
+    "status": userInfo.status,
+    "name": userInfo.name,
+    'major': userInfo.major,
+    'email': userInfo.email,
+    'password': userInfo.password   //还是之前密码
+  } //之后发出post请求
+  ruleFormRefOne.value.validate((valid) => {
+
+    if (userInfo.inputPasswordOne === "") {
+      ElMessage({
+        type: 'info',
+        message: "未输入原始密码",
+      })
+      return;
+    }
+    if (userInfo.password !== userInfo.inputPasswordOne) {
+      ElMessage({
+        type: 'error',
+        message: "原始密码输入错误!",
+      })
+      return;
+    }
     if (valid) {
       console.log("通过");
-      api.post("/editStudentInfo",info).then(res=>{
+      api.post("/editStudentInfo", info).then(res => {
         console.log(res);
-        if(res.data.flag===true){
+        if (res.data.flag === true) {
           ElMessage({
             type: 'success',
             message: res.data.message,
           })
-        }
-        else{
+        } else {
           ElMessage({
             type: 'error',
             message: res.data.message,
@@ -184,41 +203,41 @@ const updateInfo=()=>{
   });
 
 }
-const resetFormOne=()=>{
+const resetFormOne = () => {
   getUserInfo()
 }
-const resetFormTwo=()=>{
-  userInfo.inputPasswordTwo=""
-  userInfo.newPassword=""
-  userInfo.confirmPassword=""
+const resetFormTwo = () => {
+  userInfo.inputPasswordTwo = ""
+  userInfo.newPassword = ""
+  userInfo.confirmPassword = ""
 }
-const updatePwd=()=>{
-  console.log("userinfo的信息 ",userInfo);
-  let info={
-    "id":userInfo.id,
-    "username":userInfo.username,
-    "status":userInfo.status,
-    "name":userInfo.name,
-    'major':userInfo.major,
-    'password':userInfo.newPassword //还是之前密码
+const updatePwd = () => {
+  console.log("userinfo的信息 ", userInfo);
+  let info = {
+    "id": userInfo.id,
+    "username": userInfo.username,
+    "status": userInfo.status,
+    "name": userInfo.name,
+    'major': userInfo.major,
+    'password': userInfo.newPassword //还是之前密码
   } //之后发出post请求
   ruleFormRefTwo.value.validate((valid) => {
 
-    if(userInfo.inputPasswordTwo===""){
+    if (userInfo.inputPasswordTwo === "") {
       ElMessage({
         type: 'warning',
         message: "请输入原始密码",
       })
       return;
     }
-    if(userInfo.newPassword!==userInfo.confirmPassword){
+    if (userInfo.newPassword !== userInfo.confirmPassword) {
       ElMessage({
         type: 'warning',
         message: "两次输入的密码不一致",
       })
       return;
     }
-    if(userInfo.password!==userInfo.inputPasswordTwo){
+    if (userInfo.password !== userInfo.inputPasswordTwo) {
       ElMessage({
         type: 'error',
         message: "原始密码输入错误!",
@@ -227,16 +246,15 @@ const updatePwd=()=>{
     }
     if (valid) {
       console.log("通过");
-      api.post("/editStudentInfo",info).then(res=>{
+      api.post("/editStudentInfo", info).then(res => {
         console.log(res);
-        if(res.data.flag===true){
+        if (res.data.flag === true) {
           ElMessage({
             type: 'success',
             message: res.data.message,
           })
-        resetFormTwo()
-        }
-        else{
+          resetFormTwo()
+        } else {
           ElMessage({
             type: 'error',
             message: res.data.message,
@@ -256,59 +274,58 @@ const updatePwd=()=>{
   });
 
 }
-const deleteUser=()=>{
-    ElMessageBox.confirm(
-        '此操作将注销您的账号,后续将无法找回,且所填写的成果数据也将被删除,请慎重考虑',
-        'Warning',
-        {
-          confirmButtonText: '确定注销',
-          cancelButtonText: '取消',
-          type: 'warning',
-        }
-      )
-        .then(() => {
-            api.delete("/student/"+userInfo.username).then(res=>{
-              console.log("删除信息为",res)
-              if(res.data.flag===true){
-                ElMessage({
-                  type: 'success',
-                  message: '账号注销成功',
-                })
-                sessionStorage.removeItem('saToken'); //会话存储里面
-                sessionStorage.removeItem('tokenName');
-                sessionStorage.removeItem('role');
-                router.push("/login") //删除之后跳转到登录页面
-              }
-              else{
-                ElMessage({
-                  type: 'success',
-                  message: res.data.data.message,
-                })
-              }
+const deleteUser = () => {
+  ElMessageBox.confirm(
+      '此操作将注销您的账号,后续将无法找回,且所填写的成果数据也将被删除,请慎重考虑',
+      'Warning',
+      {
+        confirmButtonText: '确定注销',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  )
+      .then(() => {
+        api.delete("/student/" + userInfo.username).then(res => {
+          console.log("删除信息为", res)
+          if (res.data.flag === true) {
+            ElMessage({
+              type: 'success',
+              message: '账号注销成功',
             })
-          })
-        .catch(() => {
-          ElMessage({
-            type: 'info',
-            message: '操作取消',
-          })
+            sessionStorage.removeItem('saToken'); //会话存储里面
+            sessionStorage.removeItem('tokenName');
+            sessionStorage.removeItem('role');
+            router.push("/login") //删除之后跳转到登录页面
+          } else {
+            ElMessage({
+              type: 'success',
+              message: res.data.data.message,
+            })
+          }
         })
+      })
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '操作取消',
+        })
+      })
 
 }
 
-onMounted(()=>{
+onMounted(() => {
   getUserInfo();
 })
-const getUserInfo=()=>{
-    api.get("/getUserInfo").then(res=>{
-      console.log("获取到的用户信息",res.data.data );
-      Object.assign(userInfo,res.data.data)
-    })
+const getUserInfo = () => {
+  api.get("/getUserInfo").then(res => {
+    console.log("获取到的用户信息", res.data.data);
+    Object.assign(userInfo, res.data.data)
+  })
 }
-const attention= () => {
+const attention = () => {
   ElNotification({
     title: 'Info',
-    message: h('i', { style: 'color: teal;'  },'谨慎选择是否注销账号!注销之后后续将无法找回,且所填写的成果数据也将被删除,请慎重考虑。请保存好自己的账号密码，切勿将账号密码传递给他人，以防所填信息出现问题。如有，出现的后果将由本人承担。'),
+    message: h('i', {style: 'color: teal;'}, '谨慎选择是否注销账号!注销之后后续将无法找回,且所填写的成果数据也将被删除,请慎重考虑。请保存好自己的账号密码，切勿将账号密码传递给他人，以防所填信息出现问题。如有，出现的后果将由本人承担。'),
     type: 'info',
     duration: 0,
   })
@@ -317,44 +334,54 @@ const attention= () => {
 const ruleFormRefOne = ref(null)
 const ruleFormRefTwo = ref(null)
 const rulesOne = reactive({
-  inputPasswordOne:[{
-    required:true,message:"请填入原始密码",trigger:'blur'
+  inputPasswordOne: [{
+    required: true, message: "请填入原始密码", trigger: 'blur'
   }],
   name: [
-    { required: true, message: '姓名不可为空', trigger: 'blur' },
+    {required: true, message: '姓名不可为空', trigger: 'blur'},
   ],
-  major:[
+
+  email: [
     {
       required: true,
-      message: '不可为空，请按照标准填写(如 软件2101)',
+      message: '不可为空,输入自己的QQ邮箱号,不需要加@qq.com后缀',
       trigger: 'blur',
     },
   ],
 })
 const rulesTwo = reactive({
-  inputPasswordTwo:[
-      {required:true,message:"请填入原始密码",trigger:'blur'},{ min: 3, max: 10, message: 'Length should be 3 to 10', trigger: 'blur' }],
+  inputPasswordTwo: [
+    {required: true, message: "请填入原始密码", trigger: 'blur'}, {
+      min: 3,
+      max: 10,
+      message: 'Length should be 3 to 10',
+      trigger: 'blur'
+    }],
   newPassword: [
-    { required: true, message: '密码不可为空', trigger: 'blur' },{ min: 3, max: 10, message: 'Length should be 3 to 10', trigger: 'blur' }
+    {required: true, message: '密码不可为空', trigger: 'blur'}, {
+      min: 3,
+      max: 10,
+      message: 'Length should be 3 to 10',
+      trigger: 'blur'
+    }
   ],
   confirmPassword: [
     {
       required: true,
       message: '密码不可为空',
       trigger: 'blur',
-    },{ min: 3, max: 10, message: 'Length should be 3 to 10', trigger: 'blur' }
+    }, {min: 3, max: 10, message: 'Length should be 3 to 10', trigger: 'blur'}
   ],
 })
-
 
 
 </script>
 
 <style scoped>
-.personalInfo{
+.personalInfo {
   display: flex;
   width: 100%;
-  height:100%;
+  height: 100%;
   background-color: #f3f3f3;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="resetPassword">
     <div class="container">
-      <el-steps :active="active" align-center finish-status="success">
+      <el-steps :active="active" align-center finish-status="success" >
         <el-step title="Step 1" description="验证用户名和邮箱" :icon="Edit"/>
         <el-step title="Step 2" description="输入验证码" :icon="Promotion"/>
         <el-step title="Step 3" description="设置新密码" :icon="Key"/>
@@ -36,7 +36,7 @@
       </div>
       <div v-if="active === 2" class="common_div">
         <el-form :model="passwordForm" class="user-container" :rules="updatePwdRules" ref="passwordFormRef"
-                 label-position="left" label-width="60px" size="medium">
+                 label-position="left" label-width="70px" size="medium">
           <el-form-item :rules="updatePwdRules" prop="password" style="float: right; width: 80%" label="新密码">
             <el-input :suffix-icon="Key" type="password" v-model="passwordForm.password" autofocus
                       clearable
@@ -51,10 +51,13 @@
         </el-form>
       </div>
       <div class="common_div" style="display: flex">
-        <el-button :icon="Pointer" style="margin-left: 32%" @click="next()" :disabled="disabled" class="action_button">下一步</el-button>
+        <el-button :disabled="active===3" :icon="Pointer" style="margin-left: 32%" @click="next()"  class="action_button">下一步</el-button>
         <el-button style="margin-left: 6%" @click="toLoginAndRegister()" :disabled="disabled" class="action_button">
           回到登陆页面
         </el-button>
+      </div>
+      <div class="tips" style="margin-top: 3%">
+        <el-link type="info"  underline style="color: #666b75;margin-left: 35%;height: 30px" >tips:操作过程中不要刷新页面</el-link>
       </div>
 
     </div>

@@ -367,7 +367,7 @@ const reSetForm=()=>{
 }
 //找回密码
 const findPwd=()=>{
-  router.push({name:'passwordandrecovery'})
+  router.push({name:'passwordRecovery'})
   //跳转到找回密码的页面
 }
 </script>

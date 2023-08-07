@@ -4,76 +4,87 @@
   <div class="userManage" style="width: 100%;height: 100%;background-color: #ffffff;position: relative;">
 
 
-  <div style="margin-left: 2%">
-    <div class="findarea" style="">
-    <el-input clearable class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
-              style="width: 150px;margin-right: 8px"></el-input>
-    <el-input clearable class="filter-item" v-model="queryInfo.major" placeholder="专业班级"
-              style="width: 150px;margin-right: 8px"></el-input>
-    <el-input clearable class="filter-item" v-model="queryInfo.name" placeholder="学生姓名"
-              style="width: 150px;margin-right: 8px"></el-input>
-    <el-button @click="getAll()" :icon="Search"   class="search">查询</el-button>
-      <el-tooltip
-          class="box-item"
-          effect="light"
-          content="选择重置 请事先将搜索框里面的内容清除^-^"
-          placement="top"
-      >
-        <el-button @click="reback()" :icon="Refresh" class="renew">重置</el-button>
-      </el-tooltip>
-    <el-button @click="deleteBatches()"   :icon="DeleteFilled" type="danger" class="dels">批量删除</el-button>
+    <div style="margin-left: 2%">
+      <div class="findarea" style="">
+        <el-input clearable class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
+                  style="width: 150px;margin-right: 8px"></el-input>
+        <el-input clearable class="filter-item" v-model="queryInfo.major" placeholder="专业班级"
+                  style="width: 150px;margin-right: 8px"></el-input>
+        <el-input clearable class="filter-item" v-model="queryInfo.name" placeholder="学生姓名"
+                  style="width: 150px;margin-right: 8px"></el-input>
+        <el-button @click="getAll()" :icon="Search"   class="search">查询</el-button>
+        <el-tooltip
+            class="box-item"
+            effect="light"
+            content="选择重置 请事先将搜索框里面的内容清除^-^"
+            placement="top"
+        >
+          <el-button @click="reback()" :icon="Refresh" class="renew">重置</el-button>
+        </el-tooltip>
+        <el-button @click="deleteBatches()"   :icon="DeleteFilled" type="danger" class="dels">批量删除</el-button>
 
-    <el-button type="primary" plain :icon="Download" style="margin-left: 10px" @click="exportAll()" >导出全部数据</el-button>
-    <el-button type="" plain :icon="Download" @click="exportPart()">批量导出</el-button>
-    <el-upload action="http://localhost:8080/importStudentInfo"
-               :show-file-list="false" accept="xlsx"
-               :on-success="handleImportSuccess"
-               :before-upload="beforeAvatarUpload"
-               style="display: inline-block;position: absolute;right: 1%"
-    >
-      <el-button type="success"  :icon="UploadFilled" plain  >Excel数据导入</el-button>
-    </el-upload>
+        <el-button type="primary" plain :icon="Download" style="margin-left: 10px" @click="exportAll()" >导出全部数据</el-button>
+        <el-button type="" plain :icon="Download" @click="exportPart()">批量导出</el-button>
+        <el-upload action="http://localhost:8080/importStudentInfo"
+                   :show-file-list="false" accept="xlsx"
+                   :on-success="handleImportSuccess"
+                   :before-upload="beforeAvatarUpload"
+                   style="display: inline-block;position: absolute;right: 1%"
+        >
+          <el-button type="success"  :icon="UploadFilled" plain  >Excel数据导入</el-button>
+        </el-upload>
 
-  </div>
-    <div class="addInfo"  style="margin-top: 10px">
-    <el-button type="text" plain size="default" :icon="Plus" @click="dialogVisible = true; isadd = true;dialogTitle='新增用户信息' ">点击增加</el-button>
-    <el-dialog
-        draggable
-        v-model="dialogVisible"
-        :title="dialogTitle"
-        width="30%"
-        :before-close="handleClose"
-    >
-      <el-form :model="formData" style="width: 80%"  ref="dataAddForm" :rules="rules">
-        <el-form-item label="用户名" label-width="150" prop="username" >
-          <el-input v-model="formData.username"   :disabled="!isadd"  placeholder="用户名" clearable autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="密码"  label-width="150" prop="password">
-          <el-input v-model="formData.password"  placeholder="密码" clearable autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="学生姓名" label-width="150" prop="name">
-          <el-input v-model="formData.name"   placeholder="姓名填写" clearable autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="角色" label-width="150" prop="role">
-          <el-input v-model="formData.role"  placeholder="学生(该字段不用填写)" disabled  clearable autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="专业班级" label-width="150" prop="major">
-          <el-input v-model="formData.major"  placeholder="xx专业xx班(如 计科2119班)" clearable autocomplete="off" />
-        </el-form-item>
+      </div>
+      <div class="addInfo"  style="margin-top: 10px">
+        <el-button type="text" plain size="default" :icon="Plus" @click="dialogVisible = true; isadd = true;dialogTitle='新增用户信息' ">点击增加</el-button>
+        <el-dialog
+            draggable
+            v-model="dialogVisible"
+            :title="dialogTitle"
+            width="30%"
+            :before-close="handleClose"
+        >
+          <el-form :model="formData" style="width: 80%"  ref="dataAddForm" :rules="rules">
+            <el-form-item label="用户名" label-width="150" prop="username" >
+              <el-input v-model="formData.username"   :disabled="!isadd"  placeholder="用户名" clearable autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="密码"  label-width="150" prop="password">
+              <el-input v-model="formData.password"  placeholder="密码" clearable autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="学生姓名" label-width="150" prop="name">
+              <el-input v-model="formData.name"   placeholder="姓名填写" clearable autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="角色" label-width="150" prop="role">
+              <el-input v-model="formData.role"  placeholder="学生(该字段不用填写)" disabled  clearable autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="专业班级" label-width="150" prop="major">
+              <el-input v-model="formData.major"  placeholder="xx专业xx班(如 计科2119班)" clearable autocomplete="off" />
+            </el-form-item>
 
-        <el-form-item label="用户qq号" label-width="150" prop="email">
-          <el-input v-model="formData.email"  placeholder="输入账号即可,不加@qq.com" clearable autocomplete="off" />
-        </el-form-item>
+            <el-form-item label="用户qq号" label-width="150" prop="email">
+              <el-input v-model="formData.email"  placeholder="输入账号即可,不加@qq.com" clearable autocomplete="off" />
+            </el-form-item>
 
-        <el-form-item label="帐号状态" label-width="150" >
-          <el-select v-model="formData.status"  placeholder="学生账号状态">
-            <el-option label="可用" value=1 />
-            <el-option label="禁用" value=0 />
-          </el-select>
-        </el-form-item>
-      </el-form>
+            <el-form-item label="帐号状态" label-width="150" >
 
-      <template #footer>
+              <el-switch
+                  v-model="formData.status"
+                  @change="test()"
+                  inline-prompt
+                  :active-value="1"
+                  :inactive-value="0"
+                  active-text="可用"
+                  inactive-text="禁用"
+                  style="--el-switch-on-color: #13ce66; --el-switch-off-color:  #ff4949"
+              />
+<!--              <el-select v-model="formData.status"  placeholder="学生账号状态">-->
+<!--                <el-option label="可用" value=1 />-->
+<!--                <el-option label="禁用" value=0 />-->
+<!--              </el-select>-->
+            </el-form-item>
+          </el-form>
+
+          <template #footer>
       <span class="dialog-footer">
         <el-button @click="cancelOption()">取消</el-button>
         <el-button v-if="isadd===true"  type="primary" @click="saveStudent()">
@@ -83,62 +94,63 @@
           确定更改信息
         </el-button>
       </span>
-      </template>
-    </el-dialog>
-  </div>
-    <div class="table" style="width: 90%;margin-top: 0px " >
-    <el-table :data="dataList" style="width: 100%" height="480"  size="large"  @selection-change="handleSelectionChange" >
-      <el-table-column
-          type="selection"
-          width="70">
-      </el-table-column>
-      <el-table-column prop="username" label="用户名" width="150" sortable>
-      </el-table-column>
-      <el-table-column prop="password" label="密码" width="150" >
-      </el-table-column>
-      <el-table-column prop="name" label="学生姓名" width="150" sortable>
-      </el-table-column>
-      <el-table-column prop="major" label="专业班级" width="180">
-      </el-table-column>
-      <el-table-column prop="email" label="用户qq号" width="180">
-      </el-table-column>
-      <el-table-column prop="role" label="角色" width="140">
-      </el-table-column>
+          </template>
+        </el-dialog>
+      </div>
+      <div class="table" style="width: 90%;margin-top: 0px " >
+        <el-table :data="dataList" style="width: 100%" height="480"  size="large"  @selection-change="handleSelectionChange" >
+          <el-table-column
+              type="selection"
+              width="70">
+          </el-table-column>
+          <el-table-column prop="username" label="用户名" width="130" sortable>
+          </el-table-column>
+          <el-table-column prop="password" label="密码" width="120" >
+          </el-table-column>
+          <el-table-column prop="name" label="学生姓名" width="120" sortable>
+          </el-table-column>
+          <el-table-column prop="major" label="专业班级" width="160">
+          </el-table-column>
+          <el-table-column prop="email" label="用户qq号" width="150">
+          </el-table-column>
+          <el-table-column prop="role" label="角色" width="100">
+          </el-table-column>
 
-      <el-table-column prop="status" label="帐号状态" width="140"  sortable>
-        <template #default="{ row }">
-          <el-tag :type="row.status === 1 ? 'success' : 'danger'">
-            {{ row.status === 1 ? '可用' : '禁用' }}
-          </el-tag>
-        </template>
+          <el-table-column prop="status" label="帐号状态" width="140"  sortable>
+            <template #default="{ row }">
+              <el-tag :type="row.status === 1 ? 'success' : 'danger'">
+                {{ row.status === 1 ? '可用' : '禁用' }}
+              </el-tag>
+            </template>
 
-      </el-table-column>
+          </el-table-column>
 
-      <el-table-column label="操作">
-        <template #default="scope">
-          <el-button size="small" :icon="Edit" @click="handleUpdate(scope.row)"
-          >编辑</el-button
-          >
-          <el-button
-              size="small"
-              type="danger"
-              :icon="DeleteFilled"
-              @click="DeleteByUsername(scope.row)"
-          >删除</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
-    <div class="page" style="width: 40%;margin-top:1%;margin-left: 30px" >
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                     :current-page="queryInfo.currentPage"
-                     :page-sizes="[5, 10, 15, 20,100]" :page-size="queryInfo.pageSize"
-                     layout="total, sizes, prev, pager, next, jumper"
-                     :total="queryInfo.total">
-      </el-pagination>
+          <el-table-column label="操作">
+            <template #default="scope">
+              <el-button round size="small" :icon="Edit" @click="handleUpdate(scope.row)"
+              >编辑</el-button
+              >
+              <el-button
+                  size="small"
+                  round
+                  type="danger"
+                  :icon="DeleteFilled"
+                  @click="DeleteByUsername(scope.row)"
+              >删除</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="page" style="width: 40%;margin-top:1%;margin-left: 30px" >
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                       :current-page="queryInfo.currentPage"
+                       :page-sizes="[5, 10, 15, 20,100]" :page-size="queryInfo.pageSize"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="queryInfo.total">
+        </el-pagination>
+      </div>
     </div>
-  </div>
 
 
 
@@ -191,11 +203,14 @@ export default {
       },
       usernames: []
     }
-    },
+  },
   mounted() {
     this.getAll()
   },
   methods:{
+    test(){
+      console.log("开关值",this.formData.status)
+    },
     reback() {
       api.get('/student/1/5').then((res) => {
 
@@ -286,7 +301,7 @@ export default {
             sessionStorage.removeItem('saToken'); //会话存储里面
             sessionStorage.removeItem('tokenName');
             sessionStorage.removeItem('role');
-           this.$router.push("/login") //删除之后跳转到登录页面
+            this.$router.push("/login") //删除之后跳转到登录页面
           }
           // console.log("总的数量", this.queryInfo.total);
           // if (((this.queryInfo.total - 1) % (this.queryInfo.pageSize) === 0) && this.queryInfo.pageSize !== 1) {//当删除掉某页最后一行数据的时候 我们需要跳转到前面的页面
@@ -301,15 +316,15 @@ export default {
     },
     handleUpdate(row) {
       this.dialogTitle="更改用户信息(用户名,角色不可改动)",
-      this.dialogVisible = true; //弹出窗口
+          this.dialogVisible = true; //弹出窗口
       this.isadd = false//开始编辑 改变表格按键
       api.get("/selectStudentByUsername/" + row.username).then(res => {
-          console.log("通过用户名搜索的信息是",res.data.data);
-           if(res.data.flag===true&&res.data.data!=null){
-             this.formData=res.data.data
-           }
-          else {
-           this.$message.error("数据同步失败，自动刷新")
+        console.log("通过用户名搜索的信息是",res.data.data);
+        if(res.data.flag===true&&res.data.data!=null){
+          this.formData=res.data.data
+        }
+        else {
+          this.$message.error("数据同步失败，自动刷新")
         }
       }).finally(this.getAll)
     },
@@ -317,7 +332,7 @@ export default {
       console.log("修改后的表单信息是",this.formData)
       this.formData.status=parseInt(this.formData.status)
       api.put("/student",this.formData).then(res=>{
-          console.log("编辑成功 res is ",res);
+            console.log("编辑成功 res is ",res);
             this.$message.success("学生信息修改成功")
           }
       ).finally(this.getAll)
@@ -341,10 +356,10 @@ export default {
           api.post("/deleteUsersByUsernames", this.usernames).then(res => {
             if (res) {
               this.$message.success("批量删除成功！");
-               if (((this.queryInfo.total - this.usernames.length) % (this.queryInfo.pageSize) === 0)) {//当删除掉某页最后一行数据的时候 我们需要跳转到前面的页面
-                 this.queryInfo.currentPage -= 1;//页数减1
-               }
-               this.getAll()
+              if (((this.queryInfo.total - this.usernames.length) % (this.queryInfo.pageSize) === 0)) {//当删除掉某页最后一行数据的时候 我们需要跳转到前面的页面
+                this.queryInfo.currentPage -= 1;//页数减1
+              }
+              this.getAll()
             } else {
               this.$message.error('删除失败');
             }
@@ -353,8 +368,8 @@ export default {
       }
     } ,
     handleImportSuccess(){
-        this.$message.success("导入成功");
-        this.getAll()
+      this.$message.success("导入成功");
+      this.getAll()
     },
     beforeAvatarUpload(rawFile) {
       if (rawFile.type !== 'application/vnd.ms-excel' && rawFile.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
@@ -368,7 +383,7 @@ export default {
       return true
     },
     exportAll(){
-       window.location.href = "http://localhost:8080/exportAll";
+      window.location.href = "http://localhost:8080/exportAll";
     },
     exportPart() {
       console.log("选择的用户名为", this.usernames)
@@ -378,23 +393,23 @@ export default {
         api.post('/exportByUsername', this.usernames, {
           responseType: 'blob' // 指定响应数据的类型为 Blob 对象
         }).then(response => {
-              // 获取响应头中的文件名
-              const header = response.headers['content-disposition']
-              console.log("响应的文件名",header)
-              const filename = header ? header.split('=')[1] : 'StudentInfo.xlsx'
-              // 创建一个新的 Blob 对象，将响应体的数据保存到其中
-              const blob = new Blob([response.data], { type: 'application/vnd.ms-excel' })
-              // 创建一个 URL 对象，用于生成文件的下载链接
-              const url = window.URL.createObjectURL(blob)
-              // 创建一个 <a> 元素，设置下载链接和文件名，模拟用户点击下载链接
-              const link = document.createElement('a')
-              link.href = url
-              link.download = filename
-              document.body.appendChild(link)
-              link.click()
-              // 释放 URL 对象
-              window.URL.revokeObjectURL(url)
-            })
+          // 获取响应头中的文件名
+          const header = response.headers['content-disposition']
+          console.log("响应的文件名",header)
+          const filename = header ? header.split('=')[1] : 'StudentInfo.xlsx'
+          // 创建一个新的 Blob 对象，将响应体的数据保存到其中
+          const blob = new Blob([response.data], { type: 'application/vnd.ms-excel' })
+          // 创建一个 URL 对象，用于生成文件的下载链接
+          const url = window.URL.createObjectURL(blob)
+          // 创建一个 <a> 元素，设置下载链接和文件名，模拟用户点击下载链接
+          const link = document.createElement('a')
+          link.href = url
+          link.download = filename
+          document.body.appendChild(link)
+          link.click()
+          // 释放 URL 对象
+          window.URL.revokeObjectURL(url)
+        })
             .catch(error => {
               console.error(error)
             })

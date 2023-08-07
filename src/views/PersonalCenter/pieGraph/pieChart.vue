@@ -6,14 +6,26 @@
 <script setup>
 import *  as echarts from "echarts" ; //这段代码使用了 JavaScript 的模块导入（import）语法，导入了 echarts 库的全部内容，并将其赋值给一个名为 echarts 的变量
 import {onMounted} from "vue";
+import api from "../../../api/index.js";
 onMounted(()=>{
-  initChart()
+  getPersonalPieData();
+
 })
-const initChart=()=>{
+
+let pieData=[]
+const getPersonalPieData=()=>{
+  api.get('/personalPieData').then(res=>{
+    pieData=res.data.data;
+    initChart(pieData)
+  })
+}
+
+const initChart=(pData)=>{
   let chart = echarts.init(document.getElementById("myEcharts")); // setup中使用echarts
   // 把配置和数据放这里
   chart.setOption({
-
+    tooltip: {
+    },
     title: {
       text: '个人成果占比',
       textStyle:{
@@ -40,7 +52,7 @@ const initChart=()=>{
     },
     series: [
       {
-        name: 'Nightingale Chart',
+        name: '个人成果数量统计',
         type: 'pie',
         radius: [65, 130],
         center: ['50%', '50%'],
@@ -48,13 +60,7 @@ const initChart=()=>{
         itemStyle: {
           borderRadius: 8
         },
-        data: [
-          { value: 40, name: '科技论文成果' },
-          { value: 38, name: '专著' },
-          { value: 32, name: '专利软著' },
-          { value: 30, name: '项目' },
-          { value: 28, name: '奖励' },
-        ]
+        data: pData
       }
     ]
 

@@ -390,7 +390,7 @@ const deleteNotice = (row) => {
           } else {
             ElMessage({
               type: 'warning',
-              message: '删除失败',
+              message: '删除失败,无此权限',
             })
           }
         }).finally(getNotices)
