@@ -26,6 +26,12 @@ const initChart=(pData)=>{
     // color:['#81d5d2', 'rgba(23,142,175,0.84)', '#deb797', '#50a6e0', '#0098ba'],
     title:{
       text: '各项成果占比',
+      subtext: '——当前状态',
+      subtextStyle: {
+        color:'rgba(106,123,190,0.84)',
+        fontSize: 12,
+        fontWeight: 'normal'
+      }, // 副标题样式
       top:15,
       left:30,
       textStyle:{
@@ -37,7 +43,7 @@ const initChart=(pData)=>{
     legend: {
       orient: 'vertical', // 设置图例的排列方向为竖直方向
       left: 50, // 设置图例在容器右侧
-      top: 60, // 设置图例在容器中央
+      top: 65, // 设置图例在容器中央
     },
     toolbox: {
       top:15,
@@ -54,7 +60,7 @@ const initChart=(pData)=>{
       {
         name: '总体成果数量统计',
         type: 'pie',
-        radius: [50, 130],
+        radius: [45, 130],
         center: ['50%', '50%'],
         roseType: 'area',
         itemStyle: {

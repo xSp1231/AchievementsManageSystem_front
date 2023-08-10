@@ -3,6 +3,7 @@ import router from "../router/index.js"; //js文件中 直接使用实例
 import {ElMessage} from "element-plus";
 //为什么不能使用const router=useRouter()  因为useRouter只能在
 const api = axios.create({
+    // baseURL: "http://8.137.9.219:8080",
     baseURL: "http://localhost:8080",
     timeout: 5000 // 5秒钟
 })
@@ -12,7 +13,7 @@ const api = axios.create({
 api.interceptors.request.use(config => {
     const token = sessionStorage.getItem('saToken');
     config.headers.set(sessionStorage.getItem('tokenName'), sessionStorage.getItem('saToken'))
-    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh-----------tokrn is", token)
+    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh-----------token is", token)
     // config.headers['satoken'] = token;
     return config;
 });

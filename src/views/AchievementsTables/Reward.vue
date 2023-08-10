@@ -27,7 +27,7 @@
         </el-button>
         <el-button v-if="store.state.role==='admin'"  type="" plain :icon="Download" @click="exportPart()">批量导出</el-button>
         <el-upload v-if="store.state.role==='admin'"
-            action="http://localhost:8080/Reward/importData"
+            action="http://8.137.9.219:8080/Reward/importData"
                    :show-file-list="false" accept="xlsx"
                    :on-success="handleImportSuccess"
                    :before-upload="beforeUpload"
@@ -40,6 +40,9 @@
       <div class="addInfo" style="margin-top: 10px">
         <el-button type="text" plain size="default" :icon="Plus"
                    @click="addInfo()">点击进行填报
+        </el-button>
+        <el-button @click="open()"  type="text" plain size="default" style="margin-left:2%;color: #d31010"  >
+          成果填报被拒绝后怎么办？
         </el-button>
         <el-dialog
             draggable
@@ -108,7 +111,11 @@
                 <el-option label="接收" value="接收"/>
                 <el-option label="拒绝" value="拒绝"/>
               </el-select>
+            </el-form-item>
 
+            <!----管理员审核时可见    ---只有为管理员和编辑的时候 可见--->
+            <el-form-item v-if="role==='admin'&&isAdd===false" label="拒绝详情(拒绝了再填)" label-width="150" prop="refuseInfo">
+              <el-input v-model="formData.refuseInfo" placeholder="拒绝请给出理由,其他状态无需填写" clearable autocomplete="off"/>
             </el-form-item>
           </el-form>
 
@@ -126,7 +133,7 @@
         </el-dialog>
       </div>
       <div class="table" style="width: 100%;margin-top: 0px ">
-        <el-table :data="dataList" style="width: 120%" height="480" size="large"
+        <el-table v-loading="loading" :data="dataList" style="width: 120%" height="480" size="large"
                   @selection-change="handleSelectionChange">
           <el-table-column
               fixed
@@ -154,17 +161,17 @@
           </el-table-column>
           <el-table-column prop="status" label="填报状态" width="120" sortable>
             <template #default="{ row }">
-              <el-tag :type="row.status === '审核' ? 'primary' : row.status === '接收' ? 'success' : 'danger'">
+              <el-tag @click="showWrongInfo(row)" :type="row.status === '审核' ? 'primary' : row.status === '接收' ? 'success' : 'danger'">
                 {{ row.status === '审核' ? '审核' : row.status === '接收' ? '接收' : '拒绝' }}
               </el-tag>
             </template>
 
           </el-table-column>
 
-          <el-table-column fixed="right" label="Operations" width="120">
+          <el-table-column fixed="right" label="Operations" width="160">
             <template #default="scope">
-              <el-button link type="primary" size="large" @click="handleUpdate(scope.row)">编辑</el-button>
-              <el-button link type="danger" size="large"  @click="deleteOne(scope.row)"  >删除</el-button>
+              <el-button link type="primary" :icon="EditPen" size="large" @click="handleUpdate(scope.row)">编辑</el-button>
+              <el-button link type="danger" :icon="Delete" size="large"  @click="deleteOne(scope.row)"  >删除</el-button>
             </template>
           </el-table-column>
           <template v-slot:empty>
@@ -173,6 +180,23 @@
             </div>
           </template>
         </el-table>
+        <!--错误消息提示对话框   点击拒绝标签触发-->
+        <el-dialog
+            v-model="wrongInfoDialogVisible"
+            title="成果被拒绝详情,请修改错误后再上传填报:"
+            width="30%"
+            :before-close="wrongInfoHandleClose"
+        >
+          <span>{{wrongInfo}}</span>
+          <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="wrongInfoDialogVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="wrongInfoDialogVisible = false">
+          Confirm
+        </el-button>
+      </span>
+          </template>
+        </el-dialog>
       </div>
       <div class="page" style="width: 40%;margin-top:1%;margin-left: 30px">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
@@ -190,11 +214,21 @@
 </template>
 
 <script setup>
-import {DeleteFilled, Edit, Plus, Search, UploadFilled, Refresh, Download} from '@element-plus/icons-vue'
+import {DeleteFilled, Edit,EditPen,Delete, Plus, Search, UploadFilled, Refresh, Download} from '@element-plus/icons-vue'
 import api from "../../api/index.js"
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {computed, onMounted, reactive, ref} from "vue";
+import {ElMessage, ElMessageBox, ElNotification} from 'element-plus'
+import {computed, h, onMounted, reactive, ref} from "vue";
 import store from "../../store/index.js";
+const loading=ref(true)
+//错误提示框
+const open= () => {
+  ElNotification({
+    title: '解决方案',
+    message: h('j', { style: 'color: teal' }, '成果填报被拒绝,可以点击被拒绝成果所属行的拒绝标签，点击后将会显示我们成果填写哪里有错误，请修改错误之后再提交，等待管理员审核。填写成果之前应先仔细阅读发布在公告栏中的填写要求，以免成果填报被拒绝。'),
+    type: 'success',
+
+  })
+}
 const dialogTitle = ref("test")
 const isAdd = ref(true)//true 添加  false 关闭
 const dataList = ref([])//当前页要展示的列表数据
@@ -210,6 +244,7 @@ const formData = reactive({ //对话框里面要填写的表单数据
   "dateTime": "",
   "members": "",
   "place": "", //本人位次
+  "refuseInfo":"",
   "status": "审核", //状态只有三种  审核  拒绝 接收
 })
 const rulesForm = ref(null)
@@ -244,6 +279,7 @@ onMounted(() => {
   store.commit("getUsername")
   getAll()
 })
+const role=sessionStorage.getItem('role')
 const resetFormData = () => {
   formData.id = 0;
   formData.username="";
@@ -255,6 +291,7 @@ const resetFormData = () => {
   formData.dateTime = "";
   formData.members = "";
   formData.place = "";
+  formData.refuseInfo = "";
   formData.status = "审核"; //在退出操作之后 将表格清空
 }
 //重置函数
@@ -291,7 +328,7 @@ const handleCurrentChange = (newpage) => {//显示跳转到多少页
 }
 const username = ref("");
 const getAll = () => { //分页+条件查询
-  if (sessionStorage.getItem('role') === "student") {//如果为学生  那么就发请求 获得他的username 之后再发送请求   //vuex
+  if (role === "student") {//如果为学生  那么就发请求 获得他的username 之后再发送请求   //vuex
     api.get("/getUserInfo").then(res => {
       console.log("获取到的用户姓名", res.data.data.username);
       username.value = res.data.data.username
@@ -307,6 +344,7 @@ const get = () => {
   param += "&rewardName=" + queryInfo.rewardName
   param += "&status=" + queryInfo.status
   console.log("param is ", param)
+  loading.value=true
   api.get("/Reward/" + queryInfo.currentPage + "/" + queryInfo.pageSize + param).then(res => {
     console.log("后端返回的数据是 ", res);
     dataList.value = res.data.data.records;
@@ -315,8 +353,37 @@ const get = () => {
     queryInfo.pageSize = res.data.data.size;
     queryInfo.pageSize = res.data.data.size;
     queryInfo.total = res.data.data.total;
+    loading.value=false
   })
 }
+//错误信息显示对话框
+const wrongInfoHandleClose = (done) => {
+  ElMessageBox.confirm('确定退出相应操作?')
+      .then(() => {
+        done();
+      })
+      .catch(() => {
+      })
+}
+const wrongInfoDialogVisible=ref(false)
+const wrongInfo=ref('')
+//点击标签 查看错误详情
+const showWrongInfo=(row)=>{
+  console.log("点击标签的信息",row)
+  if(row.status==="拒绝"){
+    console.log("错误信息 is ",row.refuseInfo)
+    wrongInfo.value=row.refuseInfo
+    wrongInfoDialogVisible.value=true
+  }
+}
+
+
+
+
+
+
+
+
 //点击el-diaglog右上角的x按钮(叉叉)
 const handleClose = (done) => {
   ElMessageBox.confirm('确定退出相应操作?')
@@ -337,13 +404,11 @@ const isStudent=ref(false)
 //点击进行填报
 const addInfo = () => {
   resetFormData()//清空表单数据
-  if(sessionStorage.getItem("role")==="student"){ //如果是学生  那么就让dialog对话框的用户名  填报状态不能够编辑
+  if(role==="student"){ //如果是学生  那么就让dialog对话框的用户名  填报状态不能够编辑
     isStudent.value=true
   }
   //之后姓名赋值  让其不能编辑
   formData.username=store.state.username  //获取登陆者用户名
-
-
 
   console.log("刷新之后formdata is ", formData)
   dialogVisible.value=true;
@@ -360,10 +425,18 @@ const confirmAdd = () => {
       api.post("/Reward/add/",formData).then(res=>{
         console.log(res);
         if(res.data.flag===true){
-          ElMessage({
-            type: 'success',
-            message: res.data.message,
-          })
+          if(role==='admin'){//管理员和用户添加成果时的消息显示不一样
+            ElMessage({
+              type: 'success',
+              message: '成果信息添加成功',
+            })
+          }
+          else{
+            ElMessage({
+              type: 'success',
+              message: res.data.message,
+            })
+          }
           dialogVisible.value=false;
         }
         else{
@@ -472,7 +545,7 @@ const deleteBatch=()=>{
 //点击编辑
 
 const handleUpdate = (row) => {
-  if(sessionStorage.getItem("role")==="student"){ //如果是学生  那么就让dialog对话框的用户名  填报状态不能够编辑
+  if(role==="student"){ //如果是学生  那么就让dialog对话框的用户名  填报状态不能够编辑
     isStudent.value=true
   }
   dialogTitle.value = "更改成果信息";
@@ -494,17 +567,28 @@ const handleUpdate = (row) => {
 const confirmUpdate=()=>{
   //用户修改 变为审核
   //管理员自己定义
-  //formData.status="审核"  //编辑后 状态变为 审核
+  if(role==='student'){formData.status='审核'; //只要学生用户确定编辑了 那么成果的状态就变为审核
+  }
+
   rulesForm.value.validate((valid) => {
     if(valid){
       api.post("/Reward/update" , formData).then(res => {
         console.log("传递过来的formdata is ",formData)
         console.log("编辑之后的 res is ",res);
         if (res.data.flag === true) {
-          ElMessage({
-            type: 'success',
-            message: res.data.message,
-          })
+          if(role==='admin'){//管理员和用户添加成果时的消息显示不一样
+            ElMessage({
+              type: 'success',
+              message: '成果信息修改成功',
+            })
+          }
+          else{
+            ElMessage({
+              type: 'success',
+              message: res.data.message,
+            })
+          }
+
         } else {
           ElMessage({
             type: 'warning',
@@ -529,7 +613,7 @@ const confirmUpdate=()=>{
 }
 //导出全部
 const exportAll=()=>{
-  window.location.href = "http://localhost:8080/Reward/exportAll";
+  window.location.href = "http://8.137.9.219:8080/Reward/exportAll";
 }
 //批量导出
 const exportPart=()=>{

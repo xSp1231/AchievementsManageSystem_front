@@ -179,9 +179,9 @@ import {useStore} from "vuex";
 const store=useStore();
 const router = useRouter()
 const formData = reactive({
-  username: "manager",
-  password: "123",
-  role: "管理员",
+  username: "",
+  password: "",
+  role: "",
   verifyCode: ""
 })
 const login = () => {

@@ -40,8 +40,8 @@
           </el-form-item>
 
           <el-form-item style="margin-left: 20%">
-            <el-button type="primary" @click="updateInfo()">确认修改个人信息</el-button>
-            <el-button @click="resetFormOne()">重置</el-button>
+            <el-button type="primary"  @click="updateInfo()">确认修改个人信息</el-button>
+            <el-button  @click="resetFormOne()">重置</el-button>
           </el-form-item>
         </el-form>
 

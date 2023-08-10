@@ -27,7 +27,13 @@ const initChart=(pData)=>{
     tooltip: {
     },
     title: {
-      text: '个人成果占比',
+      text: '个人填报成果占比',
+      subtext: '——所有状态(接收,审核，拒绝)',
+      subtextStyle: {
+        color:'rgba(106,123,190,0.84)',
+        fontSize: 12,
+        fontWeight: 'normal'
+      }, // 副标题样式
       textStyle:{
         color:"#9f9fa1",
         fontSize: 19, // 字体大小

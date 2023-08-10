@@ -25,7 +25,7 @@
 
         <el-button type="primary" plain :icon="Download" style="margin-left: 10px" @click="exportAll()" >导出全部数据</el-button>
         <el-button type="" plain :icon="Download" @click="exportPart()">批量导出</el-button>
-        <el-upload action="http://localhost:8080/importStudentInfo"
+        <el-upload action="http://8.137.9.219:8080/importStudentInfo"
                    :show-file-list="false" accept="xlsx"
                    :on-success="handleImportSuccess"
                    :before-upload="beforeAvatarUpload"
@@ -171,9 +171,9 @@ export default {
       dialogTitle:"test",
       isadd: true,//true 添加  false 关闭
       dataList: [
-        {"username":"test","password":"123","name":"徐书鹏","major":"计算机科学与技术","role":"角色","status":0,"email":"2789347466"},
-        {"username":"test","password":"123","name":"徐书鹏","major":"计算机科学与技术","role":"角色","status":1,"email":"2789347466"},
-        {"username":"test","password":"123","name":"徐书鹏","major":"计算机科学与技术","role":"角色","status":1,"email":"2789347466"},
+        {"username":"test","password":"123","name":"test","major":"计算机科学与技术","role":"角色","status":0,"email":"2789347466"},
+        {"username":"test","password":"123","name":"test","major":"计算机科学与技术","role":"角色","status":1,"email":"2789347466"},
+        {"username":"test","password":"123","name":"test","major":"计算机科学与技术","role":"角色","status":1,"email":"2789347466"},
       ],//当前页要展示的列表数据
       dialogVisible: false,
       formData: { //表单数据
@@ -383,7 +383,7 @@ export default {
       return true
     },
     exportAll(){
-      window.location.href = "http://localhost:8080/exportAll";
+      window.location.href = "http://8.137.9.219:8080/exportAll";
     },
     exportPart() {
       console.log("选择的用户名为", this.usernames)

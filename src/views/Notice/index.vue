@@ -5,9 +5,10 @@
     <h2 style="text-align: center;margin-bottom: 0.5%;color: rgba(126,124,124,0.75)">公告管理(Powered By wangEditor)</h2>
 
     <div class="noticeTable" style="margin-left: 5%;margin-right: 5%;">
-      <el-button type="text" plain :icon="Plus" @click="addNotice()">点击增加</el-button>
-      <el-table :data="tableData" stripe height=540 style="width: 90%;">
-        <el-table-column sortable prop="id" label="公告ID" width="120"/>
+      <el-button type="text" plain :icon="Plus" @click="addNotice()">点击发布公告</el-button>
+      <el-button type="text" plain :icon="ChatLineRound" style="margin-left: 4%;color: #5287bc" >如果公告过多，管理员可以选择删除一些不再使用的公告。公告支持链接,图片上传,字体样式设置等功能</el-button>
+      <el-table v-loading="loading" :data="tableData"  stripe height=540   style="width: 90%;"  >
+        <el-table-column sortable prop="id"   label="公告ID"  width="120"/>
         <el-table-column sortable prop="time" label="发布时间" width="180"/>
         <el-table-column prop="title" label="标题" width="180"/>
         <el-table-column sortable prop="status" label="状态" width="110">
@@ -27,6 +28,11 @@
             <el-button :icon="Remove" size="small" type="danger" plain @click="deleteNotice(scope.row)">删除公告</el-button>
           </template>
         </el-table-column>
+        <template v-slot:empty>
+          <div class="no-data">
+            <el-empty description="管理员暂未发布公告" />
+          </div>
+        </template>
       </el-table>
     </div>
     <!---添加公告时的对话框-->
@@ -121,7 +127,7 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import {onBeforeUnmount, onMounted, reactive, ref, shallowRef} from 'vue'
 import api from '../../api/index.js'
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
-import {Plus, Remove, ZoomIn,} from '@element-plus/icons-vue';
+import {Plus, Remove, ZoomIn,ChatLineRound} from '@element-plus/icons-vue';
 import {ElMessage, ElMessageBox} from "element-plus";
 // --------------------------------------增加时的编辑器实例，必须用 shallowRef
 const AddEditorRef = shallowRef()
@@ -133,7 +139,7 @@ const AddEditorConfig = reactive({
   readOnly: false, //限制为只读状态  true为只读状态
   MENU_CONF: {
     uploadImage: {
-      server: "http://localhost:8080/uploadToOss", //上传到oss
+      server: "http://8.137.9.219:8080/uploadToOss", //上传到oss
       fieldName: "file",
       allowedFileTypes: ['image/*'], //只允许图片 默认也是
       customInsert(res, insertFn) {
@@ -171,7 +177,7 @@ const ViewEditorConfig = reactive({
   readOnly: true, //限制为只读状态  true为只读状态
   MENU_CONF: {
     uploadImage: {
-      server: "http://localhost:8080/uploadToOss", //上传到oss
+      server: "http://8.137.9.219:8080/uploadToOss", //上传到oss
       fieldName: "file",
       allowedFileTypes: ['image/*'], //只允许图片 默认也是
       customInsert(res, insertFn) {
@@ -205,116 +211,10 @@ const ViewHandleCreated = (ViewEditor) => {
 /////----------------------------------------------表格函数
 const labelPosition = ref('left') //对齐方式
 const tableData = ref([
-  {
-    time: '2016-05-03',
-    title: 'Tom',
-    status: "紧急",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-02',
-    title: 'Tom',
-    status: "一般",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-04',
-    title: 'Tom',
-    status: "一般",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-01',
-    title: 'Tom',
-    status: "一般",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-03',
-    title: 'Tom',
-    status: "紧急",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-02',
-    title: 'Tom',
-    status: "紧急",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-03',
-    title: 'Tom',
-    status: "紧急",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-02',
-    title: 'Tom',
-    status: "一般",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-04',
-    title: 'Tom',
-    status: "一般",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-01',
-    title: 'Tom',
-    status: "一般",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-03',
-    title: 'Tom',
-    status: "紧急",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-02',
-    title: 'Tom',
-    status: "紧急",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-03',
-    title: 'Tom',
-    status: "紧急",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-02',
-    title: 'Tom',
-    status: "一般",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-04',
-    title: 'Tom',
-    status: "一般",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-01',
-    title: 'Tom',
-    status: "一般",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-03',
-    title: 'Tom',
-    status: "紧急",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    time: '2016-05-02',
-    title: 'Tom',
-    status: "紧急",
-    comment: 'No. 189, Grove St, Los Angeles',
-  },
+
 ])
 
+const loading=ref(true)
 const AddDialogVisible = ref(false) //添加公告时 打开
 const ViewDialogVisible = ref(false)//查看公告时打开
 
@@ -363,9 +263,11 @@ const read = (raw) => {
 }
 //获取所有公告
 const getNotices = () => {
+  loading.value=true
   api.get("/getNotices").then(res => {
     console.log("得到的公告数据 is ", res.data.data);
     tableData.value = res.data.data
+    loading.value=false
   })
 }
 //删除公告：

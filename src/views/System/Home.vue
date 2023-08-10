@@ -10,7 +10,7 @@
           </div>
           <div class="notice" style="width: 100%;height: 92%;background-color:#f6f4f4;border-radius: 10px">
 
-            <el-table :data="tableData" stripe height="100%" style="width: 100%">
+            <el-table v-loading="loading" :data="tableData" stripe height="100%" style="width: 100%"  :default-sort="{ prop: 'time', order: 'descending' }">
               <el-table-column sortable prop="time" label="发布时间" width="160"/>
               <el-table-column prop="title" label="标题" width="180"/>
               <el-table-column sortable prop="status" label="状态" width="130">
@@ -25,6 +25,12 @@
                   <el-button :icon="ZoomIn" size="small" @click="read(scope.row)">点击查看详细内容</el-button>
                 </template>
               </el-table-column>
+              <template v-slot:empty>
+                <div class="no-data">
+                  <el-empty description="暂未发布公告" />
+                </div>
+              </template>
+
             </el-table>
 
             <el-dialog v-model="dialogVisible" style="width: 820px;height: 530px;" draggable title="公告内容详细信息">
@@ -56,7 +62,7 @@
 
           <div class="top" style="width: 100%;height: 30%;display: flex;">
             <el-card shadow="hover"
-                     style="width:30%;height: 80%;margin-top: 1%;margin-left: 1%;border-radius: 10px;background-color:rgba(246,242,242,0.63);"
+                     style="width:30%;height: 80%;margin-top: 1%;margin-left: 1%;border-radius: 10px;background-color:rgba(255,255,255,0.63);"
                     >
               <div class="item" style="display: flex;margin-top: -2%">
                 <div
@@ -73,7 +79,7 @@
               </div>
             </el-card>
             <el-card shadow="hover"
-                     style="width:30%;height: 80%;margin-top: 1%;margin-left: 1%;border-radius: 10px;background-color:rgba(246,242,242,0.63);"
+                     style="width:30%;height: 80%;margin-top: 1%;margin-left: 1%;border-radius: 10px;background-color:rgb(255,255,255);"
             >
               <div class="item" style="display: flex;margin-top: -2%">
                 <div
@@ -90,7 +96,7 @@
               </div>
             </el-card>
             <el-card shadow="hover"
-                     style="width:30%;height: 80%;margin-top: 1%;margin-left: 1%;border-radius: 10px;background-color:rgba(246,242,242,0.63);"
+                     style="width:30%;height: 80%;margin-top: 1%;margin-left: 1%;border-radius: 10px;background-color:rgb(255,255,255);"
             >
               <div class="item" style="display: flex;margin-top: -2%">
                 <div
@@ -108,8 +114,11 @@
             </el-card>
           </div>
           <el-card shadow="hover"
-                   style="width: 93%;margin-left:1%;height: 65%;border-radius: 10px;background-color: rgba(246,242,242,0.63)">
-            <h3>系统介绍</h3>
+                   style="width: 93%;margin-left:1%;height: 65%;border-radius: 10px;background-color: rgb(255,255,255)">
+            <h3 style="text-align: center;color: #9f9fa1;margin-top: -10px">系统介绍</h3>
+            <h3 style="font-size: 17px;font-style:normal;margin-top: 1%;color: #9f9fa1">&nbsp&nbsp&nbsp本系统主要使用者是教师管理员，以及学生本人。学生使用者可以对自己的成果进行增删改查等操作，还可以查看修改个人信息。教师管理员可以管理整个系统的信息，包括学生个人信息、成果(类型)信息以及公告信息，能够对相关信息进行增删改查，数据导入导出等。本系统具有运行速度快、安全性高、稳定性好的优点，实现了学生成果管理的系统化、规范化、自动化、达到提高学生成果管理效率的目的。
+            </h3>
+
           </el-card>
         </div>
 
@@ -139,7 +148,8 @@ import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import {onBeforeUnmount, onMounted, reactive, ref, shallowRef} from 'vue'
 import api from "../../api/index.js";
-
+import {ElMessage} from "element-plus";
+const loading=ref(true)
 //-----------------------------------wangEditor实例
 const editorRef = shallowRef()
 // 内容 HTML
@@ -171,25 +181,34 @@ const getCountNum=()=>{
   })
 
 }
+//每次先显示通告 提醒作用
+const notice = () => {
+  ElMessage({
+    showClose:true,
+    dangerouslyUseHTMLString: true,
+    message: '<strong>重要提醒!进入系统一定要<span style="color: rgba(227,13,52,0.86); font-weight: bold;">查看公告栏</span>。看是否有新的公告</strong>',
+    duration:5000,
 
 
+  })
+}
 
 const tableData = reactive([
   {
     time: '2016-05-03',
-    title: 'Tom',
+    title: 'test',
     status: "紧急",
     comment: 'No. 189, Grove St, Los Angeles',
   },
   {
     time: '2016-05-02',
-    title: 'Tom',
+    title: 'test',
     status: "一般",
     comment: 'No. 189, Grove St, Los Angeles',
   },
   {
     time: '2016-05-04',
-    title: 'Tom',
+    title: 'test',
     status: "一般",
     comment: 'No. 189, Grove St, Los Angeles',
   },
@@ -203,17 +222,19 @@ const dialogData = reactive({
 })
 
 onMounted(() => {
+  notice()
   console.log('home')
   getNotices()
   getCountNum()
 })
 
 
-
 const getNotices = () => {
+  loading.value=true
   api.get("/getNotices").then(res => {
     console.log("notice res ", res)
     Object.assign(tableData, res.data.data);
+    loading.value=false
   })
 }
 

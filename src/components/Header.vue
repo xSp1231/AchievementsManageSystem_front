@@ -25,20 +25,25 @@
     <div class="blankArea" style="width: 16%;"><h1 style="position: relative;top:26%;left: 10%;color: #949393">
       学生成果信息管理系统</h1></div>
     <div class="timeArea" style="width: 15%; display: flex;position: relative">
-      <h4 style="width: 30px;top:30%;left: 9%;position:absolute; color: #676464">
+      <h4 style="width: 30px;top:30%;left: 5%;position:absolute; color: #676464">
         <el-icon size="21px">
           <Calendar/>
         </el-icon>
       </h4>
-      <h4 style="position: absolute;top:30%;width:180px;left: 20%;color: #949393">{{ newTime }}</h4>
+      <h4 style="position: absolute;top:30%;width:180px;left: 16%;color: #949393">{{ newTime }}</h4>
     </div>
-    <div class="personalArea" style="width: 10%;">
-      <el-dropdown @command="handleCommand" style="margin-left: 20%;width: 80px">
-
-        <img v-if="role==='admin'" class="picture" style="margin-left: 30px;margin-top: 6px;height: 50px;width: 50px;border-radius: 50%;"
-             src="../assets/images/managerAvator.jpg">
-        <img v-if="role!=='admin'" class="picture" style="margin-left: 30px;margin-top: 6px;height: 50px;width: 50px;border-radius: 50%;"
-             src="../assets/images/two.jpg">
+    <div class="personalArea" style="width: 9%;margin-left:-1%;display: flex">
+      <img v-if="role==='admin'" class="picture" style="margin-left: 0px;margin-top: 8px;height: 40px;width: 40px;border-radius: 50%;"
+           src="../assets/images/managerAvator.jpg">
+      <img v-if="role!=='admin'" class="picture" style="margin-left: 00px;margin-top: 8px;height: 40px;width: 40px;border-radius: 50%;"
+           src="../assets/images/two.jpg">
+      <el-dropdown @command="handleCommand" style="margin-left: 3%;width: 80px">
+        <span style="width: 80px;height: 30%;margin-top: 25%" >
+      {{role}}
+      <el-icon class="el-icon--right">
+        <arrow-down />
+      </el-icon>
+    </span>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item command="logOff" :icon="Guide" divided>退出登录</el-dropdown-item>
@@ -55,7 +60,7 @@
 
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {useStore} from 'vuex';
-import {Fold, ArrowRight, Expand,Guide} from "@element-plus/icons-vue";
+import {Fold, ArrowRight, Expand,Guide,ArrowDown} from "@element-plus/icons-vue";
 import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import api from "../api/index.js";
