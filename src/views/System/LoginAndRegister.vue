@@ -173,7 +173,7 @@
 <script setup>
 import {reactive, ref, watch} from "vue";
 import api from "../../api/index.js";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElNotification} from "element-plus";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 const store=useStore();
@@ -208,7 +208,21 @@ const login = () => {
           message: '登录成功,欢迎回来! ' + formData.username,
           type: 'success',
         })
-        router.push("/home")
+        //登录成功之后需要检测账号密码是否相同  ==》如果相同 就跳转到个人中心页面区完善个人信息
+        if(formData.username===formData.password){
+          router.push('/personalCenter')
+          ElNotification({
+            title: '重要提醒',
+            dangerouslyUseHTMLString: true,
+            message: '<strong>系统检测到您的用户名与密码一致。请<span style="color:#de1111">及时修改密码</span>,谨防他人登录,以保障信息安全性。否则出现问题，后果将由本人承担。并<span style="color: #e10c0c">将qq邮箱号(不需要添加@qq.com后缀)补充完整</span>，找回密码功能的实现需要依赖于qq邮箱号</strong>',
+            type: 'warning',
+            duration:0
+          })
+        }
+        else{
+          router.push("/home")
+        }
+
       }
     } else {
       ElMessage({

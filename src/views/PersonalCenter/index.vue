@@ -3,9 +3,9 @@
   <div class="personalInfo">
     <div class="infoTable" style="width: 50%;height: 97%;margin-left:2%;margin-top: 0.5%;border-radius: 10px">
       <el-card style="width: 100%;height: 100%;border-radius: 10px;padding: 0;background-color: #f1efef" shadow="hover">
-        <h3 style="margin-left: 40%;margin-top: -10px;color: #9f9fa1">个人信息修改</h3>
+        <h3 style="margin-left: 40%;margin-top: -20px;color: #9f9fa1">个人信息修改</h3>
         <el-form
-            style="margin-top: 1%;max-width: 560px;"
+            style="margin-top: 0.5%;max-width: 560px;"
             ref="ruleFormRefOne"
             :model="userInfo"
             status-icon
@@ -40,12 +40,12 @@
           </el-form-item>
 
           <el-form-item style="margin-left: 20%">
-            <el-button type="primary"  @click="updateInfo()">确认修改个人信息</el-button>
-            <el-button  @click="resetFormOne()">重置</el-button>
+            <el-button type="primary" @click="updateInfo()">确认修改个人信息</el-button>
+            <el-button @click="resetFormOne()">重置</el-button>
           </el-form-item>
         </el-form>
 
-        <h3 style="margin-left: 40%;margin-top:-13px;color: #9f9fa1">密码修改</h3>
+        <h3 style="margin-left: 40%;margin-top:-18px;color: #9f9fa1">密码修改</h3>
         <el-form
             :rules="rulesTwo"
             ref="ruleFormRefTwo"
@@ -59,16 +59,16 @@
                       autocomplete="off" placeholder="修改密码时,请输入原始密码"
                       show-password/>
           </el-form-item>
-          <el-form-item label="新密码" prop="newPassword" style="margin-bottom: 16px">
+          <el-form-item label="新密码" prop="newPassword" style="margin-bottom: 15px">
             <el-input
                 clearable :prefix-icon="Key"
                 show-password
-                placeholder="长度为3到10"
+                placeholder="长度为6到10,建议包含大小写字母，数字"
                 v-model="userInfo.newPassword"
                 autocomplete="off"
             />
           </el-form-item>
-          <el-form-item label="确认新密码" prop="confirmPassword" style="margin-bottom: 12px">
+          <el-form-item label="确认新密码" prop="confirmPassword" style="margin-bottom: 6px">
             <el-input v-model="userInfo.confirmPassword" clearable :prefix-icon="Key"
                       show-password/>
           </el-form-item>
@@ -340,7 +340,9 @@ const rulesOne = reactive({
   name: [
     {required: true, message: '姓名不可为空', trigger: 'blur'},
   ],
-
+  major: [
+    {required: true, message: '专业不可为空', trigger: 'blur'},
+  ],
   email: [
     {
       required: true,
@@ -359,9 +361,9 @@ const rulesTwo = reactive({
     }],
   newPassword: [
     {required: true, message: '密码不可为空', trigger: 'blur'}, {
-      min: 3,
+      min: 6,
       max: 10,
-      message: 'Length should be 3 to 10',
+      message: 'Length should be 6 to 10',
       trigger: 'blur'
     }
   ],
