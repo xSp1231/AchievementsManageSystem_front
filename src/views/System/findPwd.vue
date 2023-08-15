@@ -88,13 +88,38 @@ const stepOneRules = reactive({//校验规则
   username: [{required: true, message: 'username为学号', trigger: 'blur'}],
   email: [{required: true, message: '邮箱号为必填项，确保与自己账号所绑定的邮箱号一致', trigger: 'blur'}]
 })
+//校验输入的密码
+const validatePassword=(rule,value,callback)=>{
+  //正则表达式检验
+  let hasUppercase = /[A-Z]/.test(value);
+  let hasLowercase = /[a-z]/.test(value);
+  let hasNumber = /[0-9]/.test(value);
+  let hasSpecialChar = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(value);
+
+  if(!hasUppercase){
+    callback(new Error('密码中需要包含大写字母!'))
+    return false
+  }
+  if(!hasLowercase){
+    callback(new Error('密码中需要包含小写字母!'))
+    return
+  }
+  if(!hasNumber){
+    callback(new Error('密码中需要包含数字!'))
+    return
+  }
+  if(!hasSpecialChar){
+    callback(new Error('密码中需要包含特殊字符!'))
+    return
+  }
+  if(!(value.length>=6&&value.length<=10)){
+    callback(new Error('密码中长度应该在6-10位!'))
+  }
+  callback()//最后一定要使用回调函数
+}
+
 const updatePwdRules = reactive({
-  password: [{required: true, message: 'username为学号', trigger: 'blur'}, {
-    min: 3,
-    max: 10,
-    message: '密码应在 3 到 10 个字符之间',
-    trigger: 'blur'
-  }],
+  password: [{validator:validatePassword,trigger:"blur"}],
 })
 const passwordFormRef = ref(null)
 //按钮绑定的属性

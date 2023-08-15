@@ -5,18 +5,22 @@
 
     <div style="margin-left: 2%">
       <div class="findarea" style="">
-        <el-input clearable v-if="store.state.role==='admin'" class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
-                  style="width: 150px;margin-right: 8px"></el-input>
+        <el-tooltip content="用户名只可精确查询" placement="top">
+          <el-input clearable v-if="store.state.role==='admin'" class="filter-item" v-model="queryInfo.username"
+                    placeholder="用户名"
+                    style="width: 150px;margin-right: 8px"></el-input>
+        </el-tooltip>
+
         <el-input clearable class="filter-item" v-model="queryInfo.title" placeholder="论文标题"
                   style="width: 150px;margin-right: 8px"></el-input>
         <el-select clearable v-model="queryInfo.status" placeholder="成果填报状态" style="margin-right:0.3%;width: 130px">
-          <el-option label="审核" value="审核" />
-          <el-option label="接收" value="接收" />
-          <el-option label="拒绝" value="拒绝" />
+          <el-option label="审核" value="审核"/>
+          <el-option label="接收" value="接收"/>
+          <el-option label="拒绝" value="拒绝"/>
         </el-select>
         <el-button @click="getAll()" :icon="Search" class="search">查询</el-button>
 
-          <el-button @click="reback()" :icon="Refresh" class="renew">重置</el-button>
+        <el-button @click="reback()" :icon="Refresh" class="renew">重置</el-button>
 
         <el-button @click="deleteBatch()" :icon="DeleteFilled" type="danger" class="dels">批量删除</el-button>
 
@@ -26,21 +30,21 @@
         </el-button>
         <el-button v-if="store.state.role==='admin'" type="" plain :icon="Download" @click="exportPart()">批量导出
         </el-button>
-        <el-upload v-if="store.state.role==='admin'" action="http://8.137.9.219:8080/ScientificPaper/importData"
-                   :show-file-list="false" accept="xlsx"
-                   :on-success="handleImportSuccess"
-                   :before-upload="beforeUpload"
-                   style="display: inline-block;position: absolute;right: 1%"
-        >
-          <el-button type="success" :icon="UploadFilled" plain>Excel数据导入</el-button>
-        </el-upload>
+<!--        <el-upload v-if="store.state.role==='admin'" action="http://8.137.9.219:8080/ScientificPaper/importData"-->
+<!--                   :show-file-list="false" accept="xlsx"-->
+<!--                   :on-success="handleImportSuccess"-->
+<!--                   :before-upload="beforeUpload"-->
+<!--                   style="display: inline-block;position: absolute;right: 1%"-->
+<!--        >-->
+<!--          <el-button type="success" :icon="UploadFilled" plain>Excel数据导入</el-button>-->
+<!--        </el-upload>-->
 
       </div>
       <div class="addInfo" style="margin-top: 10px;">
         <el-button type="text" plain size="default" :icon="Plus"
                    @click="addInfo()">点击进行填报
         </el-button>
-        <el-button @click="open()"  type="text" plain size="default" style="margin-left:2%;color: #d31010"  >
+        <el-button @click="open()" type="text" plain size="default" style="margin-left:2%;color: #d31010">
           成果填报被拒绝后怎么办？
         </el-button>
         <el-dialog
@@ -52,7 +56,8 @@
         >
           <el-form :model="formData" style="width: 80%" ref="rulesForm" :rules="rules" :inline="true">
             <el-form-item label="用户名" label-width="150" prop="username">
-              <el-input  :disabled="isStudent||isAdd===false"   v-model="formData.username" placeholder="用户名" clearable autocomplete="off"/>
+              <el-input :disabled="isStudent||isAdd===false" v-model="formData.username" placeholder="用户名" clearable
+                        autocomplete="off"/>
             </el-form-item>
             <el-form-item label="标题" label-width="150" prop="title">
               <el-input v-model="formData.title" placeholder="请填写标题" clearable autocomplete="off"/>
@@ -70,10 +75,10 @@
               />
             </el-form-item>
             <el-form-item label="期刊号" label-width="150" prop="issueNumber">
-              <el-input v-model="formData.issueNumber" placeholder="" clearable autocomplete="off"/>
+              <el-input v-model="formData.issueNumber" placeholder="填写数字" clearable autocomplete="off"/>
             </el-form-item>
             <el-form-item label="卷号" label-width="150" prop="volumeNumber">
-              <el-input v-model="formData.volumeNumber" placeholder="" clearable autocomplete="off"/>
+              <el-input v-model="formData.volumeNumber" placeholder="填写数字" clearable autocomplete="off"/>
             </el-form-item>
             <el-form-item label="页码范围" label-width="150" prop="pageRange">
               <el-input v-model="formData.pageRange" placeholder="xx页-yy页" clearable autocomplete="off"/>
@@ -85,13 +90,24 @@
               <el-input v-model="formData.allAuthors" placeholder="所有作者" clearable autocomplete="off"/>
             </el-form-item>
             <el-form-item label="检索类型" label-width="150" prop="searchType">
-              <el-input v-model="formData.searchType" placeholder="" clearable autocomplete="off"/>
+              <el-select clearable v-model="formData.searchType" placeholder="select" >
+
+                <el-option label="SCI" value="SCI"></el-option>
+                <el-option label="EI" value="EI"/>
+                <el-option label="Natural" value="Natural"/>
+                <el-option label="Science" value="Science"/>
+                <el-option label="其他" value="其他"/>
+                <el-option label="未收录" value="未收录"/>
+
+              </el-select>
+
+
             </el-form-item>
             <el-form-item label="检索号" label-width="150" prop="accessionNumber">
-              <el-input v-model="formData.accessionNumber" placeholder="" clearable autocomplete="off"/>
+              <el-input v-model="formData.accessionNumber" placeholder="请输入字符串" clearable autocomplete="off"/>
             </el-form-item>
             <el-form-item label="填报结果状态" label-width="150" prop="status">
-              <el-select :disabled="isStudent"  v-model="formData.status" placeholder="成果填报状态">
+              <el-select :disabled="isStudent" v-model="formData.status" placeholder="成果填报状态">
                 <el-option label="审核" value="审核"/>
                 <el-option label="接收" value="接收"/>
                 <el-option label="拒绝" value="拒绝"/>
@@ -102,7 +118,55 @@
             <el-form-item v-if="role==='admin'&&isAdd===false" label="拒绝详情(拒绝了再填)" label-width="150" prop="refuseInfo">
               <el-input v-model="formData.refuseInfo" placeholder="拒绝请给出理由,其他状态无需填写" clearable autocomplete="off"/>
             </el-form-item>
+            <el-form-item label="证明图片上传" label-width="150">
+              <!--添加成果的过程中 imageurls都为空- 只有当编辑的时候才会有值 -->
+              <el-upload
+                  accept=".jpg,.jpeg,.png,.JPG,.JPEG"
+                  :disabled="imageurls.length>0"
+                  multiple
+                  :limit="2"
+                  class="file-box"
+                  ref="upload"
+                  action="#"
+                  :on-preview="handlePreview"
+                  :on-remove="handleRemove"
+                  :on-change="handleChange"
+                  :on-exceed="handleExceed"
+                  :file-list="images"
+                  list-type="picture"
+                  :auto-upload="false"
+              >
+
+                <template v-if="isAdd" #trigger>
+                  <el-button slot="trigger" size="small" type="success">选取文件</el-button>
+                </template>
+
+
+                <!--编辑的时候出现  如果文件存在 那么就disabled   编辑框出现的时候 就得到了imageurls      -->
+                <template v-if="!isAdd" #trigger>
+                  <el-button :disabled="imageurls.length>0" size="small" type="primary">选取文件</el-button>
+                </template>
+
+
+                <template #tip>
+                  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2张</div>
+                </template>
+              </el-upload>
+
+              <div v-for="it in  imageurls" @click="clickPicture(it) "
+                   style="width: 100px;height: 90px;margin-left: 20px;border-radius: 8px;border: 1px dashed #a49f9f;">
+                <img :src=baseUrl+it.url style="width: 100%;height: 100%;border-radius: 8px" @click="enlargeImg(it)"/>
+                <el-button v-if="isAdd===false" :icon="CircleClose" type="danger" plain size="small" round
+                           style="margin-top: -20%" @click="deleteImg(it)"> 删除图片
+                </el-button>
+              </div>
+            </el-form-item>
           </el-form>
+
+          <p v-if="isAdd===false" style="font-size: 13px;color: red;margin-top: 20px;text-align: center">
+            如果需要添加新的图片,一定要先将该成果对应的全部图片删除后，再上传!</p>
+          <p v-if="isAdd===false" style="font-size: 15px;color: red;margin-top: 20px;text-align: center">
+            如果需要修改标题,一定要先将该成果对应的全部图片删除后，再上传!否则会造成数据丢失</p>
 
           <template #footer>
       <span class="dialog-footer" style="margin-right: 30%">
@@ -116,9 +180,22 @@
       </span>
           </template>
         </el-dialog>
+
+        <!----放大显示图片的对话框---->
+        <el-dialog
+            v-model="imgVisible"
+            title="图片预览"
+            width="40%"
+        >
+          <div style="width: 100%;height: 500px;background-color: #5287bc">
+            <img :src=baseUrl+targetImgUrl style="width: 100%;height: 100%;border-radius: 8px">
+          </div>
+        </el-dialog>
+
+
       </div>
       <div class="table" style="width: 100%;margin-top: 0px ">
-        <el-table v-loading="loading"  :data="dataList" style="width: 120%" height="480" size="large"
+        <el-table v-loading="loading" :data="dataList" style="width: 120%" height="480" size="large"
                   @selection-change="handleSelectionChange">
           <el-table-column
               fixed
@@ -147,9 +224,10 @@
           </el-table-column>
           <el-table-column prop="accessionNumber" label="检索号" width="140">
           </el-table-column>
-          <el-table-column prop="status" label="填报状态" width="120" sortable >
-            <template #default="{ row }" >
-              <el-tag   @click="showWrongInfo(row)"  :type="row.status === '审核' ? 'primary' : row.status === '接收' ? 'success' : 'danger'">
+          <el-table-column prop="status" label="填报状态" width="120" sortable>
+            <template #default="{ row }">
+              <el-tag @click="showWrongInfo(row)"
+                      :type="row.status === '审核' ? 'primary' : row.status === '接收' ? 'success' : 'danger'">
                 {{ row.status === '审核' ? '审核' : row.status === '接收' ? '接收' : '拒绝' }}
               </el-tag>
             </template>
@@ -157,7 +235,8 @@
 
           <el-table-column fixed="right" label="Operations" width="160">
             <template #default="scope">
-              <el-button link type="primary" :icon="EditPen" size="large" @click="handleUpdate(scope.row)">编辑</el-button>
+              <el-button link type="primary" :icon="EditPen" size="large" @click="handleUpdate(scope.row)">编辑
+              </el-button>
               <el-button link type="danger" :icon="Delete" size="large" @click="deleteOne(scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -165,7 +244,7 @@
 
           <template v-slot:empty>
             <div class="no-data">
-              <el-empty description="暂未填写,这里空空如也www" />
+              <el-empty description="暂未填写,这里空空如也www"/>
             </div>
           </template>
 
@@ -177,7 +256,7 @@
             width="30%"
             :before-close="wrongInfoHandleClose"
         >
-          <span>{{wrongInfo}}</span>
+          <span>{{ wrongInfo }}</span>
           <template #footer>
       <span class="dialog-footer">
         <el-button @click="wrongInfoDialogVisible = false">Cancel</el-button>
@@ -205,25 +284,34 @@
 </template>
 
 <script setup>
-import {DeleteFilled,Delete, Edit, Plus, Search, UploadFilled, Refresh, Download,EditPen} from '@element-plus/icons-vue'
+import {
+  DeleteFilled,
+  Delete,
+  Edit,
+  Plus,
+  Search,
+  UploadFilled,
+  Refresh,
+  Download,
+  EditPen,
+  CircleClose
+} from '@element-plus/icons-vue'
 import api from "../../api/index.js"
 import {ElMessage, ElMessageBox, ElNotification} from 'element-plus'
 import {computed, h, onMounted, reactive, ref} from "vue";
 import store from "../../store/index.js";
 
 
-const loading=ref(true)
+const loading = ref(true)
 //错误提示框
-const open= () => {
+const open = () => {
   ElNotification({
     title: '解决方案',
-    message: h('j', { style: 'color: teal' }, '成果填报被拒绝,可以点击被拒绝成果所属行的拒绝标签，点击后将会显示我们成果填写哪里有错误，请修改错误之后再提交，等待管理员审核。填写成果之前应先仔细阅读发布在公告栏中的填写要求，以免成果填报被拒绝。'),
+    message: h('j', {style: 'color: teal'}, '成果填报被拒绝,可以点击被拒绝成果所属行的拒绝标签，点击后将会显示我们成果填写哪里有错误，请修改错误之后再提交，等待管理员审核。填写成果之前应先仔细阅读发布在公告栏中的填写要求，以免成果填报被拒绝。'),
     type: 'success',
 
   })
 }
-
-
 const dialogTitle = ref("test")
 const isAdd = ref(true)//true 添加  false 关闭
 const dataList = ref([])//当前页要展示的列表数据
@@ -241,7 +329,7 @@ const formData = reactive({ //对话框里面要填写的表单数据
   "allAuthors": "",
   "searchType": "",
   "accessionNumber": "",
-  "refuseInfo":"",//拒绝详情
+  "refuseInfo": "",//拒绝详情
   "status": "审核", //状态只有三种  审核  拒绝 接收
 })
 const rulesForm = ref(null)
@@ -278,9 +366,8 @@ let ids = [];  //let定义变量 const定义常量
 onMounted(() => {
   getAll()
 })
-const role=sessionStorage.getItem('role')
-
-const resetFormData = () => {
+const role = sessionStorage.getItem('role')
+const resetFormData = () => { //取消 关闭操作 使用
   formData.id = 0;
   formData.username = "";
   formData.title = "";
@@ -293,8 +380,14 @@ const resetFormData = () => {
   formData.allAuthors = "";
   formData.searchType = "";
   formData.accessionNumber = "";
-  formData.refuseInfo="";
+  formData.refuseInfo = "";
   formData.status = "审核"; //在退出操作之后 将表格清空
+  //将想要上传的文件清空
+  images.value = []
+  //同时将imageurls清空
+  imageurls.value = []
+
+
 }
 //重置函数
 const reback = () => {
@@ -302,8 +395,8 @@ const reback = () => {
     queryInfo.currentPage = 1;
     queryInfo.pageSize = 5;
     //重置
-    queryInfo.status=""
-    queryInfo.title=""
+    queryInfo.status = ""
+    queryInfo.title = ""
     getAll();
   } else { //admin
     api.get('/ScientificPaper/1/5').then((res) => {
@@ -349,7 +442,7 @@ const get = () => {
   param += "&title=" + queryInfo.title
   param += "&status=" + queryInfo.status
   console.log("param is ", param)
-  loading.value=true  //加载
+  loading.value = true  //加载
   api.get("/ScientificPaper/" + queryInfo.currentPage + "/" + queryInfo.pageSize + param).then(res => {
     console.log("后端返回的数据是 ", res);
     dataList.value = res.data.data.records;
@@ -357,7 +450,7 @@ const get = () => {
     queryInfo.currentPage = res.data.data.current;
     queryInfo.pageSize = res.data.data.size;
     queryInfo.total = res.data.data.total;
-    loading.value=false //关闭
+    loading.value = false //关闭
   })
 }
 
@@ -370,41 +463,37 @@ const wrongInfoHandleClose = (done) => {
       .catch(() => {
       })
 }
-const wrongInfoDialogVisible=ref(false)
-const wrongInfo=ref('')
+const wrongInfoDialogVisible = ref(false)
+const wrongInfo = ref('')
 //点击标签 查看错误详情
-const showWrongInfo=(row)=>{
-  console.log("点击标签的信息",row)
-  if(row.status==="拒绝"){
-   console.log("错误信息 is ",row.refuseInfo)
-    wrongInfo.value=row.refuseInfo
-    wrongInfoDialogVisible.value=true
+const showWrongInfo = (row) => {
+  console.log("点击标签的信息", row)
+  if (row.status === "拒绝") {
+    console.log("错误信息 is ", row.refuseInfo)
+    wrongInfo.value = row.refuseInfo
+    wrongInfoDialogVisible.value = true
   }
 
 }
-
-
-
-
-
 
 //admin getall  student getByUsername  可以直接在getAll里面加入条件
 //点击el-diaglog右上角的x按钮(叉叉)
 const handleClose = (done) => {
   ElMessageBox.confirm('确定退出相应操作?')
       .then(() => {
-        formData.title = "";
-        formData.jcName = "";
-        formData.publicDate = "";
-        formData.issueNumber = "";
-        formData.volumeNumber = "";
-        formData.pageRange = "";
-        formData.place = 0;
-        formData.allAuthors = "";
-        formData.searchType = "";
-        formData.accessionNumber = "";
-        formData.status = "";
-        formData.refuseInfo=""
+        resetFormData()
+        // formData.title = "";
+        // formData.jcName = "";
+        // formData.publicDate = "";
+        // formData.issueNumber = "";
+        // formData.volumeNumber = "";
+        // formData.pageRange = "";
+        // formData.place = 0;
+        // formData.allAuthors = "";
+        // formData.searchType = "";
+        // formData.accessionNumber = "";
+        // formData.status = "";
+        // formData.refuseInfo=""
         //在退出操作之后 将表格清空
         console.log("退出操作之后的formdata ", formData)
         done();
@@ -415,65 +504,66 @@ const handleClose = (done) => {
 //取消增加操作
 const cancelOption = () => {
   dialogVisible.value = false;
+  resetFormData()
 }
-const isStudent=ref(false)
+const isStudent = ref(false)
 //点击进行填报
 const addInfo = () => {
   resetFormData()//清空表单数据
-  if(role==="student"){ //如果是学生  那么就让dialog对话框的用户名  填报状态不能够编辑
-    isStudent.value=true
+  if (role === "student") { //如果是学生  那么就让dialog对话框的用户名  填报状态不能够编辑
+    isStudent.value = true
   }
   //之后姓名赋值  让其不能编辑
-  formData.username=store.state.username  //获取登陆者用户名  如果是学生=>得到username  否则 空字符串
+  formData.username = store.state.username  //获取登陆者用户名  如果是学生=>得到username  否则 空字符串
   console.log("刷新之后formdata is ", formData)
   dialogVisible.value = true;
   isAdd.value = true;
-  dialogTitle.value = "科技论文信息填报-请事先查看公告里面的填报要求"
+  dialogTitle.value = "科技论文信息填报-请事先查看公告里面的填报要求(成果标题,图片上传时(建议一张)要多考虑,后续修改过程可能略微繁琐)"
 }
 //增加成果 + 表单校验
-const confirmAdd = () => {
-  formData.place = parseInt(formData.place) //string 转换为int
-  console.log("上传的formData is ", formData)
-  // 表单校验 上传
-  rulesForm.value.validate((valid) => {
-    if (valid) {
-      console.log("通过");
-      api.post("/ScientificPaper/add/", formData).then(res => {
-        console.log(res);
-        if (res.data.flag === true) {
-
-          if(role==='admin'){//管理员和用户添加成果时的消息显示不一样
-            ElMessage({
-              type: 'success',
-              message: '成果信息添加成功',
-            })
-          }
-          else{
-            ElMessage({
-            type: 'success',
-            message: res.data.message,
-          })
-          }
-
-          dialogVisible.value = false;
-        } else {
-          ElMessage({
-            type: 'error',
-            message: res.data.message,
-          })
-        }
-      }).finally(getAll)
-      //触发成功验证表单，调用接口；
-    } else {
-      console.log("未通过");
-      ElMessage({
-        type: 'warning',
-        message: "未通过表单校验 请检查表单字段",
-      })
-    }
-  });
-}
-//删除单个
+// const confirmAdd = () => {
+//   formData.place = parseInt(formData.place) //string 转换为int
+//   console.log("上传的formData is ", formData)
+//   // 表单校验 上传
+//   rulesForm.value.validate((valid) => {
+//     if (valid) {
+//       console.log("通过");
+//       api.post("/ScientificPaper/add/", formData).then(res => {
+//         console.log(res);
+//         if (res.data.flag === true) {
+//
+//           if(role==='admin'){//管理员和用户添加成果时的消息显示不一样
+//             ElMessage({
+//               type: 'success',
+//               message: '成果信息添加成功',
+//             })
+//           }
+//           else{
+//             ElMessage({
+//             type: 'success',
+//             message: res.data.message,
+//           })
+//           }
+//
+//           dialogVisible.value = false;
+//         } else {
+//           ElMessage({
+//             type: 'error',
+//             message: res.data.message,
+//           })
+//         }
+//       }).finally(getAll)
+//       //触发成功验证表单，调用接口；
+//     } else {
+//       console.log("未通过");
+//       ElMessage({
+//         type: 'warning',
+//         message: "未通过表单校验 请检查表单字段",
+//       })
+//     }
+//   });
+// }
+//删除单个成果 同时将对应的图片也要删除     ----------逻辑外键
 const deleteOne = (row) => {
   ElMessageBox.confirm(
       '确定删除这条成果信息吗?',
@@ -558,17 +648,18 @@ const deleteBatch = () => {
 }
 //点击编辑
 const handleUpdate = (row) => {
-  if(role==="student"){ //如果是学生  那么就让dialog对话框的用户名  填报状态不能够编辑
-    isStudent.value=true
+  if (role === "student") { //如果是学生  那么就让dialog对话框的用户名  填报状态不能够编辑
+    isStudent.value = true
   }
 
-  dialogTitle.value = "更改成果信息";
+  dialogTitle.value = "更改成果信息(点击图片可以放大预览)";
   dialogVisible.value = true; //弹出窗口
   isAdd.value = false//开始编辑 改变表格按键
   api.get("/ScientificPaper/getScientificPaperById/" + row.id).then(res => {
     console.log("通过科技论文id搜索到的信息是", res.data.data);
     if (res.data.flag === true) {
       Object.assign(formData, res.data.data)
+      getImages();//同时获得图片
     } else {
       ElMessage({
         type: 'warning',
@@ -579,10 +670,18 @@ const handleUpdate = (row) => {
 }
 //点击
 const confirmUpdate = () => {
+  //必须上传图片的充要条件
+  if (imageurls.value.length === 0 && images.value.length === 0) { //如果没有图片   比如删除完没有上传 就需要提醒·1
+    ElMessage({
+      type: 'warning',
+      message: '必须要上传证明图片',
+    })
+    return
+  }
   //用户修改 变为审核
   //管理员自己定义
-  if(role==='student'){
-    formData.status='审核'; //只要学生用户确定编辑了 那么成果的状态就变为审核
+  if (role === 'student') {
+    formData.status = '审核'; //只要学生用户确定编辑了 那么成果的状态就变为审核
   }
   rulesForm.value.validate((valid) => {
     if (valid) {
@@ -590,13 +689,13 @@ const confirmUpdate = () => {
         console.log("传递过来的formdata is ", formData)
         console.log("编辑之后的 res is ", res);
         if (res.data.flag === true) {
-          if(role==='admin'){//管理员和用户添加成果时的消息显示不一样
+          submitFile();
+          if (role === 'admin') {//管理员和用户添加成果时的消息显示不一样
             ElMessage({
               type: 'success',
               message: '成果信息修改成功',
             })
-          }
-          else{
+          } else {
             ElMessage({
               type: 'success',
               message: res.data.message,
@@ -609,6 +708,7 @@ const confirmUpdate = () => {
             message: '编辑失败',
           })
         }
+        resetFormData()
       }).finally(getAll)
     } else {
       ElMessage({
@@ -686,6 +786,173 @@ const handleImportSuccess = () => {
   })
   getAll()
 }
+
+//图片上传 显示功能开发------------------------------------------------------------------------------------------------------
+const baseUrl = "https://xsp-datastore.oss-cn-chengdu.aliyuncs.com/";
+const images = ref([])
+const imageurls = ref([])
+const upload = ref()
+const submitFile = () => {
+  let Data = new FormData() //创建一个表单
+  //如果没有上传文件的话 就return
+  if (images.value.length === 0) {
+    return;
+  }
+  images.value.forEach(file => {
+    console.log("遍历file", file)
+    Data.append("files", file.raw) //将文件传到表单中，files属性是后端接受的参数名
+  })
+  Data.append("achievementName", formData.title) //将标题也加进去
+  Data.append("username", formData.username) //将成果的名字也加进去
+  api.post('/ScientificPaperPicture/uploadPictures', Data, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
+    console.log('res is ', res)
+    ElMessage({
+      message: '图片上传成功',
+      type: 'success',
+    })
+    images.value = []//之后清空
+    //填报成果成功之后无需显示
+    //imageurls.value=res.data.data;//初始化图片链接数组
+    console.log("得到的图片数据为", imageurls.value)
+    console.log("上传后", images)
+    //数据表中加入 一个用户 一个成果最多2张图片  ------username  图片url 存入数据表
+    // getImages()
+  }).catch(error => {
+    ElMessage({
+      message: error.message,
+      type: 'error',
+    })
+  })
+}
+const confirmAdd = () => {
+  console.log("上传的formData is ", formData)
+  // 表单校验 上传
+  rulesForm.value.validate((valid) => {
+    if (valid) {
+      if (images.value.length === 0) {
+        ElMessage({
+          message: '请选择要上传的图片文件以供证明',
+          type: 'warning',
+        })
+        return
+      }
+      console.log("通过");
+      api.post("/ScientificPaper/add/", formData).then(res => {
+        console.log(res);
+        if (res.data.flag === true) {
+          submitFile() //如果成功 就
+          if (role === 'admin') {//管理员和用户添加成果时的消息显示不一样
+            ElMessage({
+              type: 'success',
+              message: '成果信息添加成功',
+            })
+          } else {
+            ElMessage({
+              type: 'success',
+              message: res.data.message,//用户  显示等待审核
+            })
+          }
+          resetFormData()
+          dialogVisible.value = false;
+        } else {
+          ElMessage({
+            type: 'error',
+            message: res.data.message,
+          })
+        }
+      }).finally(
+          getAll,
+      )
+      //触发成功验证表单，调用接口；
+    } else {
+      console.log("未通过");
+      ElMessage({
+        type: 'warning',
+        message: "未通过表单校验 请检查表单字段",
+      })
+    }
+  });
+}
+//移除文件列表时的钩子
+const handleRemove = (file, fileList) => {
+  console.log("移除时候 file ", file)
+  console.log("移除时候 filelist ", fileList)
+  // images.length = 0;
+  // images.push(...fileList)
+  images.value = fileList
+  console.log('images is ', images)
+}
+//点击某个文件时的钩子
+const handlePreview = (file) => {
+  console.log("点击某个文件", file);
+}
+//添加到上传列表时的钩子
+const handleChange = (file, fileList) => {
+  // images.length = 0;
+  // images.push(...fileList)
+  images.value = fileList
+  console.log("添加到上传列表", file)
+  console.log("上传时的images is ", images)
+}
+//文件超出个数限制时的钩子
+const handleExceed = () => {
+  ElMessage({
+    message: '文件超出2个',
+    type: 'warning',
+  })
+  console.log("文件超出个数限制时的钩子")
+}
+const clickPicture = (it) => {
+  console.log("点击图片的内容", it)
+}
+//点击编辑的时候 获取 该用户 该成果 所对应的图片  同时imagesUrl数组不为空 ==》当还有图片的时候 就不能编辑 不可选择文件
+const getImages = () => {
+  api.get("/ScientificPaperPicture/picturesList/" + formData.username + "/" + formData.title) //根据用户名 成果名字 查询对应的图片
+      .then(res => {
+        console.log("图片的response ", res.data.data)
+        imageurls.value = res.data.data
+        console.log("获得的图片列表 is ", imageurls)
+        console.log("获取图片列表成功")
+      })
+      .catch(error => {
+        ElMessage({
+          message: '获取图片列表失败',
+          type: 'error',
+        })
+      })
+}
+//目标图片的url
+const targetImgUrl = ref("")
+//点击图片时候的函数
+const imgVisible = ref(false) //图片预览 显示在对话框里面
+//图片放大
+const enlargeImg = (it) => {
+  imgVisible.value = it.url
+  targetImgUrl.value = it.url;
+  console.log("点击图片时候的it is ", it.url)
+}
+//编辑的时候删除图片
+const deleteImg = (it) => {
+  console.log("要删除的图片信息是 ", it)
+  //username  成果名称  url
+  let info = {
+    "username": it.username,
+    "achievementName": it.achievementName,
+    "url": it.url
+  }
+  api.post("/ScientificPaperPicture/deleteImg", info).then(res => {
+    console.log("删除图片的res is ", res)
+    if (res.data.flag === true) {
+      ElMessage({
+        message: '图片删除成功',
+        type: 'success',
+      })
+    } else {
+      ElMessage.error("图片删除失败")
+    }
+  }).finally(getImages)
+}
+
 
 </script>
 

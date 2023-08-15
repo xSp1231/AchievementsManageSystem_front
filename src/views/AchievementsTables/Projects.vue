@@ -7,8 +7,11 @@
 
     <div style="margin-left: 2%">
       <div class="findarea" style="">
-        <el-input clearable v-if="store.state.role==='admin'" class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
-                  style="width: 140px;margin-right: 8px"></el-input>
+        <el-tooltip content="用户名只可精确查询" placement="top">
+          <el-input clearable v-if="store.state.role==='admin'" class="filter-item" v-model="queryInfo.username" placeholder="用户名(精确查询)"
+                    style="width: 140px;margin-right: 8px"></el-input>
+        </el-tooltip>
+
         <el-input clearable class="filter-item" v-model="queryInfo.projectName" placeholder="项目名称"
                   style="width: 130px;margin-right: 8px"></el-input>
 
@@ -28,15 +31,15 @@
         <el-button v-if="store.state.role==='admin'" type="primary" plain :icon="Download" style="margin-left: 10px" @click="exportAll()">导出全部项目数据
         </el-button>
         <el-button  v-if="store.state.role==='admin'" type="" plain :icon="Download" style="width: 100px" @click="exportPart()">批量导出</el-button>
-        <el-upload  v-if="store.state.role==='admin'"
-            action="http://8.137.9.219:8080/Project/importData"
-                   :show-file-list="false" accept="xlsx"
-                   :on-success="handleImportSuccess"
-                   :before-upload="beforeUpload"
-                   style="display: inline-block;position: absolute;right: 0.5%"
-        >
-          <el-button type="success" :icon="UploadFilled" plain>Excel数据导入</el-button>
-        </el-upload>
+<!--        <el-upload  v-if="store.state.role==='admin'"-->
+<!--            action="http://8.137.9.219:8080/Project/importData"-->
+<!--                   :show-file-list="false" accept="xlsx"-->
+<!--                   :on-success="handleImportSuccess"-->
+<!--                   :before-upload="beforeUpload"-->
+<!--                   style="display: inline-block;position: absolute;right: 0.5%"-->
+<!--        >-->
+<!--          <el-button type="success" :icon="UploadFilled" plain>Excel数据导入</el-button>-->
+<!--        </el-upload>-->
 
       </div>
       <div class="addInfo" style="margin-top: 10px">
@@ -113,11 +116,55 @@
             <el-form-item v-if="role==='admin'&&isAdd===false" label="拒绝详情(拒绝了再填)" label-width="150" prop="refuseInfo">
               <el-input v-model="formData.refuseInfo" placeholder="拒绝请给出理由,其他状态无需填写" clearable autocomplete="off"/>
             </el-form-item>
+            <el-form-item label="证明图片上传" label-width="150">
+              <!--添加成果的过程中 imageurls都为空- 只有当编辑的时候才会有值 -->
+              <el-upload
+                  accept=".jpg,.jpeg,.png,.JPG,.JPEG"
+                  :disabled="imageurls.length>0"
+                  multiple
+                  :limit="2"
+                  class="file-box"
+                  ref="upload"
+                  action="#"
+                  :on-preview="handlePreview"
+                  :on-remove="handleRemove"
+                  :on-change="handleChange"
+                  :on-exceed="handleExceed"
+                  :file-list="images"
+                  list-type="picture"
+                  :auto-upload="false"
+              >
+
+                <template v-if="isAdd"  #trigger>
+                  <el-button slot="trigger" size="small" type="success">选取文件</el-button>
+                </template>
 
 
+                <!--编辑的时候出现  如果文件存在 那么就disabled   编辑框出现的时候 就得到了imageurls      -->
+                <template v-if="!isAdd"  #trigger>
+                  <el-button :disabled="imageurls.length>0" size="small" type="primary">选取文件</el-button>
+                </template>
 
+
+                <template #tip>
+                  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2张</div>
+                </template>
+              </el-upload>
+
+              <div v-for="it in  imageurls" @click="clickPicture(it) "
+                   style="width: 100px;height: 90px;margin-left: 20px;border-radius: 8px;border: 1px dashed #a49f9f;">
+                <img :src=baseUrl+it.url style="width: 100%;height: 100%;border-radius: 8px" @click="enlargeImg(it)"/>
+                <el-button v-if="isAdd===false" :icon="CircleClose" type="danger" plain size="small" round
+                           style="margin-top: -20%"  @click="deleteImg(it)"> 删除图片
+                </el-button>
+              </div>
+            </el-form-item>
 
           </el-form>
+          <p v-if="isAdd===false" style="font-size: 13px;color: red;margin-top: 20px;text-align: center">
+            如果需要添加新的图片,一定要先将该成果对应的全部图片删除后，再上传!</p>
+          <p v-if="isAdd===false" style="font-size: 15px;color: red;margin-top: 20px;text-align: center">
+            如果需要修改标题,一定要先将该成果对应的全部图片删除后，再上传!否则会造成数据丢失</p>
 
           <template #footer >
       <span class="dialog-footer" style="margin-right: 30%">
@@ -131,6 +178,18 @@
       </span>
           </template>
         </el-dialog>
+        <!----放大显示图片的对话框---->
+        <el-dialog
+            v-model="imgVisible"
+            title="图片预览"
+            width="40%"
+        >
+          <div style="width: 100%;height: 500px;background-color: #5287bc">
+            <img :src=baseUrl+targetImgUrl style="width: 100%;height: 100%;border-radius: 8px" >
+          </div>
+        </el-dialog>
+
+
       </div>
       <div class="table" style="width: 100%;margin-top: 0px ">
         <el-table v-loading="loading"  :data="dataList" style="width: 120%" height="480" size="large"
@@ -218,7 +277,7 @@
 </template>
 
 <script setup>
-import {DeleteFilled,Delete, Edit, EditPen,Plus, Search, UploadFilled, Refresh, Download} from '@element-plus/icons-vue'
+import {DeleteFilled,Delete, Edit, EditPen,Plus, Search, UploadFilled, Refresh, Download,CircleClose} from '@element-plus/icons-vue'
 import api from "../../api/index.js"
 import {ElMessage, ElMessageBox, ElNotification} from 'element-plus'
 import {computed, h, onMounted, reactive, ref} from "vue";
@@ -305,6 +364,10 @@ const resetFormData = () => {
   formData.endingTime ="";
   formData.refuseInfo="";
   formData.status = "审核"; //在退出操作之后 将表格清空
+  //将想要上传的文件清空
+  images.value=[]
+  //同时将imageurls清空
+  imageurls.value = []
 }
 //重置函数
 const reback = () => {
@@ -396,10 +459,6 @@ const showWrongInfo=(row)=>{
 
 
 
-
-
-
-
 //点击el-diaglog右上角的x按钮(叉叉)
 const handleClose = (done) => {
   ElMessageBox.confirm('确定退出相应操作?')
@@ -415,6 +474,7 @@ const handleClose = (done) => {
 //取消增加操作
 const cancelOption = () => {
   dialogVisible.value = false;
+  resetFormData()
 }
 const isStudent=ref(false)
 //点击进行填报
@@ -428,50 +488,50 @@ const addInfo = () => {
   console.log("刷新之后formdata is ", formData)
   dialogVisible.value=true;
   isAdd.value=true;
-  dialogTitle.value="项目信息填报-请事先查看公告里面的填报要求"
+  dialogTitle.value="项目信息填报-请事先查看公告里面的填报要求(成果标题,图片上传时(建议一张)要多考虑,后续修改过程可能略微繁琐)"
 }
 //增加成果 + 表单校验
-const confirmAdd = () => {
-  console.log("上传的formData is ",formData)
-  // 表单校验 上传
-  rulesForm.value.validate((valid) => {
-    if (valid) {
-      console.log("通过");
-      api.post("/Project/add/",formData).then(res=>{
-        console.log(res);
-        if(res.data.flag===true){
-          if(role==='admin'){//管理员和用户添加成果时的消息显示不一样
-            ElMessage({
-              type: 'success',
-              message: '成果信息添加成功',
-            })
-          }
-          else{
-            ElMessage({
-              type: 'success',
-              message: res.data.message,
-            })
-          }
-
-          dialogVisible.value=false;
-        }
-        else{
-          ElMessage({
-            type: 'error',
-            message: res.data.message,
-          })
-        }
-      }).finally(getAll)
-      //触发成功验证表单，调用接口；
-    } else {
-      console.log("未通过");
-      ElMessage({
-        type: 'warning',
-        message: "未通过表单校验 请检查表单字段",
-      })
-    }
-  });
-}
+// const confirmAdd = () => {
+//   console.log("上传的formData is ",formData)
+//   // 表单校验 上传
+//   rulesForm.value.validate((valid) => {
+//     if (valid) {
+//       console.log("通过");
+//       api.post("/Project/add/",formData).then(res=>{
+//         console.log(res);
+//         if(res.data.flag===true){
+//           if(role==='admin'){//管理员和用户添加成果时的消息显示不一样
+//             ElMessage({
+//               type: 'success',
+//               message: '成果信息添加成功',
+//             })
+//           }
+//           else{
+//             ElMessage({
+//               type: 'success',
+//               message: res.data.message,
+//             })
+//           }
+//
+//           dialogVisible.value=false;
+//         }
+//         else{
+//           ElMessage({
+//             type: 'error',
+//             message: res.data.message,
+//           })
+//         }
+//       }).finally(getAll)
+//       //触发成功验证表单，调用接口；
+//     } else {
+//       console.log("未通过");
+//       ElMessage({
+//         type: 'warning',
+//         message: "未通过表单校验 请检查表单字段",
+//       })
+//     }
+//   });
+// }
 //删除单个
 const deleteOne = (row) => {
   ElMessageBox.confirm(
@@ -564,13 +624,14 @@ const handleUpdate = (row) => {
   if(role==="student"){ //如果是学生  那么就让dialog对话框的用户名  填报状态不能够编辑
     isStudent.value=true
   }
-  dialogTitle.value = "更改成果信息";
+  dialogTitle.value = "更改成果信息(点击图片可以放大预览)";
   dialogVisible.value = true; //弹出窗口
   isAdd.value = false//开始编辑 改变表格按键
   api.get("/Project/getProjectById/" + row.id).then(res => {
     console.log("通过科技论文id搜索到的信息是", res.data.data);
     if (res.data.flag === true) {
       Object.assign(formData,res.data.data)
+      getImages()
     } else {
       ElMessage({
         type: 'warning',
@@ -581,20 +642,28 @@ const handleUpdate = (row) => {
 }
 //点击
 const confirmUpdate=()=>{
+  //必须上传图片的充要条件
+  if(imageurls.value.length===0&&images.value.length===0){ //如果没有图片   比如删除完没有上传 就需要提醒·1
+    ElMessage({
+      type: 'warning',
+      message: '必须要上传证明图片',
+    })
+    return
+  }
+
   //用户修改 变为审核
   //管理员自己定义
   //formData.status="审核"  //编辑后 状态变为 审核
   if(role==='student'){
     formData.status='审核'; //只要学生用户确定编辑了 那么成果的状态就变为审核
   }
-
-
   rulesForm.value.validate((valid) => {
     if(valid){
       api.post("/Project/update" , formData).then(res => {
         console.log("传递过来的formdata is ",formData)
         console.log("编辑之后的 res is ",res);
         if (res.data.flag === true) {
+          submitFile()
           if(role==='admin'){//管理员和用户添加成果时的消息显示不一样
             ElMessage({
               type: 'success',
@@ -613,6 +682,7 @@ const confirmUpdate=()=>{
             message: '编辑失败',
           })
         }
+        resetFormData()
       }).finally(getAll)
     }
     else{
@@ -691,6 +761,175 @@ const handleImportSuccess=()=>{
   })
   getAll()
 }
+
+
+//图片上传 显示功能开发------------------------------------------------------------------------------------------------------
+const baseUrl = "https://xsp-datastore.oss-cn-chengdu.aliyuncs.com/";
+const images = ref([])
+const imageurls = ref([])
+const upload = ref()
+const submitFile = () => {
+  let Data = new FormData() //创建一个表单
+  //如果没有上传文件的话 就return
+  if(images.value.length===0){
+    return ;
+  }
+  images.value.forEach(file => {
+    console.log("遍历file", file)
+    Data.append("files", file.raw) //将文件传到表单中，files属性是后端接受的参数名
+  })
+  Data.append("achievementName", formData.projectName) //将标题也加进去
+  Data.append("username", formData.username) //将成果的名字也加进去
+  api.post('/ProjectPicture/uploadPictures', Data, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
+    console.log('res is ', res)
+    ElMessage({
+      message: '图片上传成功',
+      type: 'success',
+    })
+    images.value = []//之后清空
+    //填报成果成功之后无需显示
+    //imageurls.value=res.data.data;//初始化图片链接数组
+    console.log("得到的图片数据为", imageurls.value)
+    console.log("上传后", images)
+    //数据表中加入 一个用户 一个成果最多2张图片  ------username  图片url 存入数据表
+    // getImages()
+  }).catch(error => {
+    ElMessage({
+      message: error.message,
+      type: 'error',
+    })
+  })
+}
+const confirmAdd = () => {
+  console.log("上传的formData is ", formData)
+  // 表单校验 上传
+  rulesForm.value.validate((valid) => {
+    if (valid) {
+      if (images.value.length === 0) {
+        ElMessage({
+          message: '请选择要上传的图片文件以供证明',
+          type: 'warning',
+        })
+        return
+      }
+      console.log("通过");
+      api.post("/Project/add/", formData).then(res => {
+        console.log(res);
+        if (res.data.flag === true) {
+          submitFile() //如果成功 就
+          if (role === 'admin') {//管理员和用户添加成果时的消息显示不一样
+            ElMessage({
+              type: 'success',
+              message: '成果信息添加成功',
+            })
+          } else {
+            ElMessage({
+              type: 'success',
+              message: res.data.message,//用户  显示等待审核
+            })
+          }
+          resetFormData()
+          dialogVisible.value = false;
+        } else {
+          ElMessage({
+            type: 'error',
+            message: res.data.message,
+          })
+        }
+      }).finally(
+          getAll,
+      )
+      //触发成功验证表单，调用接口；
+    } else {
+      console.log("未通过");
+      ElMessage({
+        type: 'warning',
+        message: "未通过表单校验 请检查表单字段",
+      })
+    }
+  });
+}
+//移除文件列表时的钩子
+const handleRemove = (file, fileList) => {
+  console.log("移除时候 file ", file)
+  console.log("移除时候 filelist ", fileList)
+  // images.length = 0;
+  // images.push(...fileList)
+  images.value = fileList
+  console.log('images is ', images)
+}
+//点击某个文件时的钩子
+const handlePreview = (file) => {
+  console.log("点击某个文件", file);
+}
+//添加到上传列表时的钩子
+const handleChange = (file, fileList) => {
+
+  images.value = fileList
+  console.log("添加到上传列表", file)
+  console.log("上传时的images is ", images)
+}
+//文件超出个数限制时的钩子
+const handleExceed = () => {
+  ElMessage({
+    message: '文件超出2个',
+    type: 'warning',
+  })
+  console.log("文件超出个数限制时的钩子")
+}
+const clickPicture = (it) => {
+  console.log("点击图片的内容", it)
+}
+//点击编辑的时候 获取 该用户 该成果 所对应的图片  同时imagesUrl数组不为空 ==》当还有图片的时候 就不能编辑 不可选择文件
+const getImages = () => {
+  api.get("/ProjectPicture/picturesList/" + formData.username + "/" + formData.projectName) //根据用户名 成果名字 查询对应的图片
+      .then(res => {
+        console.log("图片的response ", res.data.data)
+        imageurls.value = res.data.data
+        console.log("获得的图片列表 is ", imageurls)
+        console.log("获取图片列表成功")
+      })
+      .catch(error => {
+        ElMessage({
+          message: '获取图片列表失败',
+          type: 'error',
+        })
+      })
+}
+//目标图片的url
+const targetImgUrl = ref("")
+//点击图片时候的函数
+const imgVisible = ref(false) //图片预览 显示在对话框里面
+//图片放大
+const enlargeImg = (it) => {
+  imgVisible.value = it.url
+  targetImgUrl.value = it.url;
+  console.log("点击图片时候的it is ", it.url)
+}
+//编辑的时候删除图片
+const deleteImg=(it)=>{
+  console.log("要删除的图片信息是 ",it)
+  //username  成果名称  url
+  let info={
+    "username":it.username,
+    "achievementName":it.achievementName,
+    "url":it.url
+  }
+  api.post("/ProjectPicture/deleteImg",info).then(res=>{
+    console.log("删除图片的res is ",res)
+    if(res.data.flag===true){
+      ElMessage({
+        message: '图片删除成功',
+        type: 'success',
+      })
+    }
+    else{
+      ElMessage.error("图片删除失败")
+    }
+  }).finally(getImages)
+}
+
+
 
 </script>
 

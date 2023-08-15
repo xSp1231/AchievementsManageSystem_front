@@ -351,6 +351,38 @@ const rulesOne = reactive({
     },
   ],
 })
+//校验密码安全性
+const validatePassword=(rule,value,callback)=>{
+  //正则表达式检验
+  let hasUppercase = /[A-Z]/.test(value);
+  let hasLowercase = /[a-z]/.test(value);
+  let hasNumber = /[0-9]/.test(value);
+  let hasSpecialChar = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(value);
+
+  if(!hasUppercase){
+    callback(new Error('密码中需要包含大写字母!'))
+    return false
+  }
+  if(!hasLowercase){
+    callback(new Error('密码中需要包含小写字母!'))
+    return
+  }
+  if(!hasNumber){
+    callback(new Error('密码中需要包含数字!'))
+    return
+  }
+  if(!hasSpecialChar){
+    callback(new Error('密码中需要包含特殊字符!'))
+    return
+  }
+  if(!(value.length>=6&&value.length<=10)){
+    callback(new Error('密码中长度应该在6-10位!'))
+  }
+  callback()//最后一定要使用回调函数
+}
+
+
+
 const rulesTwo = reactive({
   inputPasswordTwo: [
     {required: true, message: "请填入原始密码", trigger: 'blur'}, {
@@ -359,13 +391,8 @@ const rulesTwo = reactive({
       message: 'Length should be 3 to 10',
       trigger: 'blur'
     }],
-  newPassword: [
-    {required: true, message: '密码不可为空', trigger: 'blur'}, {
-      min: 6,
-      max: 10,
-      message: 'Length should be 6 to 10',
-      trigger: 'blur'
-    }
+  newPassword: [{ validator: validatePassword, trigger: 'blur' },
+    {required: true, message: '密码不可为空', trigger: 'blur'},
   ],
   confirmPassword: [
     {

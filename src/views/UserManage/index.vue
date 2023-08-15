@@ -6,12 +6,23 @@
 
     <div style="margin-left: 2%">
       <div class="findarea" style="">
-        <el-input clearable class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
-                  style="width: 150px;margin-right: 8px"></el-input>
-        <el-input clearable class="filter-item" v-model="queryInfo.major" placeholder="专业班级"
-                  style="width: 150px;margin-right: 8px"></el-input>
-        <el-input clearable class="filter-item" v-model="queryInfo.name" placeholder="学生姓名"
-                  style="width: 150px;margin-right: 8px"></el-input>
+        <el-tooltip content="支持模糊查询" placement="top">
+          <el-input clearable class="filter-item" v-model="queryInfo.username" placeholder="学生用户名"
+                    style="width: 150px;margin-right: 8px"></el-input>
+        </el-tooltip>
+
+        <el-tooltip content="支持模糊查询" placement="top">
+          <el-input clearable class="filter-item" v-model="queryInfo.major" placeholder="专业班级"
+                    style="width: 150px;margin-right: 8px"></el-input>
+        </el-tooltip>
+
+        <el-tooltip content="支持模糊查询" placement="top">
+          <el-input clearable class="filter-item" v-model="queryInfo.name" placeholder="学生姓名"
+                    style="width: 150px;margin-right: 8px"></el-input>
+        </el-tooltip>
+
+
+
         <el-button @click="getAll()" :icon="Search"   class="search">查询</el-button>
         <el-tooltip
             class="box-item"
@@ -26,7 +37,8 @@
         <el-button type="primary" plain :icon="Download" style="margin-left: 10px" @click="exportAll()" >导出全部数据</el-button>
         <el-button type="" plain :icon="Download" @click="exportPart()">批量导出</el-button>
         <el-upload action="http://8.137.9.219:8080/importStudentInfo"
-                   :show-file-list="false" accept="xlsx"
+                   :show-file-list="false"
+                    accept="xlsx"
                    :on-success="handleImportSuccess"
                    :before-upload="beforeAvatarUpload"
                    style="display: inline-block;position: absolute;right: 1%"

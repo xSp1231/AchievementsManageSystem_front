@@ -7,9 +7,12 @@
 
     <div style="margin-left: 2%">
       <div class="findarea" style="">
-        <el-input clearable v-if="store.state.role==='admin'" class="filter-item" v-model="queryInfo.username"
-                  placeholder="学生用户名"
-                  style="width: 150px;margin-right: 8px"></el-input>
+        <el-tooltip content="用户名只可精确查询" placement="top">
+          <el-input clearable v-if="store.state.role==='admin'" class="filter-item" v-model="queryInfo.username"
+                    placeholder="用户名"
+                    style="width: 150px;margin-right: 8px"></el-input>
+        </el-tooltip>
+
         <el-input clearable class="filter-item" v-model="queryInfo.monoName" placeholder="专著名字"
                   style="width: 150px;margin-right: 8px"></el-input>
         <el-select clearable v-model="queryInfo.status" placeholder="成果填报状态" style="margin-right:0.3%;width: 130px">
@@ -26,15 +29,15 @@
         </el-button>
         <el-button v-if="store.state.role==='admin'" type="" plain :icon="Download" @click="exportPart()">批量导出
         </el-button>
-        <el-upload v-if="store.state.role==='admin'"
-                   action="http://8.137.9.219:8080/Monograph/importData"
-                   :show-file-list="false" accept="xlsx"
-                   :on-success="handleImportSuccess"
-                   :before-upload="beforeUpload"
-                   style="display: inline-block;position: absolute;right: 1%"
-        >
-          <el-button type="success" :icon="UploadFilled" plain>Excel数据导入</el-button>
-        </el-upload>
+<!--        <el-upload v-if="store.state.role==='admin'"-->
+<!--                   action="http://8.137.9.219:8080/Monograph/importData"-->
+<!--                   :show-file-list="false" accept="xlsx"-->
+<!--                   :on-success="handleImportSuccess"-->
+<!--                   :before-upload="beforeUpload"-->
+<!--                   style="display: inline-block;position: absolute;right: 1%"-->
+<!--        >-->
+<!--          <el-button type="success" :icon="UploadFilled" plain>Excel数据导入</el-button>-->
+<!--        </el-upload>-->
 
       </div>
       <div class="addInfo" style="margin-top: 10px">
@@ -96,6 +99,7 @@
             <el-form-item label="证明图片上传" label-width="150">
               <!--添加成果的过程中 imageurls都为空- 只有当编辑的时候才会有值 -->
               <el-upload
+                  accept=".jpg,.jpeg,.png,.JPG,.JPEG"
                   :disabled="imageurls.length>0"
                   multiple
                   :limit="2"
@@ -114,13 +118,10 @@
                 <template v-if="isAdd"  #trigger>
                   <el-button slot="trigger" size="small" type="success">选取文件</el-button>
                 </template>
-
-
                 <!--编辑的时候出现  如果文件存在 那么就disabled   编辑框出现的时候 就得到了imageurls      -->
                 <template v-if="!isAdd"  #trigger>
                   <el-button :disabled="imageurls.length>0" size="small" type="primary">选取文件</el-button>
                 </template>
-
 
                 <template #tip>
                   <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2张</div>
@@ -157,7 +158,7 @@
         <el-dialog
             v-model="imgVisible"
             title="图片预览"
-            width="40%"
+            width="52%"
         >
           <div style="width: 100%;height: 500px;background-color: #5287bc">
             <img :src=baseUrl+targetImgUrl style="width: 100%;height: 100%;border-radius: 8px" >
@@ -700,7 +701,7 @@ const submitFile = () => {
   })
   Data.append("achievementName", formData.monoName) //将标题也加进去
   Data.append("username", formData.username) //将成果的名字也加进去
-  api.post('/uploadPictures', Data, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
+  api.post('/MonographPicture/uploadPictures', Data, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
     console.log('res is ', res)
     ElMessage({
       message: '图片上传成功',
@@ -805,7 +806,7 @@ const clickPicture = (it) => {
 //点击编辑的时候 获取 该用户 该成果 所对应的图片  同时imagesUrl数组不为空 ==》当还有图片的时候 就不能编辑 不可选择文件
 const getImages = () => {
 
-  api.get("/picturesList/" + formData.username + "/" + formData.monoName) //根据用户名 成果名字 查询对应的图片
+  api.get("/MonographPicture/picturesList/" + formData.username + "/" + formData.monoName) //根据用户名 成果名字 查询对应的图片
       .then(res => {
         console.log("图片的response ", res.data.data)
         imageurls.value = res.data.data
@@ -838,7 +839,7 @@ const deleteImg=(it)=>{
     "achievementName":it.achievementName,
     "url":it.url
   }
-  api.post("/deleteMonographImg",info).then(res=>{
+  api.post("/MonographPicture/deleteImg",info).then(res=>{
     console.log("删除图片的res is ",res)
     if(res.data.flag===true){
       ElMessage({

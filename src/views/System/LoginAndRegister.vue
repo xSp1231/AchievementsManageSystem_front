@@ -265,13 +265,44 @@ const changeToLogin = () => {
 }
 
 const checkForm = ref(null) //ref对象
-//自定义校验规则  校验两次输入的密码
+//自定义校验规则  校验两次输入的密码\
+//校验输入的密码
+const validatePassword=(rule,value,callback)=>{
+  //正则表达式检验
+  let hasUppercase = /[A-Z]/.test(value);
+  let hasLowercase = /[a-z]/.test(value);
+  let hasNumber = /[0-9]/.test(value);
+  let hasSpecialChar = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(value);
+
+  if(!hasUppercase){
+    callback(new Error('密码中需要包含大写字母!'))
+    return false
+  }
+  if(!hasLowercase){
+    callback(new Error('密码中需要包含小写字母!'))
+    return
+  }
+  if(!hasNumber){
+    callback(new Error('密码中需要包含数字!'))
+    return
+  }
+  if(!hasSpecialChar){
+    callback(new Error('密码中需要包含特殊字符!'))
+    return
+  }
+  if(!(value.length>=6&&value.length<=10)){
+    callback(new Error('密码中长度应该在6-10位!'))
+}
+  callback()//最后一定要使用回调函数
+}
+
 const validatecheckPass = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('请输入确认的密码!'))
   } else if (value !== ruleForm.password) {
     callback(new Error("两次输入的密码不一致,请重新尝试"))
-  } else {
+  }
+  else {
     callback()
   }
 }
@@ -282,16 +313,11 @@ const rules = reactive({//校验规则
     message: '用户名在 3 到 10 个字符之间',
     trigger: 'blur'
   }],
-  password:[{required: true, message: '注意密码安全性', trigger: 'blur'}, {
-    min: 3,
-    max: 10,
-    message: '密码应该在 3 到 10 个字符之间',
-    trigger: 'blur'
-  }],
   name:[{required: true, message: '姓名为必填项', trigger: 'blur'}],
   email:[{required: true, message: 'qq邮箱号为必填项', trigger: 'blur'}],
   major:[{required: true, message: '注意专业填写格式,如计科2101', trigger: 'blur'}],
-   checkPass:[{ validator: validatecheckPass, trigger: 'blur' }],
+  password :[{ validator: validatePassword, trigger: 'blur' }],
+  checkPass:[{ validator: validatecheckPass, trigger: 'blur' }],
 
 })
 const ruleForm=reactive({
@@ -301,7 +327,7 @@ const ruleForm=reactive({
       name:"",
       major:'',
       email:"",
-      checkPass: '',
+      checkPass: '',//确认密码部分的输入
       status:1,
 })
 const progressLength=ref(0)
@@ -342,7 +368,9 @@ const getColor=(percentage)=>{
 
 //用户注册
 const register=()=>{
+  console.log("调用注册函数")
   checkForm.value.validate((valid) => {
+    console.log("进入")
     if(valid){
       console.log("校验结果",valid)
       console.log("表单内容",ruleForm)
