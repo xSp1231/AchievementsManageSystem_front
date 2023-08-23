@@ -309,16 +309,6 @@ export default {
         api.delete('/student/' + row.username).then((res) => {
           console.log("删除的res is ",res)
           this.$message.success("删除成功");
-          if(res.data.message==="学生注销成功!"){
-            sessionStorage.removeItem('saToken'); //会话存储里面
-            sessionStorage.removeItem('tokenName');
-            sessionStorage.removeItem('role');
-            this.$router.push("/login") //删除之后跳转到登录页面
-          }
-          // console.log("总的数量", this.queryInfo.total);
-          // if (((this.queryInfo.total - 1) % (this.queryInfo.pageSize) === 0) && this.queryInfo.pageSize !== 1) {//当删除掉某页最后一行数据的时候 我们需要跳转到前面的页面
-          //   this.queryInfo.currentPage -= 1;//页数减1
-          // }
         }).finally(() => {
           this.getAll();
         });

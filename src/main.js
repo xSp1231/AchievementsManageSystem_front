@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
-
+import {createPinia} from 'pinia' //引入pinia
 import router from "./router/index.js";
 import store from "./store/index.js";
 import ElementPlus from 'element-plus'
@@ -11,6 +11,7 @@ const app = createApp(App)
 app.use(router)
 app.use(store)
 app.use(ElementPlus)
+app.use(createPinia())
 // 屏蔽控制台警告信息
 app.config.warnHandler = () => null;
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {  //应用所有图标

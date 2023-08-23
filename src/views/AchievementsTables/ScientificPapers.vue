@@ -30,14 +30,14 @@
         </el-button>
         <el-button v-if="store.state.role==='admin'" type="" plain :icon="Download" @click="exportPart()">批量导出
         </el-button>
-<!--        <el-upload v-if="store.state.role==='admin'" action="http://8.137.9.219:8080/ScientificPaper/importData"-->
-<!--                   :show-file-list="false" accept="xlsx"-->
-<!--                   :on-success="handleImportSuccess"-->
-<!--                   :before-upload="beforeUpload"-->
-<!--                   style="display: inline-block;position: absolute;right: 1%"-->
-<!--        >-->
-<!--          <el-button type="success" :icon="UploadFilled" plain>Excel数据导入</el-button>-->
-<!--        </el-upload>-->
+        <!--        <el-upload v-if="store.state.role==='admin'" action="http://8.137.9.219:8080/ScientificPaper/importData"-->
+        <!--                   :show-file-list="false" accept="xlsx"-->
+        <!--                   :on-success="handleImportSuccess"-->
+        <!--                   :before-upload="beforeUpload"-->
+        <!--                   style="display: inline-block;position: absolute;right: 1%"-->
+        <!--        >-->
+        <!--          <el-button type="success" :icon="UploadFilled" plain>Excel数据导入</el-button>-->
+        <!--        </el-upload>-->
 
       </div>
       <div class="addInfo" style="margin-top: 10px;">
@@ -90,12 +90,12 @@
               <el-input v-model="formData.allAuthors" placeholder="所有作者" clearable autocomplete="off"/>
             </el-form-item>
             <el-form-item label="检索类型" label-width="150" prop="searchType">
-              <el-select clearable v-model="formData.searchType" placeholder="select" >
+              <el-select clearable v-model="formData.searchType" placeholder="select">
 
                 <el-option label="SCI" value="SCI"></el-option>
                 <el-option label="EI" value="EI"/>
-                <el-option label="Natural" value="Natural"/>
-                <el-option label="Science" value="Science"/>
+                <el-option label="CSCD" value="CSCD"/>
+                <el-option label="SSCI" value="SSCI"/>
                 <el-option label="其他" value="其他"/>
                 <el-option label="未收录" value="未收录"/>
 
@@ -118,10 +118,10 @@
             <el-form-item v-if="role==='admin'&&isAdd===false" label="拒绝详情(拒绝了再填)" label-width="150" prop="refuseInfo">
               <el-input v-model="formData.refuseInfo" placeholder="拒绝请给出理由,其他状态无需填写" clearable autocomplete="off"/>
             </el-form-item>
-            <el-form-item label="证明图片上传" label-width="150">
+            <el-form-item label="证明文件上传" label-width="150">
               <!--添加成果的过程中 imageurls都为空- 只有当编辑的时候才会有值 -->
               <el-upload
-                  accept=".jpg,.jpeg,.png,.JPG,.JPEG"
+                  accept=".jpg,.jpeg,.png,.JPG,.JPEG,.pdf"
                   :disabled="imageurls.length>0"
                   multiple
                   :limit="2"
@@ -149,24 +149,36 @@
 
 
                 <template #tip>
-                  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2张</div>
+                  <div slot="tip" class="el-upload__tip">只能上传jpg/png,pdf文件，且文件个数不超过2</div>
                 </template>
               </el-upload>
 
               <div v-for="it in  imageurls" @click="clickPicture(it) "
-                   style="width: 100px;height: 90px;margin-left: 20px;border-radius: 8px;border: 1px dashed #a49f9f;">
-                <img :src=baseUrl+it.url style="width: 100%;height: 100%;border-radius: 8px" @click="enlargeImg(it)"/>
-                <el-button v-if="isAdd===false" :icon="CircleClose" type="danger" plain size="small" round
-                           style="margin-top: -20%" @click="deleteImg(it)"> 删除图片
+                   style="width: 106px;height: 90px;margin-left: 20px;border-radius: 8px;border: 1px dashed #a49f9f;">
+
+                <!-------------------------------------pdf预览------------------------->
+                <el-button class="pdf" v-if="isPdf(it.url)" :icon="Document" type="text" plain size="default"
+                           style="width: 100%;height: 100%;color: #97979a;text-decoration-line:underline;" @click="scanPdf(it)" > pdf文件(查看)
                 </el-button>
+                <el-button v-if="isAdd===false&&isPdf(it.url)" :icon="CircleClose" type="danger" plain size="small" round
+                         style="margin-left: 0%"   @click="deleteImg(it)"> 删除文件
+                </el-button>
+
+                <!-------------------------------------图片------------------------->
+                <img class="picture" v-if="!isPdf(it.url)" :src=baseUrl+it.url style="width: 100%;height: 100%;border-radius: 8px" @click="enlargeImg(it)"/>
+                  <el-button v-if="isAdd===false&&!isPdf(it.url)" :icon="CircleClose" type="danger" plain size="small" round
+                             style="margin-top: -20%" @click="deleteImg(it)"> 删除文件
+                  </el-button>
+
+
               </div>
             </el-form-item>
           </el-form>
 
           <p v-if="isAdd===false" style="font-size: 13px;color: red;margin-top: 20px;text-align: center">
-            如果需要添加新的图片,一定要先将该成果对应的全部图片删除后，再上传!</p>
+            如果需要添加新的文件,一定要先将该成果对应的全部文件删除后，再上传!</p>
           <p v-if="isAdd===false" style="font-size: 15px;color: red;margin-top: 20px;text-align: center">
-            如果需要修改标题,一定要先将该成果对应的全部图片删除后，再上传!否则会造成数据丢失</p>
+            如果需要修改标题,一定要先将该成果对应的全部文件删除后，再上传!否则会造成数据丢失</p>
 
           <template #footer>
       <span class="dialog-footer" style="margin-right: 30%">
@@ -185,7 +197,7 @@
         <el-dialog
             v-model="imgVisible"
             title="图片预览"
-            width="40%"
+            width="52%"
         >
           <div style="width: 100%;height: 500px;background-color: #5287bc">
             <img :src=baseUrl+targetImgUrl style="width: 100%;height: 100%;border-radius: 8px">
@@ -290,6 +302,7 @@ import {
   Edit,
   Plus,
   Search,
+  Document,
   UploadFilled,
   Refresh,
   Download,
@@ -482,19 +495,6 @@ const handleClose = (done) => {
   ElMessageBox.confirm('确定退出相应操作?')
       .then(() => {
         resetFormData()
-        // formData.title = "";
-        // formData.jcName = "";
-        // formData.publicDate = "";
-        // formData.issueNumber = "";
-        // formData.volumeNumber = "";
-        // formData.pageRange = "";
-        // formData.place = 0;
-        // formData.allAuthors = "";
-        // formData.searchType = "";
-        // formData.accessionNumber = "";
-        // formData.status = "";
-        // formData.refuseInfo=""
-        //在退出操作之后 将表格清空
         console.log("退出操作之后的formdata ", formData)
         done();
       })
@@ -520,50 +520,6 @@ const addInfo = () => {
   isAdd.value = true;
   dialogTitle.value = "科技论文信息填报-请事先查看公告里面的填报要求(成果标题,图片上传时(建议一张)要多考虑,后续修改过程可能略微繁琐)"
 }
-//增加成果 + 表单校验
-// const confirmAdd = () => {
-//   formData.place = parseInt(formData.place) //string 转换为int
-//   console.log("上传的formData is ", formData)
-//   // 表单校验 上传
-//   rulesForm.value.validate((valid) => {
-//     if (valid) {
-//       console.log("通过");
-//       api.post("/ScientificPaper/add/", formData).then(res => {
-//         console.log(res);
-//         if (res.data.flag === true) {
-//
-//           if(role==='admin'){//管理员和用户添加成果时的消息显示不一样
-//             ElMessage({
-//               type: 'success',
-//               message: '成果信息添加成功',
-//             })
-//           }
-//           else{
-//             ElMessage({
-//             type: 'success',
-//             message: res.data.message,
-//           })
-//           }
-//
-//           dialogVisible.value = false;
-//         } else {
-//           ElMessage({
-//             type: 'error',
-//             message: res.data.message,
-//           })
-//         }
-//       }).finally(getAll)
-//       //触发成功验证表单，调用接口；
-//     } else {
-//       console.log("未通过");
-//       ElMessage({
-//         type: 'warning',
-//         message: "未通过表单校验 请检查表单字段",
-//       })
-//     }
-//   });
-// }
-//删除单个成果 同时将对应的图片也要删除     ----------逻辑外键
 const deleteOne = (row) => {
   ElMessageBox.confirm(
       '确定删除这条成果信息吗?',
@@ -652,7 +608,7 @@ const handleUpdate = (row) => {
     isStudent.value = true
   }
 
-  dialogTitle.value = "更改成果信息(点击图片可以放大预览)";
+  dialogTitle.value = "更改成果信息(点击图片可以放大预览,第一次文件加载较慢,请耐心等待)";
   dialogVisible.value = true; //弹出窗口
   isAdd.value = false//开始编辑 改变表格按键
   api.get("/ScientificPaper/getScientificPaperById/" + row.id).then(res => {
@@ -786,9 +742,10 @@ const handleImportSuccess = () => {
   })
   getAll()
 }
-
+//-------------------------------------
 //图片上传 显示功能开发------------------------------------------------------------------------------------------------------
-const baseUrl = "https://xsp-datastore.oss-cn-chengdu.aliyuncs.com/";
+//const baseUrl = "https://xsp-datastore.oss-cn-chengdu.aliyuncs.com/";
+const baseUrl = "https://xspfile.yougi.top/";
 const images = ref([])
 const imageurls = ref([])
 const upload = ref()
@@ -807,12 +764,11 @@ const submitFile = () => {
   api.post('/ScientificPaperPicture/uploadPictures', Data, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
     console.log('res is ', res)
     ElMessage({
-      message: '图片上传成功',
+      message: '文件上传成功',
       type: 'success',
     })
     images.value = []//之后清空
     //填报成果成功之后无需显示
-    //imageurls.value=res.data.data;//初始化图片链接数组
     console.log("得到的图片数据为", imageurls.value)
     console.log("上传后", images)
     //数据表中加入 一个用户 一个成果最多2张图片  ------username  图片url 存入数据表
@@ -907,7 +863,7 @@ const clickPicture = (it) => {
 }
 //点击编辑的时候 获取 该用户 该成果 所对应的图片  同时imagesUrl数组不为空 ==》当还有图片的时候 就不能编辑 不可选择文件
 const getImages = () => {
-  api.get("/ScientificPaperPicture/picturesList/" + formData.username + "/" + formData.title) //根据用户名 成果名字 查询对应的图片
+  api.get("/ScientificPaperPicture/picturesList/" + formData.username + "/" + formData.title) //根据用户名 成果名字 查询对应的图片+pdf文件
       .then(res => {
         console.log("图片的response ", res.data.data)
         imageurls.value = res.data.data
@@ -921,6 +877,8 @@ const getImages = () => {
         })
       })
 }
+
+
 //目标图片的url
 const targetImgUrl = ref("")
 //点击图片时候的函数
@@ -953,7 +911,16 @@ const deleteImg = (it) => {
   }).finally(getImages)
 }
 
+//判断文件名是否以.pdf结尾
+const isPdf = (filename) => {
+  return filename.endsWith(".pdf");
+}
 
+
+//浏览pdf
+const scanPdf=(it)=>{
+  window.open(baseUrl+it.url)
+}
 </script>
 
 <style scoped>

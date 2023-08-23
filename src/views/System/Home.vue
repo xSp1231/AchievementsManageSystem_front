@@ -189,7 +189,6 @@ const notice = () => {
     message: '<strong>重要提醒!进入系统一定要<span style="color: rgba(227,13,52,0.86); font-weight: bold;">查看公告栏</span>。看是否有新的公告</strong>',
     duration:5000,
 
-
   })
 }
 

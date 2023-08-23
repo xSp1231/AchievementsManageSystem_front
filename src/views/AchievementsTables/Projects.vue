@@ -31,15 +31,7 @@
         <el-button v-if="store.state.role==='admin'" type="primary" plain :icon="Download" style="margin-left: 10px" @click="exportAll()">导出全部项目数据
         </el-button>
         <el-button  v-if="store.state.role==='admin'" type="" plain :icon="Download" style="width: 100px" @click="exportPart()">批量导出</el-button>
-<!--        <el-upload  v-if="store.state.role==='admin'"-->
-<!--            action="http://8.137.9.219:8080/Project/importData"-->
-<!--                   :show-file-list="false" accept="xlsx"-->
-<!--                   :on-success="handleImportSuccess"-->
-<!--                   :before-upload="beforeUpload"-->
-<!--                   style="display: inline-block;position: absolute;right: 0.5%"-->
-<!--        >-->
-<!--          <el-button type="success" :icon="UploadFilled" plain>Excel数据导入</el-button>-->
-<!--        </el-upload>-->
+
 
       </div>
       <div class="addInfo" style="margin-top: 10px">
@@ -116,10 +108,10 @@
             <el-form-item v-if="role==='admin'&&isAdd===false" label="拒绝详情(拒绝了再填)" label-width="150" prop="refuseInfo">
               <el-input v-model="formData.refuseInfo" placeholder="拒绝请给出理由,其他状态无需填写" clearable autocomplete="off"/>
             </el-form-item>
-            <el-form-item label="证明图片上传" label-width="150">
+            <el-form-item label="证明文件上传" label-width="150">
               <!--添加成果的过程中 imageurls都为空- 只有当编辑的时候才会有值 -->
               <el-upload
-                  accept=".jpg,.jpeg,.png,.JPG,.JPEG"
+                  accept=".jpg,.jpeg,.png,.JPG,.JPEG,.pdf"
                   :disabled="imageurls.length>0"
                   multiple
                   :limit="2"
@@ -147,24 +139,36 @@
 
 
                 <template #tip>
-                  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2张</div>
+                  <div slot="tip" class="el-upload__tip">只能上传jpg/png,pdf文件,且数量不超过2</div>
                 </template>
               </el-upload>
 
               <div v-for="it in  imageurls" @click="clickPicture(it) "
-                   style="width: 100px;height: 90px;margin-left: 20px;border-radius: 8px;border: 1px dashed #a49f9f;">
-                <img :src=baseUrl+it.url style="width: 100%;height: 100%;border-radius: 8px" @click="enlargeImg(it)"/>
-                <el-button v-if="isAdd===false" :icon="CircleClose" type="danger" plain size="small" round
-                           style="margin-top: -20%"  @click="deleteImg(it)"> 删除图片
+                   style="width: 106px;height: 90px;margin-left: 20px;border-radius: 8px;border: 1px dashed #a49f9f;">
+
+                <!-------------------------------------pdf预览------------------------->
+                <el-button class="pdf" v-if="isPdf(it.url)" :icon="Document" type="text" plain size="default"
+                           style="width: 100%;height: 100%;color: #97979a;text-decoration-line:underline;" @click="scanPdf(it)" > pdf文件(查看)
                 </el-button>
+                <el-button v-if="isAdd===false&&isPdf(it.url)" :icon="CircleClose" type="danger" plain size="small" round
+                           style="margin-left: 0%"   @click="deleteImg(it)"> 删除文件
+                </el-button>
+
+                <!-------------------------------------图片------------------------->
+                <img class="picture" v-if="!isPdf(it.url)" :src=baseUrl+it.url style="width: 100%;height: 100%;border-radius: 8px" @click="enlargeImg(it)"/>
+                <el-button v-if="isAdd===false&&!isPdf(it.url)" :icon="CircleClose" type="danger" plain size="small" round
+                           style="margin-top: -20%" @click="deleteImg(it)"> 删除文件
+                </el-button>
+
+
               </div>
             </el-form-item>
 
           </el-form>
           <p v-if="isAdd===false" style="font-size: 13px;color: red;margin-top: 20px;text-align: center">
-            如果需要添加新的图片,一定要先将该成果对应的全部图片删除后，再上传!</p>
+            如果需要添加新的文件,一定要先将该成果对应的全部文件删除后，再上传!</p>
           <p v-if="isAdd===false" style="font-size: 15px;color: red;margin-top: 20px;text-align: center">
-            如果需要修改标题,一定要先将该成果对应的全部图片删除后，再上传!否则会造成数据丢失</p>
+            如果需要修改标题,一定要先将该成果对应的全部文件删除后，再上传!否则会造成数据丢失</p>
 
           <template #footer >
       <span class="dialog-footer" style="margin-right: 30%">
@@ -182,7 +186,7 @@
         <el-dialog
             v-model="imgVisible"
             title="图片预览"
-            width="40%"
+            width="52%"
         >
           <div style="width: 100%;height: 500px;background-color: #5287bc">
             <img :src=baseUrl+targetImgUrl style="width: 100%;height: 100%;border-radius: 8px" >
@@ -277,7 +281,7 @@
 </template>
 
 <script setup>
-import {DeleteFilled,Delete, Edit, EditPen,Plus, Search, UploadFilled, Refresh, Download,CircleClose} from '@element-plus/icons-vue'
+import {DeleteFilled,Delete,Document, Edit, EditPen,Plus, Search, UploadFilled, Refresh, Download,CircleClose} from '@element-plus/icons-vue'
 import api from "../../api/index.js"
 import {ElMessage, ElMessageBox, ElNotification} from 'element-plus'
 import {computed, h, onMounted, reactive, ref} from "vue";
@@ -624,7 +628,7 @@ const handleUpdate = (row) => {
   if(role==="student"){ //如果是学生  那么就让dialog对话框的用户名  填报状态不能够编辑
     isStudent.value=true
   }
-  dialogTitle.value = "更改成果信息(点击图片可以放大预览)";
+  dialogTitle.value = "更改成果信息(点击图片可以放大预览,第一次文件加载较慢,请耐心等待)";
   dialogVisible.value = true; //弹出窗口
   isAdd.value = false//开始编辑 改变表格按键
   api.get("/Project/getProjectById/" + row.id).then(res => {
@@ -764,7 +768,8 @@ const handleImportSuccess=()=>{
 
 
 //图片上传 显示功能开发------------------------------------------------------------------------------------------------------
-const baseUrl = "https://xsp-datastore.oss-cn-chengdu.aliyuncs.com/";
+//const baseUrl = "https://xsp-datastore.oss-cn-chengdu.aliyuncs.com/";
+const baseUrl = "https://xspfile.yougi.top/";
 const images = ref([])
 const imageurls = ref([])
 const upload = ref()
@@ -783,7 +788,7 @@ const submitFile = () => {
   api.post('/ProjectPicture/uploadPictures', Data, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
     console.log('res is ', res)
     ElMessage({
-      message: '图片上传成功',
+      message: '文件上传成功',
       type: 'success',
     })
     images.value = []//之后清空
@@ -927,6 +932,16 @@ const deleteImg=(it)=>{
       ElMessage.error("图片删除失败")
     }
   }).finally(getImages)
+}
+//判断文件名是否以.pdf结尾
+const isPdf = (filename) => {
+  return filename.endsWith(".pdf");
+}
+
+
+//浏览pdf
+const scanPdf=(it)=>{
+  window.open(baseUrl+it.url)
 }
 
 
