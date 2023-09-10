@@ -608,7 +608,7 @@ const confirmUpdate=()=>{
 }
 //导出全部
 const exportAll=()=>{
-  window.location.href = "http://8.137.9.219:8080/PatentSoft/exportAll";
+  window.location.href = "http://8.137.112.197:8080/PatentSoft/exportAll";
 }
 //批量导出
 const exportPart=()=>{

@@ -9,7 +9,6 @@ import {onMounted, ref} from "vue";
 import api from "../../api/index.js";
 onMounted(()=>{
   getTotalPieData()
-
 })
 let pieData=[]
 const getTotalPieData=()=>{
@@ -58,13 +57,27 @@ const initChart=(pData)=>{
     },
     series: [
       {
-        name: '总体成果数量统计',
+        name: '成果统计',
         type: 'pie',
-        radius: [45, 130],
-        center: ['50%', '50%'],
-        roseType: 'area',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
         itemStyle: {
-          borderRadius: 10
+          borderRadius: 10,
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        label: {
+          show: true,
+          position: 'outside', // 标签显示在扇区外部
+          alignTo: 'none', // 不对齐扇区边界
+          bleedMargin: 5 // 扇区与标签之间的间距
+        },
+        labelLine: {
+          show: true,
+          length: 20,
+          lineStyle: {
+            color: '#8ba4a4' // 指示线颜色
+          }
         },
         data: pData
       }

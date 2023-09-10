@@ -4,89 +4,104 @@
 </template>
 
 <script setup>
+import { ElMessage } from 'element-plus'
 import *  as echarts from "echarts" ; //这段代码使用了 JavaScript 的模块导入（import）语法，导入了 echarts 库的全部内容，并将其赋值给一个名为 echarts 的变量
 import {onMounted} from "vue";
+import api from "../../api/index.js";
 onMounted(()=>{
-  initChart()
+  getData()
 })
-const initChart=()=>{
+let x=[]
+let y=[]
+const getData=()=>{
+  api.get("/LoginCountStatistics").then(res=>{
+    if(res.data.flag===true){
+      console.log("近七天登录数据 is ",res);
+      let data=res.data.data
+      for(let i=0; i<data.length; i++){
+        console.log()
+        x.push(data[i]["date"])
+        y.push(data[i]["num"])
+      }
+      initChart(x,y);
+    }
+    else{
+      ElMessage.error('登录次数数据获取失效')
+    }
+  })
+
+}
+const initChart=(x,y)=>{
   let chart = echarts.init(document.getElementById("line")); // setup中使用echarts
   // 把配置和数据放这里
   chart.setOption({
-    color:['rgb(21,181,201)'],
+    color: ['rgba(47,149,178,0.88)'],
+
+    grid:{
+      bottom:30,
+      left:50,
+      right:90
+      // right:60
+    },
     title: {
-      text: '系统近七天活跃度',
+      left:10,
+      top:10,
       textStyle:{
-        color: 'grey', // 标题颜色-->
-        fontSize: 17, // 标题字体大小-->
-        fontWeight: 'bold' // 标题字体粗细-->
-         }
+        color: 'grey', // 标题颜色
+        fontSize: 18, // 标题字体大小
+        fontWeight: 'bold' // 标题字体粗细
+      },
+      text: '近七天每日登录量实时统计'
     },
     tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'cross',
-      }
+      trigger: 'axis'
     },
-    legend: {
-      data: ['活跃度']
-    },
+    legend: {},
     toolbox: {
-      right:'8%',
+      show: true,
+      top:30,
+      right:60,
       feature: {
+        restore: {},
         saveAsImage: {}
       }
     },
-    grid: {
-      left: '3%',
-      bottom: '3%',
-      containLabel: true
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: x
     },
-    xAxis: [
-      {
-        type: 'category',
-        boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        formatter: '{value}次'
       }
-    ],
-    yAxis: [
-      {
-        type: 'value'
-      }
-    ],
+    },
     series: [
       {
-        name: '活跃度',
+        name: '数量',
         type: 'line',
-        smooth: true,
-        lineStyle: {
-          width: 0
+        smooth: false,
+        data: y,
+        markPoint: {
+          data: [
+            { type: 'max', name: 'Max' },
+            { type: 'min', name: 'Min' }
+          ]
         },
-        showSymbol: false,
-        areaStyle: {
-          opacity: 0.6,
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            {
-              offset: 0,
-              color: 'rgb(29,103,239)'
-            },
-            {
-              offset: 1,
-              color: 'rgb(51,117,164)'
-            }
-          ])
-        },
-        emphasis: {
-          focus: 'series'
-        },
-        data: [140, 232, 101, 264, 90, 340, 250]
+        markLine: {
+          data: [{ type: 'average', name: 'Avg' }]
+        }
       },
     ]
-  });
+
+
+  })
   window.onresize = function() {
     //自适应大小
     chart.resize();
   };
+
 }
 
 </script>

@@ -325,7 +325,7 @@ const rules = reactive({//校验规则
     message: '用户名在 3 到 10 个字符之间',
     trigger: 'blur'
   }],
-  projectName:[{required: true, message: '负责人为必填项', trigger: 'blur'}],
+  projectName:[{required: true, message: '项目名称为必填项', trigger: 'blur'}],
   leader: [{required: true, message: '负责人为必填项', trigger: 'blur'}],
   teacher: [{required: true, message: '指导老师必填', trigger: 'blur'}],
   category: [{required: true, message: '项目类别必填', trigger: 'blur'}],
@@ -702,7 +702,7 @@ const confirmUpdate=()=>{
 }
 //导出全部
 const exportAll=()=>{
-  window.location.href = "http://8.137.9.219:8080/Project/exportAll";
+  window.location.href = "http://8.137.112.197:8080/Project/exportAll";
 }
 //批量导出
 const exportPart=()=>{

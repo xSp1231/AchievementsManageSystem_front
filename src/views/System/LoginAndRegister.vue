@@ -38,7 +38,7 @@
                       type="text"
                       v-model="formData.verifyCode"
                       placeholder="请输入验证码"></el-input>&nbsp;&nbsp;
-                  <img src="http://8.137.9.219:8080/getCode"
+                  <img src="http://8.137.112.197:8080/getCode"
                        id="code"
                        style="width: 120px;height: 30px"
                        @click="refresh()"
@@ -184,12 +184,22 @@ const formData = reactive({
   role: "",
   verifyCode: ""
 })
+const AddLoginNum=()=>{
+  api.get("/addLoginNum").then(res=>{
+    if(res.data.flag===true){}
+    console.log("登录次数+1")
+  })
+
+}
+
 const login = () => {
   console.log("登录角色", formData.role)
   //如果为管理员 =>header部分显示 成果信息后台管理系统
   api.post("/login", formData).then(res => {
     console.log("登陆之后后端返回的数据是 ", res.data);
     if (res.data.flag === true) {
+      //登陆成功  计数 +1
+      AddLoginNum()
       store.commit("inittabList")//登录成功之后 初始化面包屑 和tag标签
       //存入token
       let tokenValue = res.data.data.tokenValue;
@@ -236,7 +246,7 @@ const refresh=()=>{
   //为什么后面要加时间呢？
   //在某些情况下，浏览器可能会缓存从服务器获取的图片。如果验证码图片被缓存，那么每次刷新页面时，页面上显示的验证码图片就不会变化，这样就会影响验证码的安全性和有效性。
   // 为了避免这种情况，可以在请求验证码图片的 URL 后面添加一个随机参数，使得每次请求的 URL 都不同。这样，即使图片被缓存，每次请求的 URL 也会不同，浏览器就会重新获取验证码图片。这个随机参数可以是当前时间的毫秒数，或者是一个随机数等。
-  document.getElementById("code").src="http://8.137.9.219:8080/getCode?time="+new Date().getTime();
+  document.getElementById("code").src="http://8.137.112.197:8080/getCode?time="+new Date().getTime();
 }
 const styleObj = reactive({
   bordertoprightradius: '15px',
@@ -368,13 +378,8 @@ const getColor=(percentage)=>{
 
 //用户注册
 const register=()=>{
-  console.log("调用注册函数")
   checkForm.value.validate((valid) => {
-    console.log("进入")
     if(valid){
-      console.log("校验结果",valid)
-      console.log("表单内容",ruleForm)
-
       api.post("/register" , ruleForm).then(res => {
         console.log("编辑之后的 res is ",res);
         if (res.data.flag === true) {

@@ -1,10 +1,7 @@
 <!--专著（monograph）是指一本完整的、系统性的、独立出版的书，通常由一个或多个作者撰写，涵盖某个特定主题、领域或学科的全部或大部分内容--->
 <!--用户管理页面--->
 <template>
-
   <div class="userManage" style="width: 100%;height: 100%;background-color: #ffffff;position: relative;">
-
-
     <div style="margin-left: 2%">
       <div class="findarea" style="">
         <el-tooltip content="用户名只可精确查询" placement="top">
@@ -12,7 +9,6 @@
                     placeholder="用户名"
                     style="width: 150px;margin-right: 8px"></el-input>
         </el-tooltip>
-
         <el-input clearable class="filter-item" v-model="queryInfo.monoName" placeholder="专著名字"
                   style="width: 150px;margin-right: 8px"></el-input>
         <el-select clearable v-model="queryInfo.status" placeholder="成果填报状态" style="margin-right:0.3%;width: 130px">
@@ -245,7 +241,6 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup>
@@ -615,7 +610,7 @@ const confirmUpdate = () => {
 }
 //导出全部
 const exportAll = () => {
-  window.location.href = "http://8.137.9.219:8080/Monograph/exportAll";
+  window.location.href = "http://8.137.112.197:8080/Monograph/exportAll";
 }
 //批量导出
 const exportPart = () => {
@@ -698,7 +693,7 @@ const submitFile = () => {
   })
   Data.append("achievementName", formData.monoName) //将标题也加进去
   Data.append("username", formData.username) //将成果的名字也加进去
-  api.post('/MonographPicture/uploadPictures', Data, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
+  api.post('/MonographPicture/uploadPictures', Data).then(res => {
     console.log('res is ', res)
     ElMessage({
       message: '文件上传成功',
@@ -709,8 +704,6 @@ const submitFile = () => {
     //imageurls.value=res.data.data;//初始化图片链接数组
     console.log("得到的图片数据为", imageurls.value)
     console.log("上传后", images)
-    //数据表中加入 一个用户 一个成果最多2张图片  ------username  图片url 存入数据表
-    // getImages()
   }).catch(error => {
     ElMessage({
       message: error.message,

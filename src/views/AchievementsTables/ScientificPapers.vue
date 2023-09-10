@@ -438,13 +438,13 @@ const handleCurrentChange = (newpage) => {//显示跳转到多少页
 const username = ref("");
 
 const getAll = () => { //分页+条件查询
-  console.log("科技论文表role is ", sessionStorage.getItem("role"))
   if (sessionStorage.getItem('role') === "student") {//如果为学生  那么就发请求 获得他的username 之后再发送请求   //vuex
     api.get("/getUserInfo").then(res => {
+      console.log("获取到的res=>",res)
       console.log("获取到的用户姓名", res.data.data.username);
       username.value = res.data.data.username
       queryInfo.username = username.value
-    }).finally(get)
+    }).finally(get)//如果为学生登陆 先获取username 再发送分页请求
   } else { //管理员
     get();
   }
@@ -680,7 +680,7 @@ const confirmUpdate = () => {
 }
 //导出全部
 const exportAll = () => {
-  window.location.href = "http://8.137.9.219:8080/ScientificPaper/exportAll";
+  window.location.href = "http://8.137.112.197:8080/ScientificPaper/exportAll";
 }
 //批量导出
 const exportPart = () => {

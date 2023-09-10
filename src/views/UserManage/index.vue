@@ -36,7 +36,7 @@
 
         <el-button type="primary" plain :icon="Download" style="margin-left: 10px" @click="exportAll()" >导出全部数据</el-button>
         <el-button type="" plain :icon="Download" @click="exportPart()">批量导出</el-button>
-        <el-upload action="http://8.137.9.219:8080/importStudentInfo"
+        <el-upload action="http://8.137.112.197:8080/importStudentInfo"
                    :show-file-list="false"
                     accept="xlsx"
                    :on-success="handleImportSuccess"
@@ -385,7 +385,7 @@ export default {
       return true
     },
     exportAll(){
-      window.location.href = "http://8.137.9.219:8080/exportAll";
+      window.location.href = "http://8.137.112.197:8080/exportAll";
     },
     exportPart() {
       console.log("选择的用户名为", this.usernames)
