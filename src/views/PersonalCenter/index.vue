@@ -1,3 +1,4 @@
+<!---个人中心 进行密码 信息的修改---->
 <template>
   <div class="personalInfo">
     <div class="infoTable" style="width: 50%;height: 97%;margin-left:2%;margin-top: 0.5%;border-radius: 10px">
@@ -37,25 +38,56 @@
           <el-form-item label="qq号" prop="email">
             <el-input clearable v-model="userInfo.email"/>
           </el-form-item>
-
-          <el-form-item>
-            <el-upload
-              class="avatar-uploader"
-              action="#"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-          >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-          </el-upload>
+          <el-form-item label="地区" prop="area">
+            <el-input clearable v-model="userInfo.area"/>
           </el-form-item>
-
+          <el-form-item label="头像" prop="avtar" style="width: 200px; height: 200px">
+            <template>
+              <el-upload
+                  class="avatar-uploader"
+                  action="http://localhost:8080/MonographPicture/uploadPictures"
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccess"
+                  :before-upload="beforeAvatarUpload"
+              >
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" style="width: 300px; height: 130px"/>
+                <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+              </el-upload>
+            </template>
+          </el-form-item>
           <el-form-item style="margin-left: 20%">
             <el-button type="primary" @click="updateInfo()">确认修改个人信息</el-button>
             <el-button @click="resetFormOne()">重置</el-button>
           </el-form-item>
         </el-form>
+
+
+      </el-card>
+
+    </div>
+
+
+    <div class="other"
+         style="width: 40%;height: 90%;margin-left: 1.5%;margin-top: 0.5%;background-color: #f3f3f3;border-radius: 10px">
+      <div class="notification"
+           style="width: 100%;height: 10%;background-color: #f1efef;border-radius: 10px;display: flex">
+        <el-tooltip
+            effect="dark"
+            content="点击查看具体信息"
+            placement="top-start"
+        >
+          <el-button style="margin-left: 2%;margin-top: 2%" plain @click="attention()" type="info"> 个人信息修改注意事项
+          </el-button>
+
+        </el-tooltip>
+        <h4 style="margin-top: 2.8%;margin-left: 23px;font-size: 15px;font-style: italic;font-weight: normal;color: #d73c4c">
+          用户修改信息时必看</h4>
+        <el-button style="margin-top: 2.6%;margin-left: 10%;" type="danger" plain size="small" round :icon="Delete"
+                   @click="deleteUser()"> 账号注销
+        </el-button>
+      </div>
+      <div class="staticGraph"
+           style="width: 100%;height: 87%;margin-top: 3%;background-color: #f1efef;border-radius: 10px">
         <h3 style="margin-left: 40%;margin-top:-18px;color: #9f9fa1">密码修改</h3>
         <el-form
             :rules="rulesTwo"
@@ -92,33 +124,6 @@
             <el-button @click="resetFormTwo()">重置</el-button>
           </el-form-item>
         </el-form>
-
-      </el-card>
-
-    </div>
-
-    <div class="other"
-         style="width: 40%;height: 90%;margin-left: 1.5%;margin-top: 0.5%;background-color: #f3f3f3;border-radius: 10px">
-      <div class="notification"
-           style="width: 100%;height: 10%;background-color: #f1efef;border-radius: 10px;display: flex">
-        <el-tooltip
-            effect="dark"
-            content="点击查看具体信息"
-            placement="top-start"
-        >
-          <el-button style="margin-left: 2%;margin-top: 2%" plain @click="attention()" type="info"> 个人信息修改注意事项
-          </el-button>
-
-        </el-tooltip>
-        <h4 style="margin-top: 2.8%;margin-left: 23px;font-size: 15px;font-style: italic;font-weight: normal;color: #d73c4c">
-          用户修改信息时必看</h4>
-        <el-button style="margin-top: 2.6%;margin-left: 10%;" type="danger" plain size="small" round :icon="Delete"
-                   @click="deleteUser()"> 账号注销
-        </el-button>
-      </div>
-      <div class="staticGraph"
-           style="width: 100%;height: 87%;margin-top: 3%;background-color: #f1efef;border-radius: 10px">
-        <pie-chart></pie-chart>
       </div>
     </div>
 
@@ -126,7 +131,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import {
   Check,
   Delete,
@@ -137,21 +142,24 @@ import {
   Key
 } from '@element-plus/icons-vue'
 import {useRouter} from "vue-router";
+
 const router = useRouter();
-import PieChart from "./pieGraph/pieChart.vue";
 import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {h, onMounted, reactive, ref} from "vue";
+import { Plus } from '@element-plus/icons-vue'
+import type { UploadProps } from 'element-plus'
 import api from "../../api/index.js";
+//上传图片
 const imageUrl = ref('')
-const handleAvatarSuccess = (
+
+const handleAvatarSuccess: UploadProps['onSuccess'] = (
     response,
     uploadFile
 ) => {
-  console.log("response is ",response)
-  console.log("uploadFile is ",uploadFile)
+  imageUrl.value = URL.createObjectURL(uploadFile.raw!)
 }
 
-const beforeAvatarUpload = (rawFile) => {
+const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   if (rawFile.type !== 'image/jpeg') {
     ElMessage.error('Avatar picture must be JPG format!')
     return false
@@ -161,7 +169,6 @@ const beforeAvatarUpload = (rawFile) => {
   }
   return true
 }
-
 const userInfo = reactive({
   "id": "",
   "username": "",
@@ -171,6 +178,7 @@ const userInfo = reactive({
   "major": "",
   "email": "",//邮箱号
   "status": "",
+  "avtar":"",
   //-------------------------------
   "inputPasswordOne": "",   //个人信息修改时需要输入的密码
   "inputPasswordTwo": "",   //更改密码时需要输入的密码
@@ -378,6 +386,9 @@ const rulesOne = reactive({
       trigger: 'blur',
     },
   ],
+  area: [
+    {required: true, message: '地区不可为空', trigger: 'blur'},
+  ],
 })
 //校验密码安全性
 const validatePassword=(rule,value,callback)=>{
@@ -435,31 +446,6 @@ const rulesTwo = reactive({
 </script>
 
 <style scoped>
-.avatar-uploader .avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
-.avatar-uploader .el-upload {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: var(--el-transition-duration-fast);
-}
-
-.avatar-uploader .el-upload:hover {
-  border-color: var(--el-color-primary);
-}
-
-.el-icon.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  text-align: center;
-}
 .personalInfo {
   display: flex;
   width: 100%;
@@ -467,3 +453,4 @@ const rulesTwo = reactive({
   background-color: #f3f3f3;
 }
 </style>
+
