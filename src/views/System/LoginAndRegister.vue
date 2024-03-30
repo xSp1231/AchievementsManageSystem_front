@@ -100,6 +100,44 @@
               <el-form-item label="qq邮箱号" style="margin-bottom: 17px;margin-top: 0" prop="email" >
                 <el-input v-model="ruleForm.email" placeholder="不需要加上@qq.com" autocomplete="off"></el-input>
               </el-form-item>
+              <el-form-item label="地区选择" style="margin-bottom: 0 "  prop="area" >
+                <el-select v-model="ruleForm.area" placeholder="地区选择" clearable>
+                  <el-option label="安徽省" value="安徽省"></el-option>
+                  <el-option label="福建省" value="福建省"></el-option>
+                  <el-option label="甘肃省" value="甘肃省"></el-option>
+                  <el-option label="广东省" value="广东省"></el-option>
+                  <el-option label="贵州省" value="贵州省"></el-option>
+                  <el-option label="海南省" value="海南省"></el-option>
+                  <el-option label="河北省" value="河北省"></el-option>
+                  <el-option label="河南省" value="河南省"></el-option>
+                  <el-option label="黑龙江省" value="黑龙江省"></el-option>
+                  <el-option label="湖北省" value="湖北省"></el-option>
+                  <el-option label="湖南省" value="湖南省"></el-option>
+                  <el-option label="江苏省" value="江苏省"></el-option>
+                  <el-option label="江西省" value="江西省"></el-option>
+                  <el-option label="吉林省" value="吉林省"></el-option>
+                  <el-option label="辽宁省" value="辽宁省"></el-option>
+                  <el-option label="青海省" value="青海省"></el-option>
+                  <el-option label="山东省" value="山东省"></el-option>
+                  <el-option label="山西省" value="山西省"></el-option>
+                  <el-option label="陕西省" value="陕西省"></el-option>
+                  <el-option label="四川省" value="四川省"></el-option>
+                  <el-option label="台湾省" value="台湾省"></el-option>
+                  <el-option label="云南省" value="云南省"></el-option>
+                  <el-option label="浙江省" value="浙江省"></el-option>
+                  <el-option label="广西壮族自治区" value="广西壮族自治区"></el-option>
+                  <el-option label="内蒙古自治区" value="内蒙古自治区"></el-option>
+                  <el-option label="宁夏回族自治区" value="宁夏回族自治区"></el-option>
+                  <el-option label="西藏自治区" value="西藏自治区"></el-option>
+                  <el-option label="新疆维吾尔自治区" value="新疆维吾尔自治区"></el-option>
+                  <el-option label="北京市" value="北京市"></el-option>
+                  <el-option label="天津市" value="天津市"></el-option>
+                  <el-option label="上海市" value="上海市"></el-option>
+                  <el-option label="重庆市" value="重庆市"></el-option>
+                  <el-option label="香港特别行政区" value="香港特别行政区"></el-option>
+                  <el-option label="澳门特别行政区" value="澳门特别行政区"></el-option>
+                </el-select>
+              </el-form-item>
             </el-form>
           </div>
         </transition>
@@ -135,7 +173,7 @@
             <!-- 欢迎语 -->
             <div
                 style="flex: 2;display: flex;align-items: center;font-size: 22px;color: #eeebeb;font-weight: bold">
-              欢迎登录学生成果管理平台
+              欢迎登录SWUST学生成果管理系统
             </div>
             <!-- 欢迎图片 -->
             <div style="flex: 2">
@@ -302,7 +340,7 @@ const validatePassword=(rule,value,callback)=>{
   }
   if(!(value.length>=6&&value.length<=10)){
     callback(new Error('密码中长度应该在6-10位!'))
-}
+  }
   callback()//最后一定要使用回调函数
 }
 
@@ -326,19 +364,22 @@ const rules = reactive({//校验规则
   name:[{required: true, message: '姓名为必填项', trigger: 'blur'}],
   email:[{required: true, message: 'qq邮箱号为必填项', trigger: 'blur'}],
   major:[{required: true, message: '注意专业填写格式,如计科2101', trigger: 'blur'}],
+  area:[{required: true, message: '地区必选', trigger: 'blur'}],
   password :[{ validator: validatePassword, trigger: 'blur' }],
   checkPass:[{ validator: validatecheckPass, trigger: 'blur' }],
 
 })
 const ruleForm=reactive({
-      username:"",
-      password: '',
-      role: "学生",
-      name:"",
-      major:'',
-      email:"",
-      checkPass: '',//确认密码部分的输入
-      status:1,
+  username:"",
+  password: '',
+  role: "学生",
+  name:"",
+  major:'',
+  email:"",
+  checkPass: '',//确认密码部分的输入
+  status:1,
+  avtar:"https://xspfile.yougi.top/%E5%B1%B1%E5%B7%9D7bb4d9cbbc8441c99ecdabf1346ac001.jpg",
+  area:""
 })
 const progressLength=ref(0)
 //进度条
@@ -373,9 +414,12 @@ const getColor=(percentage)=>{
   else {
     return '#5cb87a';
   }
+
 }
+
 //用户注册
 const register=()=>{
+  console.log(ruleForm.area);
   checkForm.value.validate((valid) => {
     if(valid){
       api.post("/register" , ruleForm).then(res => {
@@ -409,6 +453,7 @@ const reSetForm=()=>{
   ruleForm.major=''
   ruleForm.checkPass= ''
   ruleForm.status=1
+  ruleForm.area=""
 }
 //找回密码
 const findPwd=()=>{
@@ -440,7 +485,7 @@ const findPwd=()=>{
   background-color: rgba(239, 233, 233, 0.8);
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
-  height: 400px;
+  height: 430px;
   width: 540px;
   z-index: 1;
   display: flex;
@@ -452,7 +497,7 @@ const findPwd=()=>{
 .registArea {
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
-  height: 400px;
+  height: 430px;
   width: 540px;
   background-color: rgba(239, 233, 233, 0.8);
   z-index: 1;
@@ -467,7 +512,7 @@ const findPwd=()=>{
   border-bottom-right-radius: 15px;
   position: absolute;
   z-index: 2;
-  height: 400px;
+  height: 430px;
   width: 540px;
   display: flex;
   justify-content: center;

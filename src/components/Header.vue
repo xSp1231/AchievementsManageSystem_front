@@ -64,7 +64,6 @@ import {Fold, ArrowRight, Expand,Guide,ArrowDown} from "@element-plus/icons-vue"
 import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import api from "../api/index.js";
-
 const router = useRouter()
 const store = useStore()
 const newTime = ref("");
@@ -80,6 +79,7 @@ onMounted(() => {
 
 const getUserAvtar = () => {
   api.get("/getUserInfo").then(res => {
+    console.log(res);
     console.log("获取到的头像", res.data.data.avtar);
     avatr.value=res.data.data.avtar;
     console.log("avtar is ",avatr.value)
