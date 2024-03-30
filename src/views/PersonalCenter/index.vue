@@ -1,4 +1,3 @@
-<!---个人中心 进行密码 信息的修改---->
 <template>
   <div class="personalInfo">
     <div class="infoTable" style="width: 50%;height: 97%;margin-left:2%;margin-top: 0.5%;border-radius: 10px">
@@ -39,12 +38,24 @@
             <el-input clearable v-model="userInfo.email"/>
           </el-form-item>
 
+          <el-form-item>
+            <el-upload
+              class="avatar-uploader"
+              action="#"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+          </el-upload>
+          </el-form-item>
+
           <el-form-item style="margin-left: 20%">
             <el-button type="primary" @click="updateInfo()">确认修改个人信息</el-button>
             <el-button @click="resetFormOne()">重置</el-button>
           </el-form-item>
         </el-form>
-
         <h3 style="margin-left: 40%;margin-top:-18px;color: #9f9fa1">密码修改</h3>
         <el-form
             :rules="rulesTwo"
@@ -86,7 +97,6 @@
 
     </div>
 
-
     <div class="other"
          style="width: 40%;height: 90%;margin-left: 1.5%;margin-top: 0.5%;background-color: #f3f3f3;border-radius: 10px">
       <div class="notification"
@@ -127,12 +137,30 @@ import {
   Key
 } from '@element-plus/icons-vue'
 import {useRouter} from "vue-router";
-
 const router = useRouter();
 import PieChart from "./pieGraph/pieChart.vue";
 import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {h, onMounted, reactive, ref} from "vue";
 import api from "../../api/index.js";
+const imageUrl = ref('')
+const handleAvatarSuccess = (
+    response,
+    uploadFile
+) => {
+  console.log("response is ",response)
+  console.log("uploadFile is ",uploadFile)
+}
+
+const beforeAvatarUpload = (rawFile) => {
+  if (rawFile.type !== 'image/jpeg') {
+    ElMessage.error('Avatar picture must be JPG format!')
+    return false
+  } else if (rawFile.size / 1024 / 1024 > 2) {
+    ElMessage.error('Avatar picture size can not exceed 2MB!')
+    return false
+  }
+  return true
+}
 
 const userInfo = reactive({
   "id": "",
@@ -407,6 +435,31 @@ const rulesTwo = reactive({
 </script>
 
 <style scoped>
+.avatar-uploader .avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  text-align: center;
+}
 .personalInfo {
   display: flex;
   width: 100%;

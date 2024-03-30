@@ -3,9 +3,10 @@ import router from "../router/index.js"; //js文件中 直接使用实例
 import {ElMessage} from "element-plus";
 //为什么不能使用const router=useRouter()  因为useRouter只能在
 const api = axios.create({
-    baseURL: "http://8.137.112.197:8080",
+  //  baseURL: "http://8.137.112.197:8080",
    // baseURL: "http://8.137.9.219:8080",
-    //baseURL: "http://localhost:8080",
+    baseURL: "http://localhost:8080",
+   //  baseURL: "http://149.88.75.178:8080",
     timeout: 5000 // 5秒钟
 })
 
@@ -19,7 +20,6 @@ api.interceptors.request.use(config => {
     // config.headers['satoken'] = token;
     return config;
 });
-
 //响应拦截器设置
 api.interceptors.response.use(response => {
       console.log("前端响应拦截器 拦截到的后端数据是的response is ",response.data);

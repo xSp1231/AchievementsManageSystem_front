@@ -38,7 +38,7 @@
                       type="text"
                       v-model="formData.verifyCode"
                       placeholder="请输入验证码"></el-input>&nbsp;&nbsp;
-                  <img src="http://8.137.112.197:8080/getCode"
+                  <img src="http://localhost:8080/getCode"
                        id="code"
                        style="width: 120px;height: 30px"
                        @click="refresh()"
@@ -135,7 +135,7 @@
             <!-- 欢迎语 -->
             <div
                 style="flex: 2;display: flex;align-items: center;font-size: 22px;color: #eeebeb;font-weight: bold">
-              欢迎登录SWUST学生成果管理系统
+              欢迎登录学生成果管理平台
             </div>
             <!-- 欢迎图片 -->
             <div style="flex: 2">
@@ -246,7 +246,7 @@ const refresh=()=>{
   //为什么后面要加时间呢？
   //在某些情况下，浏览器可能会缓存从服务器获取的图片。如果验证码图片被缓存，那么每次刷新页面时，页面上显示的验证码图片就不会变化，这样就会影响验证码的安全性和有效性。
   // 为了避免这种情况，可以在请求验证码图片的 URL 后面添加一个随机参数，使得每次请求的 URL 都不同。这样，即使图片被缓存，每次请求的 URL 也会不同，浏览器就会重新获取验证码图片。这个随机参数可以是当前时间的毫秒数，或者是一个随机数等。
-  document.getElementById("code").src="http://8.137.112.197:8080/getCode?time="+new Date().getTime();
+  document.getElementById("code").src="http://localhost:8080/getCode?time="+new Date().getTime();
 }
 const styleObj = reactive({
   bordertoprightradius: '15px',
@@ -373,9 +373,7 @@ const getColor=(percentage)=>{
   else {
     return '#5cb87a';
   }
-
 }
-
 //用户注册
 const register=()=>{
   checkForm.value.validate((valid) => {

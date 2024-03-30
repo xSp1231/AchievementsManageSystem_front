@@ -34,9 +34,9 @@
     </div>
     <div class="personalArea" style="width: 9%;margin-left:-1%;display: flex">
       <img v-if="role==='admin'" class="picture" style="margin-left: 0px;margin-top: 8px;height: 40px;width: 40px;border-radius: 50%;"
-           src="../assets/images/managerAvator.jpg">
-      <img v-if="role!=='admin'" class="picture" style="margin-left: 00px;margin-top: 8px;height: 40px;width: 40px;border-radius: 50%;"
            src="../assets/images/two.jpg">
+      <img v-if="role!=='admin'" class="picture" style="margin-left: 00px;margin-top: 8px;height: 40px;width: 40px;border-radius: 50%;"
+           :src="avatr">
       <el-dropdown @command="handleCommand" style="margin-left: 3%;width: 80px">
         <span style="width: 80px;height: 30%;margin-top: 25%" >
       {{role}}
@@ -70,11 +70,21 @@ const store = useStore()
 const newTime = ref("");
 const tabsList = computed(() => store.state.tabsList)
 const isCollapse = computed(() => store.state.isCollapse)
-
+const avatr=ref("")
 onMounted(() => {
   // 在组件挂载时启动定时器，每秒钟更新一次时间
+
   setInterval(getNowTime, 1000);
+  getUserAvtar();
 });
+
+const getUserAvtar = () => {
+  api.get("/getUserInfo").then(res => {
+    console.log("获取到的头像", res.data.data.avtar);
+    avatr.value=res.data.data.avtar;
+    console.log("avtar is ",avatr.value)
+  })
+}
 const role = computed(() => {
   return sessionStorage.getItem('role');
 });
@@ -104,8 +114,6 @@ const handleCommand = (command) => {//////注意dropdown里面时间的触发
     router.push('/loginandregister')
   }
 }
-
-
 
 </script>
 

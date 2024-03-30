@@ -702,7 +702,7 @@ const confirmUpdate=()=>{
 }
 //导出全部
 const exportAll=()=>{
-  window.location.href = "http://8.137.112.197:8080/Project/exportAll";
+  window.location.href = "http://localhost:8080/Project/exportAll";
 }
 //批量导出
 const exportPart=()=>{

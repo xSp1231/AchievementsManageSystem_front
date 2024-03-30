@@ -610,7 +610,7 @@ const confirmUpdate = () => {
 }
 //导出全部
 const exportAll = () => {
-  window.location.href = "http://8.137.112.197:8080/Monograph/exportAll";
+  window.location.href = "http://localhost:8080/Monograph/exportAll";
 }
 //批量导出
 const exportPart = () => {
@@ -790,7 +790,6 @@ const clickPicture = (it) => {
 }
 //点击编辑的时候 获取 该用户 该成果 所对应的图片  同时imagesUrl数组不为空 ==》当还有图片的时候 就不能编辑 不可选择文件
 const getImages = () => {
-
   api.get("/MonographPicture/picturesList/" + formData.username + "/" + formData.monoName) //根据用户名 成果名字 查询对应的图片
       .then(res => {
         console.log("图片的response ", res.data.data)

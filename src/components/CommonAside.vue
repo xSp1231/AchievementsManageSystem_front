@@ -148,7 +148,13 @@ const changeMenu=()=>{
       {
         path: "/home",
         name: "home",
-        label: "主页",
+        label: "系统公告",
+        icon: "HomeFilled",
+      },
+      {
+        path: "/home",
+        name: "home",
+        label: "数据可视化",
         icon: "HomeFilled",
       },
       {
