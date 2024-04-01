@@ -41,27 +41,27 @@
           <el-form-item label="地区" prop="area">
             <el-input clearable v-model="userInfo.area"/>
           </el-form-item>
-          <el-form-item label="头像" prop="avtar" style="width: 200px; height: 200px">
-            <template>
-              <el-upload
-                  class="avatar-uploader"
-                  action="http://localhost:8080/MonographPicture/uploadPictures"
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccess"
-                  :before-upload="beforeAvatarUpload"
-              >
-                <img v-if="imageUrl" :src="imageUrl" class="avatar" style="width: 300px; height: 130px"/>
-                <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-              </el-upload>
-            </template>
+          <!--          <el-form-item label="头像" prop="avtar">-->
+
+          <!--          </el-form-item>-->
+          <el-form-item label="头像" style="height: 100px; height: 100px" >
+            <el-upload
+                class="avatar-uploader"
+                action="http://localhost:8080/upAvtar"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
+                accept=".jpg, .png"
+            >
+              <img v-if="imageUrl" :src="imageUrl" class="avatar" style="width: 100%; height: 150px"/>
+              <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+            </el-upload>
           </el-form-item>
-          <el-form-item style="margin-left: 20%">
+          <el-form-item style="margin-left: 40px; margin-top: 80px" >
             <el-button type="primary" @click="updateInfo()">确认修改个人信息</el-button>
             <el-button @click="resetFormOne()">重置</el-button>
           </el-form-item>
         </el-form>
-
-
       </el-card>
 
     </div>
@@ -131,7 +131,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script  setup>
 import {
   Check,
   Delete,
@@ -147,19 +147,24 @@ const router = useRouter();
 import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {h, onMounted, reactive, ref} from "vue";
 import { Plus } from '@element-plus/icons-vue'
-import type { UploadProps } from 'element-plus'
+
 import api from "../../api/index.js";
 //上传图片
 const imageUrl = ref('')
 
-const handleAvatarSuccess: UploadProps['onSuccess'] = (
+const handleAvatarSuccess= (
     response,
     uploadFile
 ) => {
-  imageUrl.value = URL.createObjectURL(uploadFile.raw!)
+  console.log("上传成功之后")
+  console.log("response",response);
+  console.log("uploadFile",uploadFile);
+  imageUrl.value= response;
+  userInfo.avtar = response;
 }
 
-const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+const beforeAvatarUpload =(rawFile) => {
+  console.log("上传之前 rawfile ",rawFile)
   if (rawFile.type !== 'image/jpeg') {
     ElMessage.error('Avatar picture must be JPG format!')
     return false
@@ -186,7 +191,7 @@ const userInfo = reactive({
   "confirmPassword": "", //确认新密码
 })
 const updateInfo = () => {
-  console.log("userinfo的信息 ", userInfo);
+  console.log("点击确认修改成功之后userinfo的信息 ", userInfo);
   let info = {
     "id": userInfo.id,
     "username": userInfo.username,
@@ -194,7 +199,8 @@ const updateInfo = () => {
     "name": userInfo.name,
     'major': userInfo.major,
     'email': userInfo.email,
-    'password': userInfo.password   //还是之前密码
+    'password': userInfo.password,  //还是之前密码
+    'avtar':userInfo.avtar
   } //之后发出post请求
   ruleFormRefOne.value.validate((valid) => {
 
@@ -356,6 +362,7 @@ const getUserInfo = () => {
   api.get("/getUserInfo").then(res => {
     console.log("获取到的用户信息", res.data.data);
     Object.assign(userInfo, res.data.data)
+    imageUrl.value=res.data.data.avtar;
   })
 }
 const attention = () => {
@@ -453,4 +460,25 @@ const rulesTwo = reactive({
   background-color: #f3f3f3;
 }
 </style>
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+}
 
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 120px;
+  height: 120px;
+  text-align: center;
+}
+</style>
