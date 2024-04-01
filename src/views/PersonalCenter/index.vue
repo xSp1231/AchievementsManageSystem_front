@@ -41,21 +41,21 @@
           <el-form-item label="地区" prop="area">
             <el-input clearable v-model="userInfo.area"/>
           </el-form-item>
-<!--          <el-form-item label="头像" prop="avtar">-->
+          <!--          <el-form-item label="头像" prop="avtar">-->
 
-<!--          </el-form-item>-->
+          <!--          </el-form-item>-->
           <el-form-item label="头像" style="height: 100px; height: 100px" >
-              <el-upload
-                  class="avatar-uploader"
-                  action="http://localhost:8080/upAvtar"
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccess"
-                  :before-upload="beforeAvatarUpload"
-                  accept=".jpg, .png"
-              >
-                <img v-if="imageUrl" :src="imageUrl" class="avatar" style="width: 300px; height: 130px"/>
-                <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-              </el-upload>
+            <el-upload
+                class="avatar-uploader"
+                action="http://localhost:8080/upAvtar"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
+                accept=".jpg, .png"
+            >
+              <img v-if="imageUrl" :src="imageUrl" class="avatar" style="width: 100%; height: 150px"/>
+              <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+            </el-upload>
           </el-form-item>
           <el-form-item style="margin-left: 40px; margin-top: 80px" >
             <el-button type="primary" @click="updateInfo()">确认修改个人信息</el-button>
@@ -65,7 +65,6 @@
       </el-card>
 
     </div>
-
 
     <div class="other"
          style="width: 40%;height: 90%;margin-left: 1.5%;margin-top: 0.5%;background-color: #f3f3f3;border-radius: 10px">
@@ -86,8 +85,8 @@
                    @click="deleteUser()"> 账号注销
         </el-button>
       </div>
-      <div class="staticGraph"
-           style="width: 100%;height: 87%;margin-top: 3%;background-color: #f1efef;border-radius: 10px">
+      <div class="passwordArea"
+           style="width: 100%;height: 250px;margin-top: 3%;background-color: #f1efef;border-radius: 10px">
         <h3 style="margin-left: 40%;margin-top:-18px;color: #9f9fa1">密码修改</h3>
         <el-form
             :rules="rulesTwo"
@@ -125,13 +124,17 @@
           </el-form-item>
         </el-form>
       </div>
-    </div>
+      <div class="calendarArea" style="background-color: #f1efef">
 
+          <calendar></calendar>
+      </div>
+    </div>
 
   </div>
 </template>
 
-<script lang="ts" setup>
+<script  setup>
+import Calendar from './components/calendar.vue'
 import {
   Check,
   Delete,
@@ -147,24 +150,24 @@ const router = useRouter();
 import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import {h, onMounted, reactive, ref} from "vue";
 import { Plus } from '@element-plus/icons-vue'
-import type { UploadProps } from 'element-plus'
+
 import api from "../../api/index.js";
 //上传图片
 const imageUrl = ref('')
 
-const handleAvatarSuccess: UploadProps['onSuccess'] = (
+const handleAvatarSuccess= (
     response,
     uploadFile
 ) => {
-  console.log("上传成功之后oss url ",response);
-  console.log(uploadFile);
-  imageUrl.value = URL.createObjectURL(uploadFile.raw!)
+  console.log("上传成功之后")
+  console.log("response",response);
+  console.log("uploadFile",uploadFile);
+  imageUrl.value= response;
   userInfo.avtar = response;
-  console.log("上传成功头像之后的userInfo ",userInfo);
-
 }
 
-const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+const beforeAvatarUpload =(rawFile) => {
+  console.log("上传之前 rawfile ",rawFile)
   if (rawFile.type !== 'image/jpeg') {
     ElMessage.error('Avatar picture must be JPG format!')
     return false
@@ -362,7 +365,6 @@ const getUserInfo = () => {
   api.get("/getUserInfo").then(res => {
     console.log("获取到的用户信息", res.data.data);
     Object.assign(userInfo, res.data.data)
-    imageUrl.value=res.data.data.avtar;
   })
 }
 const attention = () => {
@@ -427,8 +429,6 @@ const validatePassword=(rule,value,callback)=>{
   callback()//最后一定要使用回调函数
 }
 
-
-
 const rulesTwo = reactive({
   inputPasswordTwo: [
     {required: true, message: "请填入原始密码", trigger: 'blur'}, {
@@ -448,7 +448,6 @@ const rulesTwo = reactive({
     }, {min: 3, max: 10, message: 'Length should be 3 to 10', trigger: 'blur'}
   ],
 })
-
 
 </script>
 

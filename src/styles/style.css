@@ -1,0 +1,54 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap");
+:root {
+  --delay: 0s;
+}
+
+* {
+  outline: none;
+  box-sizing: border-box;
+}
+
+.cards-wrapper {
+  margin-left: 10px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.cards.card {
+  border-radius: 0 0 6px 6px;
+  padding: 30px 20px;
+}
+.cards.card svg {
+  width: 24px;
+  margin-left: auto;
+  color: #6dadcb;
+}
+.cards-head {
+  display: flex;
+  align-items: center;
+}
+
+.items {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.items.numbers {
+  margin-top: 0;
+}
+
+.item {
+  flex: 0 1 calc(100% / 7);
+  padding: 10px 5px;
+  text-align: center;
+}
+.item.is-active {
+  background: rgba(93, 150, 197, 0.98);
+  border-radius: 50%;
+  color: #fff;
+}
+.item.disable {
+  color: #595b5b;
+}
