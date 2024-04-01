@@ -512,7 +512,7 @@ const findPwd=()=>{
   border-bottom-right-radius: 15px;
   position: absolute;
   z-index: 2;
-  height: 400px;
+  height: 430px;
   width: 540px;
   display: flex;
   justify-content: center;

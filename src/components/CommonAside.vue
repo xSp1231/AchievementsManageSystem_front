@@ -83,12 +83,18 @@ const findUsername=()=>{
 const changeMenu=()=>{
   if(role.value==="admin"){
   const t= [//菜单栏里面的数据
-  {
-    path: "/home",
-    name: "home",
-    label: "主页",
-    icon: "HomeFilled",
-  },
+    {
+      path: "/home",
+      name: "home",
+      label: "系统公告",
+      icon: "HomeFilled",
+    },
+    {
+      path: "/home",
+      name: "home",
+      label: "数据可视化",
+      icon: "HomeFilled",
+    },
   {
     path: "/userManage",
     name: "userManage",

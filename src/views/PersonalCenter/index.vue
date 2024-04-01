@@ -66,7 +66,6 @@
 
     </div>
 
-
     <div class="other"
          style="width: 40%;height: 90%;margin-left: 1.5%;margin-top: 0.5%;background-color: #f3f3f3;border-radius: 10px">
       <div class="notification"
@@ -86,8 +85,8 @@
                    @click="deleteUser()"> 账号注销
         </el-button>
       </div>
-      <div class="staticGraph"
-           style="width: 100%;height: 87%;margin-top: 3%;background-color: #f1efef;border-radius: 10px">
+      <div class="passwordArea"
+           style="width: 100%;height: 250px;margin-top: 3%;background-color: #f1efef;border-radius: 10px">
         <h3 style="margin-left: 40%;margin-top:-18px;color: #9f9fa1">密码修改</h3>
         <el-form
             :rules="rulesTwo"
@@ -125,13 +124,17 @@
           </el-form-item>
         </el-form>
       </div>
-    </div>
+      <div class="calendarArea" style="background-color: #f1efef">
 
+          <calendar></calendar>
+      </div>
+    </div>
 
   </div>
 </template>
 
 <script  setup>
+import Calendar from './components/calendar.vue'
 import {
   Check,
   Delete,
@@ -362,7 +365,6 @@ const getUserInfo = () => {
   api.get("/getUserInfo").then(res => {
     console.log("获取到的用户信息", res.data.data);
     Object.assign(userInfo, res.data.data)
-    imageUrl.value=res.data.data.avtar;
   })
 }
 const attention = () => {
@@ -427,8 +429,6 @@ const validatePassword=(rule,value,callback)=>{
   callback()//最后一定要使用回调函数
 }
 
-
-
 const rulesTwo = reactive({
   inputPasswordTwo: [
     {required: true, message: "请填入原始密码", trigger: 'blur'}, {
@@ -448,7 +448,6 @@ const rulesTwo = reactive({
     }, {min: 3, max: 10, message: 'Length should be 3 to 10', trigger: 'blur'}
   ],
 })
-
 
 </script>
 

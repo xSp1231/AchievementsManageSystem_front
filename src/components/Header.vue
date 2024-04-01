@@ -1,8 +1,8 @@
 <template>
   <div class="top-header" style="width:100%;height:100%; background-color: #e8e6e6;display:flex">
 
-    <div class="breadcrumbArea" style="width: 58%;display: flex">
-      <div class="foldarea" style="width: 6%;position: relative;top:23%;left: 1%">
+    <div class="breadcrumbArea" style="width: 58%;min-width: 300px;display: flex">
+      <div class="foldarea" style="width: 6% ; min-width: 20px;position: relative;top:23%;left: 1%">
 
         <el-icon v-if="!isCollapse" style="font-size: 26px;color: #9f9fa1" @click="stretch()">
           <Fold/>
@@ -15,16 +15,15 @@
 
 
       <!---面包屑区域-->
-      <div class="bread" style="width: 94%;">
+      <div class="bread" style="width: 94%;min-width:600px ">
         <el-breadcrumb :separator-icon="ArrowRight" style="position: relative;top:33%;font-size:15px;font-style:normal">
           <el-breadcrumb-item v-for="it in tabsList" :key="it.name" :to="{path:it.path}">{{ it.label }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
     </div>
-    <div class="blankArea" style="width: 16%;"><h1 style="position: relative;top:26%;left: 10%;color: #949393">
-      学生成果信息管理系统</h1></div>
-    <div class="timeArea" style="width: 15%; display: flex;position: relative">
+    <div class="blankArea" style="width: 16%;"></div>
+    <div class="timeArea" style="width: 15%;min-width: 200px; display: flex;position: relative">
       <h4 style="width: 30px;top:30%;left: 5%;position:absolute; color: #676464">
         <el-icon size="21px">
           <Calendar/>
