@@ -13,7 +13,6 @@ const routes = [
         component: () => import('../views/test/blog.vue'),
     },
 
-
     {
         path: "/LoginAndRegister",
         name: "loginandregister",
@@ -38,7 +37,13 @@ const routes = [
             path: "home",
             name: "Home",
             component: () => import('../views/System/Home.vue'),
-        }, {
+        },
+            {
+                path: "dataVisualization", //个人中心
+                name: "dataVisualization",
+                component: () => import('../views/DataAnalyse/dataVisualization.vue'),
+            },
+            {
             path: "personalCenter", //个人中心
             name: "personalCenter",
             component: () => import('../views/PersonalCenter/index.vue'),

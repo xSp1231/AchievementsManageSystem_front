@@ -33,27 +33,21 @@
 
             </el-table>
 
-            <el-dialog v-model="dialogVisible" style="width: 820px;height: 530px;" draggable title="公告内容详细信息">
-              <div style="border: 1px solid #ccc">
-                <Toolbar
-                    style="border-bottom: 1px solid #ccc"
-                    :editor="editorRef"
-                    :defaultConfig="toolbarConfig"
-                    :mode="mode"
-                />
-                <Editor
-                    style="height: 310px; overflow-y: hidden;"
-                    v-model="valueHtml"
-                    :defaultConfig="editorConfig"
-                    :mode="mode"
-                    @onCreated="handleCreated"
-                />
-              </div>
-
-              <div slot="footer" class="dialog-footer">
-                <el-button @click="closeDialog()">关闭</el-button>
-              </div>
-            </el-dialog>
+            <el-drawer
+                v-model="drawer"
+                :direction="direction"
+                size="40%"
+            >
+              <h2 style="color: #484545;;text-align: center;margin-bottom: 8px">{{noticeTitle}}</h2>
+              <el-divider border-style="double" style="margin-bottom: 3px;margin-top: 3px"/>
+              <Editor
+                  style="height: 600px; overflow-y: hidden;"
+                  v-model="valueHtml"
+                  :defaultConfig="editorConfig"
+                  :mode="mode"
+                  @onCreated="handleCreated"
+              />
+            </el-drawer>
 
           </div>
         </div>
@@ -148,8 +142,12 @@ import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import {onBeforeUnmount, onMounted, reactive, ref, shallowRef} from 'vue'
 import api from "../../api/index.js";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 const loading=ref(true)
+//----el-drawer
+const drawer = ref(false);
+const direction = ref('rtl')
+
 //-----------------------------------wangEditor实例
 const editorRef = shallowRef()
 // 内容 HTML
@@ -222,23 +220,22 @@ const dialogData = reactive({
 
 onMounted(() => {
   notice()
-  console.log('home')
   getNotices()
   getCountNum()
 })
 
-
 const getNotices = () => {
-  loading.value=true
+   loading.value=true
   api.get("/getNotices").then(res => {
     console.log("notice res ", res)
     Object.assign(tableData, res.data.data);
     loading.value=false
   })
 }
-
-
+const noticeTitle=ref("")
 const read = (row) => {
+  drawer.value=true;
+  noticeTitle.value=row.title
   console.log("row is ", row)
   // Object.assign(dialogData, row); //将row的值赋值给dialogData   不能直接使用dialogData=row
   valueHtml.value = row.comment
@@ -253,6 +250,14 @@ const closeDialog = () => {
 </script>
 
 <style lang="less" scoped>
+/deep/.el-drawer__header {
+  align-items: center;
+  color: #72767b;
+  display: flex;
+  margin-bottom: 0;
+  padding: var(--el-drawer-padding-primary);
+  padding-bottom: 0;
+}
 
 .one {
   width: 49%;

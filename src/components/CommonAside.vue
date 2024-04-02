@@ -90,10 +90,10 @@ const changeMenu=()=>{
       icon: "HomeFilled",
     },
     {
-      path: "/home",
-      name: "home",
+      path: "/dataVisualization",
+      name: "dataVisualization",
       label: "数据可视化",
-      icon: "HomeFilled",
+      icon: "Histogram",
     },
   {
     path: "/userManage",
@@ -158,10 +158,10 @@ const changeMenu=()=>{
         icon: "HomeFilled",
       },
       {
-        path: "/home",
-        name: "home",
+        path: "/dataVisualization",
+        name: "dataVisualization",
         label: "数据可视化",
-        icon: "HomeFilled",
+        icon: "Histogram",
       },
       {
         path: "/personalCenter",
