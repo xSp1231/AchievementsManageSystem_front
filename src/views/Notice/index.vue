@@ -263,6 +263,7 @@ const read = (raw) => {
 }
 //获取所有公告
 const getNotices = () => {
+
   loading.value=true
   api.get("/getNotices").then(res => {
     console.log("得到的公告数据 is ", res.data.data);

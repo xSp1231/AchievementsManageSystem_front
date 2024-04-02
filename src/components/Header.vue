@@ -1,19 +1,14 @@
 <template>
   <div class="top-header" style="width:100%;height:100%; background-color: #e8e6e6;display:flex">
-
     <div class="breadcrumbArea" style="width: 58%;min-width: 300px;display: flex">
       <div class="foldarea" style="width: 6% ; min-width: 20px;position: relative;top:23%;left: 1%">
-
         <el-icon v-if="!isCollapse" style="font-size: 26px;color: #9f9fa1" @click="stretch()">
           <Fold/>
         </el-icon>
         <el-icon v-if="isCollapse" style="font-size: 26px;color: #9f9fa1" @click="stretch()">
           <Expand/>
         </el-icon>
-
       </div>
-
-
       <!---面包屑区域-->
       <div class="bread" style="width: 94%;min-width:600px ">
         <el-breadcrumb :separator-icon="ArrowRight" style="position: relative;top:33%;font-size:15px;font-style:normal">
@@ -30,6 +25,11 @@
         </el-icon>
       </h4>
       <h4 style="position: absolute;top:30%;width:180px;left: 16%;color: #949393">{{ newTime }}</h4>
+    </div>
+    <div style="width: 80px; height: 50px;  margin-top: 15px">
+      <el-badge :is-dot="iSDot" class="item">
+       <el-icon type="primary" size="28" color="blue" @click="gotoList()" style="cursor: pointer"><Bell /></el-icon>
+      </el-badge>
     </div>
     <div class="personalArea" style="width: 9%;margin-left:-1%;display: flex">
       <img v-if="role==='admin'" class="picture" style="margin-left: 0px;margin-top: 8px;height: 40px;width: 40px;border-radius: 50%;"
@@ -50,13 +50,9 @@
         </template>
       </el-dropdown>
     </div>
-
   </div>
 </template>
-
 <script setup>
-
-
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {useStore} from 'vuex';
 import {Fold, ArrowRight, Expand,Guide,ArrowDown} from "@element-plus/icons-vue";
@@ -68,12 +64,15 @@ const store = useStore()
 const newTime = ref("");
 const tabsList = computed(() => store.state.tabsList)
 const isCollapse = computed(() => store.state.isCollapse)
+//图片的信息
 const avatr=ref("")
+//isdot的信息
+const iSDot = ref(false);
 onMounted(() => {
   // 在组件挂载时启动定时器，每秒钟更新一次时间
-
   setInterval(getNowTime, 1000);
   getUserAvtar();
+  getSelfAll();
 });
 
 const getUserAvtar = () => {
@@ -113,7 +112,20 @@ const handleCommand = (command) => {//////注意dropdown里面时间的触发
     router.push('/loginandregister')
   }
 }
-
+const getSelfAll = () => {
+  api.get("Message/getUserInfo").then(res => {
+    console.log(res);
+    console.log(res.data.data);
+    if(res.data.data.length!=0){
+      iSDot.value=true;
+    }
+    console.log("获取到所有拒绝的信息");
+  })
+}
+//展示列表
+const gotoList = () => {
+   console.log("666");
+}
 </script>
 
 <style scoped>
