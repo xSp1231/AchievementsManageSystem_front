@@ -94,7 +94,7 @@ const routes = [
             {
                 path:"selfReturnMessage",//反馈的个人信息
                 name:"selfReturnMessage",
-                component: () => import('../views/AchievementsTables/selfReturnMessage.vue'),
+                component: () => import('../views/Message/selfReturnMessage.vue'),
             }
 
         ]

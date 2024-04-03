@@ -17,8 +17,8 @@
         </el-breadcrumb>
       </div>
     </div>
-    <div class="blankArea" style="width: 16%;"></div>
-    <div class="timeArea" style="width: 15%;min-width: 200px; display: flex;position: relative">
+    <div class="blankArea" style="width: 13%;"></div>
+    <div class="timeArea" style="width: 13%;min-width: 200px; display: flex;position: relative">
       <h4 style="width: 30px;top:30%;left: 5%;position:absolute; color: #676464">
         <el-icon size="21px">
           <Calendar/>
@@ -26,12 +26,12 @@
       </h4>
       <h4 style="position: absolute;top:30%;width:180px;left: 16%;color: #949393">{{ newTime }}</h4>
     </div>
-    <div style="width: 80px; height: 50px;  margin-top: 15px">
-      <el-badge :is-dot="iSDot" class="item">
-       <el-icon type="primary" size="28" color="blue" @click="gotoList()" style="cursor: pointer"><Bell /></el-icon>
+    <div class="messageArea" style="width: 40px;margin-right: 36px;min-width:45px;margin-top: 7px;position: relative">
+      <el-badge  :value=iSDot   :max="10"  style="position: absolute;top: 10px">
+       <el-icon type="primary" size="26" color="grey" @click="gotoList()" style="cursor: pointer"><BellFilled /></el-icon>
       </el-badge>
     </div>
-    <div class="personalArea" style="width: 9%;margin-left:-1%;display: flex">
+    <div class="personalArea" style="width: 9%;min-width: 60px;margin-left:-1%;display: flex">
       <img v-if="role==='admin'" class="picture" style="margin-left: 0px;margin-top: 8px;height: 40px;width: 40px;border-radius: 50%;"
            src="../assets/images/two.jpg">
       <img v-if="role!=='admin'" class="picture" style="margin-left: 00px;margin-top: 8px;height: 40px;width: 40px;border-radius: 50%;"
@@ -55,7 +55,7 @@
 <script setup>
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {useStore} from 'vuex';
-import {Fold, ArrowRight, Expand,Guide,ArrowDown} from "@element-plus/icons-vue";
+import {Fold, ArrowRight, Expand, Guide, ArrowDown, BellFilled} from "@element-plus/icons-vue";
 import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import api from "../api/index.js";
@@ -67,7 +67,7 @@ const isCollapse = computed(() => store.state.isCollapse)
 //图片的信息
 const avatr=ref("")
 //isdot的信息
-const iSDot = ref(false);
+const iSDot = ref(0);
 onMounted(() => {
   // 在组件挂载时启动定时器，每秒钟更新一次时间
   setInterval(getNowTime, 1000);
@@ -77,10 +77,7 @@ onMounted(() => {
 
 const getUserAvtar = () => {
   api.get("/getUserInfo").then(res => {
-    console.log(res);
-    console.log("获取到的头像", res.data.data.avtar);
     avatr.value=res.data.data.avtar;
-    console.log("avtar is ",avatr.value)
   })
 }
 const role = computed(() => {
@@ -116,8 +113,8 @@ const getSelfAll = () => {
   api.get("Message/getUserInfo").then(res => {
     console.log(res);
     console.log(res.data.data);
-    if(res.data.data.length!=0){
-      iSDot.value=true;
+    if(res.data.data.length!==0){
+      iSDot.value=res.data.data.length;
     }
     console.log("获取到所有拒绝的信息");
   })
