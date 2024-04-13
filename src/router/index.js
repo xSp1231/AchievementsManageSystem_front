@@ -10,7 +10,7 @@ const routes = [
     {
         path: "/blog",
         name: "blog",
-        component: () => import('../views/test/blog.vue'),
+        component: () => import('../views/test/Test.vue'),
     },
 
     {
@@ -33,21 +33,27 @@ const routes = [
         name: "layout",
         redirect: "/home",
         component: () => import('../layout/layout.vue'),
-        children: [{
-            path: "home",
-            name: "Home",
-            component: () => import('../views/System/Home.vue'),
-        },
+        children: [
+            {
+                path: "home",
+                name: "Home",
+                component: () => import('../views/System/Home.vue'),
+            },
+            {
+                path: "Mymessages", //个人中心
+                name: "messages",
+                component: () => import('../views/MessageView/MessageView.vue'),
+            },
             {
                 path: "dataVisualization", //个人中心
                 name: "dataVisualization",
                 component: () => import('../views/DataAnalyse/dataVisualization.vue'),
             },
             {
-            path: "personalCenter", //个人中心
-            name: "personalCenter",
-            component: () => import('../views/PersonalCenter/index.vue'),
-        },
+                path: "personalCenter", //个人中心
+                name: "personalCenter",
+                component: () => import('../views/PersonalCenter/index.vue'),
+            },
             {
                 //只有管理员可以访问
                 path: "userManage", //用户管理
@@ -92,8 +98,8 @@ const routes = [
                 component: () => import('../views/AchievementsTables/ScientificPapers.vue'),
             },
             {
-                path:"selfReturnMessage",//反馈的个人信息
-                name:"selfReturnMessage",
+                path: "selfReturnMessage",//反馈的个人信息
+                name: "selfReturnMessage",
                 component: () => import('../views/Message/selfReturnMessage.vue'),
             }
 
@@ -109,11 +115,11 @@ router.beforeEach((to, from, next) => {
     const token = sessionStorage.getItem("saToken")
     const role = sessionStorage.getItem('role')
     const requireAdmin = to.meta.requireAdmin;//要访问的页面是否需要admin角色
-    console.log("requireAdmin is ",requireAdmin)
+    console.log("requireAdmin is ", requireAdmin)
     if (token) {// 如果存在token，则允许访问路由
         if (to.name != "loginandregister" && to.name != 'passwordRecovery') {//访问的是除了登录页面和找回密码页面的其他页面
             //管理员才能访问的页面
-            if (requireAdmin===true && role != 'admin') {
+            if (requireAdmin === true && role != 'admin') {
                 next({name: "403"}); // 重定向到权限不足的页面
             } else {
                 next();

@@ -215,11 +215,11 @@ const changeMenu=()=>{
 
 
 const clickmenu=(it)=>{
-  if(it.path!==route.path){ //route.path是当前所在的path  it.path是点击要去的path
-    console.log("route is ",route.path)
+  // if(it.path!==route.path){ //route.path是当前所在的path  it.path是点击要去的path
+  //   console.log("route is ",route.path)
     console.log("it.path is ",it.path)
     router.push(it.path);
-  }
+  // }
   store.commit('updateBread',it)
 }
 

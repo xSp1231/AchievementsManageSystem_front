@@ -28,7 +28,7 @@
     </div>
     <div class="messageArea" style="width: 40px;margin-right: 36px;min-width:45px;margin-top: 7px;position: relative">
       <el-badge  :value=iSDot   :max="10"  style="position: absolute;top: 10px">
-       <el-icon type="primary" size="26" color="grey" @click="gotoList()" style="cursor: pointer"><BellFilled /></el-icon>
+       <el-icon type="primary" size="26" color="grey" @click="gotoMessageList()" style="cursor: pointer"><BellFilled /></el-icon>
       </el-badge>
     </div>
     <div class="personalArea" style="width: 9%;min-width: 60px;margin-left:-1%;display: flex">
@@ -59,6 +59,7 @@ import {Fold, ArrowRight, Expand, Guide, ArrowDown, BellFilled} from "@element-p
 import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import api from "../api/index.js";
+
 const router = useRouter()
 const store = useStore()
 const newTime = ref("");
@@ -72,7 +73,7 @@ onMounted(() => {
   // 在组件挂载时启动定时器，每秒钟更新一次时间
   setInterval(getNowTime, 1000);
   getUserAvtar();
-  getSelfAll();
+  getMyMessage ();
 });
 
 const getUserAvtar = () => {
@@ -92,7 +93,6 @@ const getNowTime = () => {
 const addZero = (s) => {
   return s < 10 ? ('0' + s) : s;
 };
-
 const stretch = () => {
   store.commit('collapseMenu')
 }
@@ -109,19 +109,19 @@ const handleCommand = (command) => {//////注意dropdown里面时间的触发
     router.push('/loginandregister')
   }
 }
-const getSelfAll = () => {
-  api.get("Message/getUserInfo").then(res => {
-    console.log(res);
-    console.log(res.data.data);
+const getMyMessage = () => {
+  api.get("Message/getUserMessage").then(res => {
+    console.log("获取消息",res);
+    console.log("用户获取的消息为",res.data.data);
     if(res.data.data.length!==0){
       iSDot.value=res.data.data.length;
     }
-    console.log("获取到所有拒绝的信息");
+
   })
 }
 //展示列表
-const gotoList = () => {
-   console.log("666");
+const gotoMessageList = () => {
+  router.push({name: "messages"})
 }
 </script>
 

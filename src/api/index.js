@@ -9,15 +9,11 @@ const api = axios.create({
    //  baseURL: "http://149.88.75.178:8080",
     timeout: 5000 // 5秒钟
 })
-
 // 添加请求拦截器
 //// 在请求发送之前做一些处理，例如添加请求头等
 api.interceptors.request.use(config => {
     const token = sessionStorage.getItem('saToken');
-    // config.headers['Authorization'] = `Bearer ${localStorage.getItem('jwt')`}; //headers携带jwt
     config.headers.set(sessionStorage.getItem('tokenName'), sessionStorage.getItem('saToken'))
-    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh-----------token is", token)
-    // config.headers['satoken'] = token;
     return config;
 });
 //响应拦截器设置
