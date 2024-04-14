@@ -7,7 +7,16 @@
     </div>
     <div v-for="message in messageList" :key="message.id"
          :class="{'success': message.status === '接收', 'warning': message.status === '拒绝', 'message': true}">
+      <el-button link type="danger" size="large" @click="deleteOne(message.id)" style="margin-left: 1050px">
+        <el-icon color="white">
+          <DeleteFilled />
+        </el-icon>
+        <span style="color: white;">删除</span>
+      </el-button>
       <h2>{{ message.status }}</h2>
+<!--      <el-button link type="danger" :icon="Delete" size="large"  @click="deleteOne(scope.row)"  >删除</el-button>-->
+<!--        <el-button link type="danger" :icon="Delete" size="large"  @click="deleteOne(scope.row)"  >删除</el-button>-->
+<!--      <el-icon><DeleteFilled /></el-icon>-->
       <h4>{{ message.audittime }}</h4>
       <div style="display: flex;justify-content: space-between;">
         <p>{{ message.message }}</p>
@@ -21,6 +30,7 @@
 
 import {onMounted, ref} from "vue";
 import api from "../../api/index.js";
+import {ElMessage} from 'element-plus'
 const messageList=ref([]);
 onMounted( ()=>{
   getUserMessage();
@@ -31,7 +41,14 @@ const getUserMessage=()=>{
     console.log("用户获取的消息为",messageList.value);
   })
 }
-
+const deleteOne = (id) => {
+  // console.log("绑定的id是什么");
+  // console.log(id);
+  api.delete(`Message/${id}`).then(res => {
+    console.log(res);
+  })
+  getUserMessage();
+}
 </script>
 
 <style scoped>

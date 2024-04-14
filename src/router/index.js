@@ -119,7 +119,6 @@ router.beforeEach((to, from, next) => {
             } else {
                 next();
             }
-
         } else {//访问的是登录页面 或者找回密码页面 但是token存在 那么就回到home
             next({name: "Home"})
         }

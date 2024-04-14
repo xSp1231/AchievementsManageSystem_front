@@ -121,6 +121,8 @@ const getMyMessage = () => {
 //展示列表
 const gotoMessageList = () => {
   router.push({name: "messages"})
+  // router.push({name: "dataVisualization"})
+  // router.push({name: "dataVisualization"})
 }
 </script>
 
