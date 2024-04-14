@@ -177,8 +177,8 @@ const getCountNum=()=>{
     adminNumber.value=res.data.data[1]
     achievementNumber.value=res.data.data[2]
   })
-
 }
+
 //每次先显示通告 提醒作用
 const notice = () => {
   ElMessage({
@@ -186,10 +186,8 @@ const notice = () => {
     dangerouslyUseHTMLString: true,
     message: '<strong>重要提醒!进入系统一定要<span style="color: rgba(227,13,52,0.86); font-weight: bold;">查看公告栏</span>。看是否有新的公告</strong>',
     duration:5000,
-
   })
 }
-
 const tableData = reactive([
   {
     time: '2016-05-03',

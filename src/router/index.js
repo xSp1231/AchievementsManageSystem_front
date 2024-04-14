@@ -97,11 +97,6 @@ const routes = [
                 name: "scientificPapers",
                 component: () => import('../views/AchievementsTables/ScientificPapers.vue'),
             },
-            {
-                path: "selfReturnMessage",//反馈的个人信息
-                name: "selfReturnMessage",
-                component: () => import('../views/Message/selfReturnMessage.vue'),
-            }
 
         ]
     },

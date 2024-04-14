@@ -2,6 +2,9 @@
     font-family: Roboto;
 }
 
+.MessageArea{
+    background-color: #6dadcb;
+}
 h2{
     font-weight: 100;
     font-size: 30pt;
