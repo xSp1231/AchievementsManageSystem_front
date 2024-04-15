@@ -45,7 +45,7 @@ const initChart = (pData) => {
       orient: 'vertical', // 将图例垂直排列
       left: 'left', // 将图例放置在左侧
       bottom: 6,
-      itemGap: 45 // 设置图例项之间的间距
+      itemGap: 58,// 设置图例项之间的间距
     },
     toolbox: {
       show: true,
