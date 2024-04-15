@@ -133,7 +133,7 @@
 
 <script setup>
 import pieChart from "../GraphsOfHome/PieChart.vue";
-import lineChart from "../GraphsOfHome/NumberOfDailySystemUsers.vue"
+import lineChart from "../DataAnalyse/totalChartsComponents/NumberOfDailySystemUsers.vue"
 import {
   Avatar,
   ZoomIn,

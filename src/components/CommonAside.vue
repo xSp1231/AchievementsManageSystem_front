@@ -90,8 +90,8 @@ const changeMenu=()=>{
       icon: "HomeFilled",
     },
     {
-      path: "/dataVisualization",
-      name: "dataVisualization",
+      path: "/totalDataVis",
+      name: "totalDataVis",
       label: "数据可视化",
       icon: "Histogram",
     },
@@ -158,8 +158,8 @@ const changeMenu=()=>{
         icon: "HomeFilled",
       },
       {
-        path: "/dataVisualization",
-        name: "dataVisualization",
+        path: "/totalDataVis",
+        name: "totalDataVis",
         label: "数据可视化",
         icon: "Histogram",
       },

@@ -7,20 +7,17 @@
     </div>
     <div v-for="message in messageList" :key="message.id"
          :class="{'success': message.status === '接收', 'warning': message.status === '拒绝', 'message': true}">
-      <el-button link type="danger" size="large" @click="deleteOne(message.id)" style="margin-left: 1050px">
+      <el-button link type="danger" size="large" @click="open(message.id)" style="margin-left: 93%">
         <el-icon color="white">
           <DeleteFilled />
         </el-icon>
-        <span style="color: white;">删除</span>
+        <span style="color: white;margin-top: 4px">删除消息</span>
       </el-button>
       <h2>{{ message.status }}</h2>
-<!--      <el-button link type="danger" :icon="Delete" size="large"  @click="deleteOne(scope.row)"  >删除</el-button>-->
-<!--        <el-button link type="danger" :icon="Delete" size="large"  @click="deleteOne(scope.row)"  >删除</el-button>-->
-<!--      <el-icon><DeleteFilled /></el-icon>-->
       <h4>{{ message.audittime }}</h4>
       <div style="display: flex;justify-content: space-between;">
         <p>{{ message.message }}</p>
-        <p>{{message.project}} ———— {{message.name}}</p>
+        <p style="font-size: large;font-weight: bold">{{message.project}} ———— {{message.name}}</p>
       </div>
     </div>
 
@@ -28,9 +25,10 @@
 </template>
 <script setup>
 
-import {onMounted, ref} from "vue";
+import {markRaw, onMounted, ref} from "vue";
 import api from "../../api/index.js";
-import {ElMessage} from 'element-plus'
+import {ElMessage, ElMessageBox, ElNotification} from 'element-plus'
+import {Delete} from "@element-plus/icons-vue";
 const messageList=ref([]);
 onMounted( ()=>{
   getUserMessage();
@@ -41,13 +39,35 @@ const getUserMessage=()=>{
     console.log("用户获取的消息为",messageList.value);
   })
 }
-const deleteOne = (id) => {
-  // console.log("绑定的id是什么");
-  // console.log(id);
-  api.delete(`Message/${id}`).then(res => {
-    console.log(res);
+const open=(num)=>{
+  ElMessageBox.confirm(
+      '删除后该消息将不会出现在消息列表之中. 确定删除吗?',
+      'Warning',
+      {
+        type: 'warning',
+        icon: markRaw(Delete),
+      }
+  ) .then(() => {
+        deleteMessage(num);
   })
-  getUserMessage();
+}
+const deleteMessage = (id) => {
+  api.delete(`Message/${id}`).then(res => {
+    if(res.data.flag===true){
+      ElNotification({
+        title: 'Success',
+        message: '消息删除成功',
+        type: 'success',
+      })
+    }
+    else{
+      ElNotification({
+        title: 'Error',
+        message: '消息删除失败',
+        type: 'error',
+      })
+    }
+  }).finally(getUserMessage);
 }
 </script>
 
@@ -127,19 +147,3 @@ div.message.success{background: #5A6;}
 div.message.announcement{background: #EA0;}
 div.message.error{background: #C43;}
 </style>
-<!--    <div class="error message">-->
-<!--      <h2>Error</h2>-->
-<!--      <h4>2024-04-14-0:57</h4>-->
-<!--      <p>This is an 'error message' div. It stresses that there is an immediate problem. this should be used sparingly.</p>-->
-<!--    </div>-->
-<!--    <div class="information message">-->
-<!--      <h2>Information</h2>-->
-<!--      <h4>2024-04-14-0:57</h4>-->
-<!--      <p>This is an 'information message' div. It helps people get to know the site a little better. </p>-->
-<!--    </div>-->
-<!--    <div class="announcement message">-->
-<!--      <h2>Announcement</h2>-->
-<!--      <h4>2024-04-14-0:57</h4>-->
-
-<!--      <p>This is an 'announcement message' div! It is loud and proud to say things that you want people to hear first!</p>-->
-<!--    </div>-->

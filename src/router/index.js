@@ -45,9 +45,14 @@ const routes = [
                 component: () => import('../views/MessageView/MessageView.vue'),
             },
             {
-                path: "dataVisualization", //个人中心
+                path: "totalDataVis", //全局可视化
                 name: "dataVisualization",
-                component: () => import('../views/DataAnalyse/dataVisualization.vue'),
+                component: () => import('../views/DataAnalyse/totalDataVis.vue'),
+            },
+            {
+                path: "personalDataVis", //全局可视化
+                name: "personalDataVis",
+                component: () => import('../views/DataAnalyse/personalDataVis.vue'),
             },
             {
                 path: "personalCenter", //个人中心
