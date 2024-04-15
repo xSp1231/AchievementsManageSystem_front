@@ -36,7 +36,6 @@ const initChart=(x,y)=>{
   // 把配置和数据放这里
   chart.setOption({
     color: ['rgba(47,149,178,0.88)'],
-
     grid:{
       bottom:30,
       left:50,

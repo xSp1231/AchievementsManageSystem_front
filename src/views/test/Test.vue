@@ -107,6 +107,7 @@
               </div>
             </el-card>
           </div>
+
           <el-card shadow="hover"
                    style="width: 93%;margin-left:1%;height: 65%;border-radius: 10px;background-color: rgb(255,255,255)">
             <h3 style="text-align: center;color: #9f9fa1;margin-top: -10px">系统介绍</h3>

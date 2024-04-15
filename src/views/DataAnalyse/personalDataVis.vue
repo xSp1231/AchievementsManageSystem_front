@@ -17,9 +17,9 @@
 </template>
 
 <script setup>
-import Test from "./DataAnalyzeComponent/Test.vue";
-import PersonalLine from "./DataAnalyzeComponent/PersonalLine.vue";
-import Reli from "./DataAnalyzeComponent/Reli.vue";
+import Test from "./personalChartsComponents/Test.vue";
+import PersonalLine from "./personalChartsComponents/PersonalLine.vue";
+import Reli from "./personalChartsComponents/Reli.vue";
 </script>
 
 <style scoped>

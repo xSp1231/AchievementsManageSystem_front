@@ -6,7 +6,7 @@
 <script setup>
 import *  as echarts from "echarts" ; //这段代码使用了 JavaScript 的模块导入（import）语法，导入了 echarts 库的全部内容，并将其赋值给一个名为 echarts 的变量
 import {onMounted, ref} from "vue";
-import api from "../../api/index.js";
+import api from "../../../api/index.js";
 onMounted(()=>{
   getTotalPieData()
 })
