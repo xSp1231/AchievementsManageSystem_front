@@ -39,7 +39,6 @@ import Map from "./totalChartsComponents/Map.vue"
   min-width: 1400px;
   background-color: #ebebef;
 }
-
 .top {
   display: flex;
   width: 100%;

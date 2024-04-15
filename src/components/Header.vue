@@ -26,6 +26,11 @@
       </h4>
       <h4 style="position: absolute;top:30%;width:180px;left: 16%;color: #949393">{{ newTime }}</h4>
     </div>
+    <div v-if="role==='student'" class="PersonalDataVisArea" style="width: 30px;">
+      <el-icon size="22" style="position: absolute;top: 19px;color: #2573c9" @click="personalDatavis()">
+        <DataAnalysis />
+      </el-icon>
+    </div>
     <div class="messageArea" style="width: 40px;margin-right: 36px;min-width:45px;margin-top: 7px;position: relative">
       <el-badge  :value=iSDot   :max="10"  style="position: absolute;top: 10px">
        <el-icon type="primary" size="26" color="grey" @click="gotoMessageList()" style="cursor: pointer"><BellFilled /></el-icon>
@@ -76,6 +81,9 @@ onMounted(() => {
   getMyMessage ();
 });
 
+const personalDatavis=()=>{
+  router.push("/personalDataVis")
+}
 const getUserAvtar = () => {
   api.get("/getUserInfo").then(res => {
     avatr.value=res.data.data.avtar;
