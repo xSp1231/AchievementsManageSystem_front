@@ -50,6 +50,11 @@ const routes = [
                 component: () => import('../views/DataAnalyse/totalDataVis.vue'),
             },
             {
+                path: "personalDataVis", //个人可视化
+                name: "personalDataVis",
+                component: () => import('../views/DataAnalyse/personalDataVis.vue'),
+            },
+            {
                 path: "personalDataVis", //全局可视化
                 name: "personalDataVis",
                 component: () => import('../views/DataAnalyse/personalDataVis.vue'),
