@@ -5,7 +5,7 @@
 
   </div>
   <div class="pieChart">
-
+     <self-pie-compoent></self-pie-compoent>
   </div>
   <div class="intro">
 
@@ -20,7 +20,6 @@
 </template>
 
 <script setup>
-
 </script>
 
 <style scoped>
