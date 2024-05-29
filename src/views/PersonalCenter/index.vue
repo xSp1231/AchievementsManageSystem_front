@@ -47,7 +47,7 @@
           <el-form-item label="头像" style="height: 100px; height: 100px" >
             <el-upload
                 class="avatar-uploader"
-                action="http://localhost:8080/upAvtar"
+                action="http://47.109.143.177:8080/upAvtar"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload"

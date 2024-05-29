@@ -1,14 +1,14 @@
 <template>
-<div id="bar" style="width: 100%;height: 100%">
-</div>
+    <div id="bar" style="width: 100%;height: 100%"></div>
 </template>
 
 <script setup>
-
+import  'echarts/theme/vintage'
 import { ElMessage } from 'element-plus'
 import *  as echarts from "echarts" ; //这段代码使用了 JavaScript 的模块导入（import）语法，导入了 echarts 库的全部内容，并将其赋值给一个名为 echarts 的变量
 import {onMounted} from "vue";
 import api from "../../../api/index.js";
+import {color} from "echarts";
 onMounted(()=>{
   getData()
 })
@@ -30,7 +30,9 @@ const getData=()=>{
 const initBar=(datalist)=>{
   let chart = echarts.init(document.getElementById("bar")); // setup中使用echarts
   // 把配置和数据放这里
+
   chart.setOption({
+    // color:['#0c8cd3'],
     grid:{
       bottom:30,
       left:80,
@@ -85,5 +87,14 @@ const initBar=(datalist)=>{
 </script>
 
 <style scoped>
-
+#bar {
+  margin-left: 2%;
+  background-color: #f8f5f5;
+  border-radius: 7px;
+  transition: all 0.3s ease;
+}
+#bar:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
 </style>

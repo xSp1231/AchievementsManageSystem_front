@@ -11,7 +11,6 @@
     <div class="bottom">
         <reli></reli>
     </div>
-
   </div>
 </template>
 
@@ -27,7 +26,7 @@ import Reli from "./personalChartsComponents/Reli.vue";
   height: 100%;
   min-height: 600px;
   min-width: 1400px;
-  background-color: #ebebef;
+  background-color: rgba(232, 232, 239, 0.9);
 }
 .top{
   display: flex;
@@ -35,7 +34,6 @@ import Reli from "./personalChartsComponents/Reli.vue";
   height: 45%;
   min-height: 300px;
 }
-
 .bottom{
   margin-top: 20px;
   width: 100%;
@@ -52,13 +50,5 @@ import Reli from "./personalChartsComponents/Reli.vue";
   width: 50%;
   height: 100%;
   min-height: 300px;
-
 }
-/*.intro{*/
-/*  margin-left: 10px;*/
-/*  width: 33%;*/
-/*  height: 100%;*/
-/*  min-height: 300px;*/
-/*  background-color: #2afadf;*/
-/*}*/
 </style>

@@ -139,7 +139,7 @@ const AddEditorConfig = reactive({
   readOnly: false, //限制为只读状态  true为只读状态
   MENU_CONF: {
     uploadImage: {
-      server: "http://localhost:8080/uploadToOss", //上传到oss
+      server: "http://47.109.143.177:8080/uploadToOss", //上传到oss
       fieldName: "file",
       allowedFileTypes: ['image/*'], //只允许图片 默认也是
       customInsert(res, insertFn) {
@@ -177,7 +177,7 @@ const ViewEditorConfig = reactive({
   readOnly: true, //限制为只读状态  true为只读状态
   MENU_CONF: {
     uploadImage: {
-      server: "http://localhost:8080/uploadToOss", //上传到oss
+      server: "http://47.109.143.177:8080/uploadToOss", //上传到oss
       fieldName: "file",
       allowedFileTypes: ['image/*'], //只允许图片 默认也是
       customInsert(res, insertFn) {

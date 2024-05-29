@@ -1,5 +1,5 @@
 <template>
-  <div id="myEcharts" style="width: 100%; height: 100%;"></div>
+  <div id="myEcharts" style="width: 98%; height: 100%;"></div>
 </template>
 
 <script setup>
@@ -43,9 +43,9 @@ const initChart = (pData) => {
     },
     legend: {
       orient: 'vertical', // 将图例垂直排列
-      left: 'left', // 将图例放置在左侧
+      left: '80', // 将图例放置在左侧
       bottom: 6,
-      itemGap: 58,// 设置图例项之间的间距
+      itemGap: 38,// 设置图例项之间的间距
     },
     toolbox: {
       show: true,
@@ -97,5 +97,15 @@ const initChart = (pData) => {
 </script>
 
 <style scoped>
-
+#myEcharts {
+  margin-top: 2%;
+  margin-left: 1%;
+  background-color: #f8f5f5;
+  border-radius: 7px;
+  transition: all 0.3s ease;
+}
+#myEcharts:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
 </style>

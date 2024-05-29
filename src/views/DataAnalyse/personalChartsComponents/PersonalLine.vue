@@ -1,5 +1,5 @@
 <template>
-  <div id="bar-chart" style="width: 100%; height: 100%;"></div>
+  <div id="bar-chart" style="width: 98%; height: 100%;"></div>
 </template>
 
 <script setup>
@@ -81,5 +81,15 @@ const initChart = (data) => {
 </script>
 
 <style scoped>
-
+#bar-chart {
+  margin-top: 2%;
+  margin-left: 2%;
+  background-color: #f8f5f5;
+  border-radius: 7px;
+  transition: all 0.3s ease;
+}
+#bar-chart:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
 </style>

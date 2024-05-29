@@ -1,7 +1,7 @@
 <template>
   <div class="intro">
     <div class="notification-header">
-      <p>校园动态</p>
+      <p>友链</p>
     </div>
 
       <div class="notification-items">
@@ -28,7 +28,7 @@ onMounted(()=>{
 const introList = [
   {
     id:1,
-    picture:"https://pic4.zhimg.com/v2-2928f3c5218f6c42e759880263cc2234_1440w.jpg?source=172ae18b",
+    picture:"https://pic3.zhimg.com/v2-39ccfa8f70ef77ee2f94bf8c5f42a07e_b.jpg",
     intro: '计算机科学与技术学院官网',
     link: "https://codepen.io/search/pens?q=announce&cursor=ZD0xJm89MCZwPTc=",
   },
@@ -57,6 +57,12 @@ const introList = [
     picture:"https://www.bing.com/th?id=OIP.c0iIyE2V0os2corDMYbKswHaHg&w=150&h=152&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2",
     intro: 'Github',
     link: "https://github.com/",
+  },
+  {
+    id:7,
+    picture:"https://cdn.dribbble.com/users/984227/screenshots/4647247/echarts_logo________.png",
+    intro: 'echarts',
+    link: "https://echarts.apache.org/examples/zh/editor.html?c=mix-timeline-finance",
   },
 ]
 </script>

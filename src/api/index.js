@@ -5,7 +5,7 @@ import {ElMessage} from "element-plus";
 const api = axios.create({
   //  baseURL: "http://8.137.112.197:8080",
    // baseURL: "http://8.137.9.219:8080",
-    baseURL: "http://localhost:8080",
+    baseURL: "http://47.109.143.177:8080",
    //  baseURL: "http://149.88.75.178:8080",
     timeout: 5000 // 5秒钟
 })

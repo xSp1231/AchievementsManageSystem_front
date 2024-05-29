@@ -1,6 +1,6 @@
 <!---学生个人成果占比饼状图---->
 <template>
-  <div  id="intro"  style="width: 100%;height: 100%"></div>
+  <div  id="intro"  style="width: 98%;height: 100%"></div>
 </template>
 
 <script setup>
@@ -21,6 +21,7 @@ const initChart=(pData)=>{
   let chart = echarts.init(document.getElementById("intro")); // setup中使用echarts
   // 把配置和数据放这里
   chart.setOption({
+    color: ['rgba(222,126,103,0.93)', 'rgba(120,232,139,0.93)', '#1694dc'],
     tooltip:{},
     // color:['#81d5d2', 'rgba(23,142,175,0.84)', '#deb797', '#50a6e0', '#0098ba'],
     title:{
@@ -31,7 +32,7 @@ const initChart=(pData)=>{
         fontSize: 12,
         fontWeight: 'normal'
       }, // 副标题样式
-      top:15,
+      top:25,
       left:30,
       textStyle:{
         color: 'grey', // 标题颜色
@@ -41,9 +42,13 @@ const initChart=(pData)=>{
     },
 
     legend: {
-      orient: 'vertical', // 设置图例的排列方向为竖直方向
-      left: 50, // 设置图例在容器右侧
-      top: 65, // 设置图例在容器中央
+      //设置位置   文字在右，图例在左（图例纵向排列在图表右侧的时候）
+      align:'left',
+      x: 'left', // 'center' | 'left' | {number},
+      y: 'center', // 'center' | 'bottom' | {number}
+      icon: "circle",//图例样式
+      orient: 'vertical',
+      itemHeight: 17,
     },
     toolbox: {
       top:15,
@@ -92,7 +97,15 @@ const initChart=(pData)=>{
 </script>
 
 <style scoped>
-
+#intro {
+  background-color: #f8f5f5;
+  border-radius: 7px;
+  transition: all 0.3s ease;
+}
+#intro:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
 </style>
 
 

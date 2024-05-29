@@ -657,7 +657,7 @@ const confirmUpdate=()=>{
 }
 //导出全部
 const exportAll=()=>{
-  window.location.href = "http://localhost:8080/Reward/exportAll";
+  window.location.href = "http://47.109.143.177:8080/Reward/exportAll";
 }
 //批量导出
 const exportPart=()=>{

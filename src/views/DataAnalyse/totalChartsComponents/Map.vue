@@ -1,5 +1,5 @@
 <template>
-  <div ref="mapContainer" class="graphmap"></div>
+  <div ref="mapContainer" id="graphmap"></div>
 </template>
 <script>
 import * as echarts from "echarts";
@@ -40,7 +40,7 @@ export default {
         },
         tooltip: {
           formatter: function (params) {
-            return params.data.name + '近十年地震总次数为:' + '<br>' + params.data.value;
+            return params.data.name + '学生人数为:' + '<br>' + params.data.value;
           }
         },
         geo: {
@@ -229,8 +229,16 @@ export default {
 </script>
 
 <style scoped>
-.graphmap {
+#graphmap {
+  margin-left: 6%;
   width: 100%;
   height: 100%;
+  background-color: #f8f5f5;
+  border-radius: 7px;
+  transition: all 0.3s ease;
+}
+#graphmap:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 </style>

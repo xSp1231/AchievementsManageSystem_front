@@ -40,10 +40,19 @@ const initChart=(pData)=>{
       }
     },
     legend: {
-      orient: 'vertical', // 设置图例的排列方向为竖直方向
-      left: 50, // 设置图例在容器右侧
-      top: 65, // 设置图例在容器中央
+      //设置位置   文字在右，图例在左（图例纵向排列在图表右侧的时候）
+      align:'right',
+      x: 'left', // 'center' | 'left' | {number},
+      y: 'center', // 'center' | 'bottom' | {number}
+      icon: "circle",//图例样式
+      orient: 'vertical',
+      itemHeight: 17,
     },
+    // legend: {
+    //   orient: 'vertical', // 设置图例的排列方向为竖直方向
+    //   left: 50, // 设置图例在容器右侧
+    //   top: 65, // 设置图例在容器中央
+    // },
     toolbox: {
       top:15,
       right:50,
@@ -92,7 +101,16 @@ const initChart=(pData)=>{
 </script>
 
 <style scoped>
-
+#pie {
+  margin-left: 1%;
+  background-color: #f8f5f5;
+  border-radius: 7px;
+  transition: all 0.3s ease;
+}
+#pie:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
 </style>
 
 
