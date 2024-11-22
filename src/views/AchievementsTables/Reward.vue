@@ -6,7 +6,7 @@
 
 
     <div style="margin-left: 2%">
-      <div class="findarea" style="">
+      <div class="findArea">
         <el-tooltip content="用户名只可精确查询" placement="top">
           <el-input clearable v-if="store.state.role==='admin'" class="filter-item" v-model="queryInfo.username"
                     placeholder="用户名"
@@ -169,7 +169,7 @@
                 </el-button>
 
                 <!-------------------------------------图片------------------------->
-                <img class="picture" v-if="!isPdf(it.url)" :src=baseUrl+it.url style="width: 100%;height: 100%;border-radius: 8px" @click="enlargeImg(it)"/>
+                <img class="picture" v-if="!isPdf(it.url)" :src=baseUrl+it.url style="width: 100%;height: 100%;border-radius: 8px;background-repeat: no-repeat;background-size: cover" @click="enlargeImg(it)"/>
                 <el-button v-if="isAdd===false&&!isPdf(it.url)" :icon="CircleClose" type="danger" plain size="small" round
                            style="margin-top: -20%" @click="deleteImg(it)"> 删除文件
                 </el-button>
@@ -201,7 +201,7 @@
             width="52%"
         >
           <div style="width: 100%;height: 500px;background-color: #5287bc">
-            <img :src=baseUrl+targetImgUrl style="width: 100%;height: 100%;border-radius: 8px" >
+            <img :src=baseUrl+targetImgUrl style="width: 100%;height: 100%;border-radius: 8px;background-size: cover;background-repeat: no-repeat" >
           </div>
         </el-dialog>
       </div>
@@ -608,7 +608,6 @@ const confirmUpdate=()=>{
     return
   }
 
-
   //用户修改 变为审核
   //管理员自己定义
   if(role==='student'){formData.status='审核'; //只要学生用户确定编辑了 那么成果的状态就变为审核
@@ -898,6 +897,10 @@ const scanPdf=(it)=>{
 </script>
 
 <style scoped>
+.findArea{
+  width: 100%;
+  min-width: 1200px;
+}
 
 </style>
 

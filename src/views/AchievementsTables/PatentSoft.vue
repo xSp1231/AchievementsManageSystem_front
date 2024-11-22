@@ -5,7 +5,7 @@
 
 
     <div style="margin-left: 2%">
-      <div class="findarea" style="">
+      <div class="findArea" style="">
         <el-tooltip content="用户名只可精确查询" placement="top">
           <el-input clearable v-if="store.state.role==='admin'" class="filter-item" v-model="queryInfo.username" placeholder="用户名(精确查询)"
                     style="width: 150px;margin-right: 8px"></el-input>
@@ -854,5 +854,8 @@ const scanPdf=(it)=>{
 </script>
 
 <style scoped>
-
+.findArea{
+  width: 100%;
+  min-width: 1200px;
+}
 </style>

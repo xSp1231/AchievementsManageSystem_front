@@ -5,7 +5,7 @@ import {ElMessage} from "element-plus";
 const api = axios.create({
   //  baseURL: "http://8.137.112.197:8080",
    // baseURL: "http://8.137.9.219:8080",
-    baseURL: "http://47.109.143.177:8080",
+    baseURL: "http://localhost:8080",
    //  baseURL: "http://149.88.75.178:8080",
     timeout: 5000 // 5秒钟
 })
@@ -18,7 +18,7 @@ api.interceptors.request.use(config => {
 });
 //响应拦截器设置
 api.interceptors.response.use(response => {
-      console.log("前端响应拦截器 拦截到的后端数据是的response is ",response.data);
+      // console.log("前端响应拦截器 拦截到的后端数据是的response is ",response.data);
         if (response.data.message==='登录已经过期,请重新登录') {
             //清除satoken 为什么要清除呢 因为路由导航那里有限制
             sessionStorage.removeItem('saToken'); //会话存储里面

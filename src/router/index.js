@@ -42,7 +42,7 @@ const routes = [
             },
             {
                 path: "totalDataVis", //全局可视化
-                name: "dataVisualization",
+                name: "totalDataVis",
                 component: () => import('../views/DataAnalyse/totalDataVis.vue'),
             },
             {

@@ -1,5 +1,5 @@
 <template>
-  <div class="top-header" style="width:100%;height:100%; background-color: #e8e6e6;display:flex">
+  <div class="top-header" >
     <div class="breadcrumbArea" style="width: 58%;min-width: 300px;display: flex">
       <div class="foldarea" style="width: 6% ; min-width: 20px;position: relative;top:23%;left: 1%">
         <el-icon v-if="!isCollapse" style="font-size: 26px;color: #9f9fa1" @click="stretch()">
@@ -142,6 +142,14 @@ const gotoMessageList = () => {
 </script>
 
 <style scoped>
+.top-header{
+  width:100%;
+  height:100%;
+  min-width: 1300px;
+  background-color: #e8e6e6;
+  display:flex;
+  justify-content: space-between;
+}
 .example-showcase .el-dropdown + .el-dropdown {
   margin-left: 15px;
 }

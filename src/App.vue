@@ -4,11 +4,13 @@
   </div>
 </template>
 
-
 <script setup>
 
 </script>
 
 <style>
+.master{
+  background-color: #2afadf;
+}
 
 </style>

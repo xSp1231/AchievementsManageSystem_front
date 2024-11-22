@@ -1,7 +1,10 @@
 <template xmlns="">
   <div class="common-layout">
     <el-container class="main_container">
-      <el-aside width="auto" style="max-width: 200px"><commonAside></commonAside></el-aside>  <!---------<el-aside></el-aside>默认300px------>
+      <el-aside width="auto" style="max-width: 200px">
+        <commonAside></commonAside>
+      </el-aside>
+      <!---------<el-aside></el-aside>默认300px------>
       <el-container>
         <el-header style="padding: 0"><topheader></topheader></el-header>
         <Tag></Tag>
@@ -14,6 +17,7 @@
 <!--              <transition name="moveUp">-->
 <!--              <transition name="fade" mode="out-in">-->
               <component :is="Component" :key="$route.path"></component>
+
             </transition>
 
           </router-view>
@@ -42,8 +46,10 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
+  /*width: 100%;*/
+  /*height:100% ;*/
 }
 .main_container {
   height: 100%;

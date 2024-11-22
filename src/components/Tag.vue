@@ -30,6 +30,8 @@ export default {
   },
   methods:{
     changeTag(item){//点击标签 进入页面
+
+      console.log("点击的 item.name is ",item.name,"  route is ",this.router )
       this.$router.push(item.path)
     },
     //点击删除标签

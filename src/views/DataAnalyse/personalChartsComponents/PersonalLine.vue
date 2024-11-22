@@ -23,7 +23,6 @@ const getData = () => {
 
 const initChart = (data) => {
   const chart = echarts.init(document.getElementById('bar-chart'));
-
   chart.setOption({
     title: {
       text: '个人填报成果状态图',

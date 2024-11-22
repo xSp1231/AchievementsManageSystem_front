@@ -60,6 +60,7 @@ const store = createStore({
         //更新面包屑
         updateBread(state, val) {//state为state里面的state对象，val为点击菜单时 获取到的数据
             console.log("点击导航栏传进来的val is", val);//val为点击页面菜单时的对象
+
             //首先要不是home页面  //home页面默认出现
             if (val.name !== 'home') {//之后再判断点击的页面还没有出现过.///////// 因为home原来就存在与tablelist里面
                 //fnidIndex() 遍历数组 里面的参数为数组里面的元素
